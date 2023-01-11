@@ -1,0 +1,115 @@
+---
+title: "Guide to Prepare MEA NFA Level 0 for TCPL"
+author: "Amy Carpenter"
+date: "4/12/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+08/27/2020
+Create a short name for your dataset. Usually I use “name of compounds” followed by the year the experiments were started, e.g. “PFAS2018.” Don’t use any spaces.
+Create a copy of the Template folder in this directory: L:\Lab\NHEERL_MEA\Carpenter_Amy\pre-process_mea_nfa_for_tcpl
+Rename the copy of the folder with your dataset name.
+
+# Data Preparation:
+Open the OneNote Notebook: L:\Lab\NHEERL_MEA\Carpenter_Amy\pre-process_mea_nfa_for_tcpl\Pre-processing_MEA_NFA_for_TCPL
+Make a copy of the `Notes Template` tab, and rename it as your data set name.
+Follow the instructions to fill out the form.
+
+# Running the scripts:
+Install required R packages
+1.	Use the command install.packages(“package name”) to install any of the following packages that you do not already have:
+a.	`openxlsx` – includes functions for reading .xlsx Excel files
+b.	`data.table` – for robust data manipulation
+c.	`gtools` – includes useful functions such as ‘asc’ for getting ascii character code
+d.	`devtools` – includes function needed to install packages from GitHub
+e.	`pracma` – used in mutual information scripts
+f.	`compiler` – used in mutual information scripts
+2.	Install the package `rhdf5` for reading, writing, and opening h5 files. Use the following commands:
+
+```{r}
+if(!requireNamespace("BiocManager", quietly = TRUE))
+     install.packages("BiocManager")
+BiocManager::install("rhdf5")
+```
+
+If it asks to Update all/some/none packages, select all.
+Additional info: https://bioconductor.org/install and  https://stackoverflow.com/questions/15974643/how-to-deal-with-hdf5-files-in-r
+
+3.	Use the command devtools::install_github(`package name`)to install the following packages from GitHub:
+a.	`sje30/sjemea`
+b.	`dianaransomhall/meadq`
+Additional info: https://github.com/dianaransomhall/meadq, https://github.com/sje30/sjemea
+https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html
+
+Go to the directory: L:\Lab\NHEERL_MEA\Carpenter_Amy\pre-process_mea_nfa_for_tcpl\nfa-spike-list-to-mc0-r-scripts\R
+Create a copy of the script run_me_template.R in the same folder as the rest of the scripts. Rename the copy of the scrip to run_me_datasetname.R. 
+
+In the “run_me” script, fill out the “USER INPUT” section:
+-	Set the dataset_title to the dataset name you created.
+-	Set pause_between_steps to TRUE, or FALSE if you have don’t want to pause between steps.
+-	Set save_notes_graphs to FALSE to view all output and graphs in the console. After you have ran through the steps, set to TRUE and re-source the run_me to save a log of the notes and plots.
+-	Set default_ControlTreatmentName. This is usually “DMSO”. 
+-	If there are some compounds that have a vehicle control other than the default, enter the compound names in the string vector “different_vehicleControlCompounds.” If there are no other vehicle controls used, leave this variable as an empty list (c()).
+-	Add the corresponding vehicle control names to the variable “different_vehicleControls.” There should be a one to one correspondence between the control treatment names in this list and the “different_vehicleControlCompounds” list.
+-	Set spidmap_file to the file path of the Excel file containing the Sample ID’s and stock concentrations of the compounds in the current data set. Be sure to change all backslashes “\” to forward slashes “/”.
+-	Set spid_sheet. To the sheet in the spidmap_file that you want to use. Can be a number or the name of the sheet. 
+-	Set scripts.dir. Use the default setting. This is the folder containing the scripts that will be referenced. 
+-	Set root_output_dir. This is where the output will be created. Use the default setting. 
+
+Source the run_me script line by line:
+-	Under the section “run the main steps”, source the script source_steps.R. This script will automatically run through each step. If pause_between_steps is set to TRUE, you will be prompted to enter y/n before continuing each step. The script will also check if a step has been run before. If so, you will be able to select if you want to continue with the existing files, remake all of them (i.e., overwrite), append to the existing files, or quit. You can quit and re-source this line as many times as needed.
+o	Selecting files
+	Select all file types needed for the analysis (_spike_list.csv, _MaestroExperimentLog_Ontogeny.csv, and Calculations/Summary xlsx files containing the cytotoxicity data)
+	When you have selected all files, hit “Cancel” – then the selected files will be saved in a text file.
+
+-	Under the section “prepare spidmap”, you will read in the spidmap_file. (Be sure to close the spidmap file in Excel before reading the file in R). You will need to standardize the names of the treatment, stock_conc, and spid columns in the spidmap. In the line that says “setnames”,
+o	Update trt_col to the column name in the spidmap that corresponds to the chemical names. The chemical names should match the names in the “treatment” column of the AUC and cytotoxicity data.
+o	Update the conc_col to the column in the spidmap that lists the stock concentration of the chemicals (this will be used to confirm the concentration-correction where the stock concentration is not exactly 20mM).
+o	Update the spid_col to the column in the spidmap that lists the EPA Sample ID corresponding to each compound. This column is . The sample IDs (or SPIDs) usually begin with a prefix such as “EPA”,“EX”, “TP” or “TX” followed by a 6-8 digit code.
+o	If you need multiple spidmaps, you can read them in separately and then combine them with rbind.
+o	The “expected_stock_conc” is the target concentration. This is the expected concentration that the dilutions were based on. This is usually 20mM. Sometimes, it is 30mM. Sometimes, for individual compounds in a dataset, the lab technician sees that the actual concentration is not 20, and so adjust the source_conc’s accordingly… more to explain
+	Show examples, esp where expected is 10 and actual is 10.1?
+-	Run tcpl_MEA_dev_AUC
+o	If you get an error stating that some treatments don’t have a corresponding spid in the spidmap, you may need to rename any compounds that were misspelled in the auc/cytotox data. Uncomment the section under “rename any compounds” and update as needed.
+o	This script will also check the concentration corrections for each compound. Follow the prompts to update any concentrations that look off. It assumes that the expected aliquot concentration for each compound is 20. If that is not the case, you can change this default by adding the argument expected_target_conc = 30 (for example)
+o	Other things to check:
+	If it appears that the conc’s were partially conc-corrected (e.g. corrected in cyto data but not AUC dat) -> need to standardize the conc’s before you can continue	
+•	Suggest how user could do that??
+	If it appears that the conc’s were conc-corrected incorrectly (show example -> spidmap_guess_conc’s does not agree with actual conc’s, but actual conc’s are not 0.1,0.3,etc) -> Then need to standardized the concs or something before can correct them
+-	Run the final data checks
+o	Read through the output and confirm that there are the expected number of cultures, plates, etc., no missing data, etc.
+o	Take a look at the output plots. There isn’t really anything specific to look for in the plots… just check that nothing looks waay off, many missing values, etc. Compare control wells to treated values in each plot and see if it looks reasonable.
+o	Feel free to do any other checks that you want!
+In the end, you should have a file in the output folder called “datasetname_longfile.csv”
+Once you have successfully made it through all of the steps, set save_notes_graphs to TRUE and pause_between_steps to FALSE. Then source the entire “run_me” script again. A “run_log” text file and a “summary_plots” folder will be created as documentation.
+
+Conc-correction function:
+-	If a compound in your dataset is tested at different concentrations than those listed under “expected_target_concs”, this compound will be flagged as a compound whose concentrations should be corrected. However, if the stock concentration is 20, the concentration-correction will not affect these values.
+o	Not a great long-term solution, because what if the stock conc is not 20!
+
+Dataset checks
+-	Make sure you review the results, make sure the values look reasonable, no glaring unexpected holes!
+
+Once you get to the end, re-run from the beginning with these settings in the `USER INPUT` section: 
+```{r}
+pause_between_steps <- TRUE
+save_notes_graphs <- FALSE
+```
+
+This will save the graphs and dataset checks in pdf and txt files.
+
+
+# Run_me_wide
+i.e., if you aren’t preparing data for tcpl, but just for e.g. Tim
+Overlap with above process:
+-	Packages to install mostly the same
+-	Create a copy of the template folder, with the wllq to update thing
+-	Notes template – I think can use the exact same process 
+-	Run_me -> just have to select the “wide” version
+
+If don’t have cytotox data, just select ‘n’ at Cytotoxicity data collection step.
+Console will say ‘user elected to stop’. This is fine, you can move on.
