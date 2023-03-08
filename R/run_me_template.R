@@ -17,6 +17,7 @@ scripts.dir <- "" # update to the folder where the scripts are located
 root_output_dir <- "" # where the dataset_title folder will be created
 
 update_concs_without_prompt <- FALSE
+get_new_files_log <- FALSE
 # ------------------------------------------------------------------------ #
 # END USER INPUT
 # ------------------------------------------------------------------------ #
@@ -28,7 +29,7 @@ library(RMySQL)
 
 # Run main steps ----------------------------------------------------------
 
-# create a summary log file and store the 
+# create a summary log file and store the
 if(save_notes_graphs) {
   sink(file = file.path(root_output_dir, dataset_title, paste0(dataset_title,"_run_log_",as.character.Date(Sys.Date()),".txt")))
   cat("Output from the script run_me_",dataset_title,".R\n",sep="")
@@ -61,7 +62,7 @@ get_NFA_standard_structue <- function(culture.folderi) {
   mfiles <- list.files(path = culture.folderi, pattern = 'MaestroExperimentLog', full.names = T, recursive = T)
   slists <- list.files(path = culture.folderi, pattern = '_spike_list\\.csv', full.names = T, recursive = T)
   filesi <- c(cyto.files, mfiles, slists)
-  return(filesi)  
+  return(filesi)
 }
 
 culture.folders <- list.files(path = project.dir, pattern = "[0-9]{8}", full.names = T, recursive = F)
@@ -121,8 +122,8 @@ unique(dat$units) # confirm these are all uM (this taken from maestroexperiment 
 setnames(spidmap, old = c(trt_col, spid_col), new = c("treatment","spid"))
 # for example, setnames(spidmap, old = c("Aliquot_Vial_Barcode", "Concentration", "EPA_Sample_ID"), new = c("treatment","stock_conc","spid"))
 spidmap[, expected_stock_conc := 20] # initialize expected_stock_conc. Usually this is 20mM. Change as needed.
-# update expected_stock_conc for individual compouunds where needed 
-# for example, 
+# update expected_stock_conc for individual compouunds where needed
+# for example,
 # spidmap[treatment %in% c("2,2',4,4',5,5'-Hexabromodiphenyl ether","Dibenz(a,h)anthracene"), expected_stock_conc := 10.0]
 spidmap[, treatment := as.character(treatment)]
 head(spidmap[, .(treatment, spid, expected_stock_conc)])
