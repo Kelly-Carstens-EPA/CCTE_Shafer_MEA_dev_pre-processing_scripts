@@ -1,7 +1,7 @@
-tcpl_MEA_dev_AUC <- function(basepath, dataset_title, 
-                             AUCsourcefilename = file.path(basepath, "output", paste0(dataset_title, "_AUC.csv")), 
-                             DIVsourcefilename = file.path(basepath, "output", paste0(dataset_title, "_parameters_by_DIV.csv")), 
-                             cytotox_filename = file.path(basepath, "output", paste0(dataset_title, "_cytotox.csv")),
+tcpl_MEA_dev_AUC <- function(basepath, project_name, 
+                             AUCsourcefilename = file.path(basepath, "output", paste0(project_name, "_AUC.csv")), 
+                             DIVsourcefilename = file.path(basepath, "output", paste0(project_name, "_parameters_by_DIV.csv")), 
+                             cytotox_filename = file.path(basepath, "output", paste0(project_name, "_cytotox.csv")),
                              assay_component_map_filename = file.path(dirname(basepath), "mea_nfa_component_name_map.csv"))
 {
   
@@ -75,9 +75,9 @@ update_control_well_treatment <- function(dat, control_compound, culture_date = 
   dat[wllt == "n" & apid %in% apids & rowi %in% control_rowi, treatment := control_compound]
 }
 
-update_treatment_names <- function(date, root_output_dir, dataset_title) {
+update_treatment_names <- function(date, root_output_dir, project_name) {
   trt_name_map <- as.data.table(read.csv(file.path(root_output_dir, "supplemental_mea_treatment_name_map.csv"), stringsAsFactors = F))
-  trt_name_map <- trt_name_map[dataset == dataset_title, .(mea_treatment_name, updated_treatment_name)]
+  trt_name_map <- trt_name_map[dataset == project_name, .(mea_treatment_name, updated_treatment_name)]
   unused_trt_names <- setdiff(unique(trt_name_map$mea_treatment_name), unique(dat$treatment))
   if(length(unused_trt_names)> 0 ){
     cat("Some expected mea treatment names in 'supplemental_mea_treatment_name_map.csv' are not in the input data table:", unused_trt_names, "\n", sep = "\n")

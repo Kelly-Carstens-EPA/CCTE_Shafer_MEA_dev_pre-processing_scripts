@@ -3,7 +3,7 @@ graphics.off() # clear plot history
 # ------------------------------------------------------------------------ #
 # USER INPUT
 # ------------------------------------------------------------------------ #
-dataset_title <- "testpipeline2020" # the name for the current dataset, e.g. "name2020" (this should match the name of the folder under 'pre-process_mea_nfa_for_tcpl', e.g. 'Frank2017' or 'ToxCast2016')
+project_name <- "testpipeline2020" # the name for the current dataset, e.g. "name2020" (this should match the name of the folder under 'pre-process_mea_nfa_for_tcpl', e.g. 'Frank2017' or 'ToxCast2016')
 pause_between_steps <- TRUE # probs want to be true when you first run
 save_notes_graphs <- FALSE # Do this after have run thru once, to save a log of the steps. Set pause_between_steps to FALSE if saving notes and graphs for speed
 
@@ -14,7 +14,7 @@ spid_sheet <- ""
 
 project.dir <- "" # project main folder (where will look for README files)
 scripts.dir <- "" # update to the folder where the scripts are located
-root_output_dir <- "" # where the dataset_title folder will be created
+root_output_dir <- "" # where the project_name folder will be created
 
 update_concs_without_prompt <- FALSE
 get_new_files_log <- FALSE
@@ -31,14 +31,14 @@ library(RMySQL)
 
 # create a summary log file and store the
 if(save_notes_graphs) {
-  sink(file = file.path(root_output_dir, dataset_title, paste0(dataset_title,"_run_log_",as.character.Date(Sys.Date()),".txt")))
-  cat("Output from the script run_me_",dataset_title,".R\n",sep="")
+  sink(file = file.path(root_output_dir, project_name, paste0(project_name,"_run_log_",as.character.Date(Sys.Date()),".txt")))
+  cat("Output from the script run_me_",project_name,".R\n",sep="")
   cat("Date Ran:",as.character.Date(Sys.Date()),"\n")
   cat(R.version.string,"\n")
   cat("USER INPUT settings:\n")
   print(sapply(ls(), get, envir = .GlobalEnv))
   graphics.off()
-  pdf(file = file.path(root_output_dir, dataset_title, paste0(dataset_title,"_summary_plots_",as.character.Date(Sys.Date()),".pdf")), width = 10, height = 8)
+  pdf(file = file.path(root_output_dir, project_name, paste0(project_name,"_summary_plots_",as.character.Date(Sys.Date()),".pdf")), width = 10, height = 8)
 }
 
 
@@ -78,7 +78,7 @@ length(all.files)
 # should be # groups * (1 Calc file + 3 plates * (4 DIV + 1 maestro exp log file))
 
 # Write to log file
-writeLogFile(all.files, output.dir = file.path(root_output_dir, dataset_title), dataset_title, files_type = '')
+writeLogFile(all.files, output.dir = file.path(root_output_dir, project_name), project_name, files_type = '')
 # Writing 288 files to DNT_NTP2021_files_log_2022-04-19.txt ...
 # [1] "L:/Lab/NHEERL_MEA/Carpenter_Amy/pre-process_mea_nfa_for_tcpl/DNT_NTP2021/DNT_NTP2021_files_log_2022-04-19.txt is ready."
 rm(all.files, culture.folders, readmes)
@@ -94,7 +94,7 @@ source(file.path(scripts.dir, 'source_steps.R'))
 # > run tcpl_MEA_dev_AUC --------------------------------------------------
 
 source(file.path(scripts.dir, 'tcpl_MEA_dev_AUC.R'))
-dat <- tcpl_MEA_dev_AUC(basepath = file.path(root_output_dir,dataset_title), dataset_title)
+dat <- tcpl_MEA_dev_AUC(basepath = file.path(root_output_dir,project_name), project_name)
 
 
 # Updated treatment label for solvent control wells ------------------------------------
@@ -137,7 +137,7 @@ spidmap[treatment %in% unique(dat$treatment), .N, by = .(treatment)][N > 1] # ch
 
 # update treatment names with entries in "supplemental_mea_treatment_name_map.csv" corresponding to dataset
 # (treatment -> "mea_treatment_name", "updated_treatment_name" column will match "PREFERRED_NAME"
-dat <- update_treatment_names(dat, root_output_dir, dataset_title)
+dat <- update_treatment_names(dat, root_output_dir, project_name)
 
 # assign spids
 dat <- check_and_assign_spids(dat, spidmap)
@@ -177,7 +177,7 @@ dat[wllt == 't', .(length(unique(paste0(apid,rowi,coli)))), by = .(spid, conc)][
 
 # save dat and graphs
 setkey(dat, NULL)
-save(dat, file = file.path(root_output_dir, dataset_title, "output", paste0(dataset_title,"_longfile.RData")))
+save(dat, file = file.path(root_output_dir, project_name, "output", paste0(project_name,"_longfile.RData")))
 rm(dat)
 
 if(save_notes_graphs) {

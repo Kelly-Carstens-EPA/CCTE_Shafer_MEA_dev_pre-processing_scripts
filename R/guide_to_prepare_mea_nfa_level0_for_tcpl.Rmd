@@ -49,7 +49,7 @@ Go to the directory: L:\Lab\NHEERL_MEA\Carpenter_Amy\pre-process_mea_nfa_for_tcp
 Create a copy of the script run_me_template.R in the same folder as the rest of the scripts. Rename the copy of the scrip to run_me_datasetname.R. 
 
 In the “run_me” script, fill out the “USER INPUT” section:
--	Set the dataset_title to the dataset name you created.
+-	Set the project_name to the dataset name you created.
 -	Set pause_between_steps to TRUE, or FALSE if you have don’t want to pause between steps.
 -	Set save_notes_graphs to FALSE to view all output and graphs in the console. After you have ran through the steps, set to TRUE and re-source the run_me to save a log of the notes and plots.
 -	Set default_ControlTreatmentName. This is usually “DMSO”. 

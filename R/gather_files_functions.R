@@ -1,6 +1,6 @@
 # script to gather the mea nfa spike list files, and other files
 
-selectInputFiles <- function(start.dir, output.dir, dataset_title,append = F, files_type = "") {
+selectInputFiles <- function(start.dir, output.dir, project_name,append = F, files_type = "") {
   
   if (append) {
     file_names <- readLogFile(output.dir, files_type)
@@ -15,7 +15,7 @@ selectInputFiles <- function(start.dir, output.dir, dataset_title,append = F, fi
   
   repeat {
     
-    add.files <- choose.files(default = previousfolder, caption = paste0("Select all ",files_type," analysis files for ",dataset_title))
+    add.files <- choose.files(default = previousfolder, caption = paste0("Select all ",files_type," analysis files for ",project_name))
     
     # loop breaks when user hits cancel
     if (length(add.files) == 0) {
@@ -28,22 +28,22 @@ selectInputFiles <- function(start.dir, output.dir, dataset_title,append = F, fi
   # just in case any files were selected twice
   file_names <- unique(file_names)
   
-  writeLogFile(file_names, output.dir, dataset_title, files_type = files_type)
+  writeLogFile(file_names, output.dir, project_name, files_type = files_type)
 }
 
 
-writeLogFile <- function(file_names, output.dir, dataset_title, files_type) {
+writeLogFile <- function(file_names, output.dir, project_name, files_type) {
   
   # alphabetize/numerically sort file names so that files from same folders will be printed together
   file_names <- sort(file_names)
   
   # create log file name
-  log_file <- file.path(output.dir, paste0(dataset_title,"_files_log_",as.character.Date(Sys.Date()),".txt"))
+  log_file <- file.path(output.dir, paste0(project_name,"_files_log_",as.character.Date(Sys.Date()),".txt"))
   cat("Writing",length(file_names),"files to",basename(log_file),"...\n")
   
   # create the log file
   sink(file = log_file, append = F)
-  cat(paste0(dataset_title," files used for MEA NFA pre-processing for TCPL\n"))
+  cat(paste0(project_name," files used for MEA NFA pre-processing for TCPL\n"))
   cat("Created with the script gather_files-functions.R\n")
   cat("Date created: ")
   cat(as.character.Date(Sys.time()))

@@ -4,7 +4,7 @@
 
 check_existing <- function(path, pattern, pause_between_steps) {
   # save_objects <- c("check_existing","main.output.dir",
-  #                   "dataset_title","pause_between_steps","save_notes_graphs",
+  #                   "project_name","pause_between_steps","save_notes_graphs",
   #                   "default_ControlTreatmentName",
   #                   "different_vehicleControlCompounds",
   #                   "different_vehicleControls",
@@ -44,7 +44,7 @@ check_existing <- function(path, pattern, pause_between_steps) {
 }
 
 setwd(scripts.dir)
-main.output.dir <- file.path(root_output_dir, dataset_title)
+main.output.dir <- file.path(root_output_dir, project_name)
 if (!dir.exists(main.output.dir)) dir.create(main.output.dir)
 
 # select all files needed for analysis
@@ -53,7 +53,7 @@ keep_items <- c(ls(), 'keep_items') # will clear all items except for these afte
 cat("\n- Select files for files_log:\n")
 resp <- check_existing(path = main.output.dir, pattern = "_files_log_", pause_between_steps)
 if(resp %in% c("r","a")) {
-  selectInputFiles(start.dir = dirname(dirname(main.output.dir)), main.output.dir, dataset_title, append = append)
+  selectInputFiles(start.dir = dirname(dirname(main.output.dir)), main.output.dir, project_name, append = append)
   # view summary of files
   file_names <- readLogFile(main.output.dir)
   # cultures <- sort(unique(sapply(strsplit(file_names, "\\\\"), function(x) grep("([Cc]ulture)|([Oo]ntogeny)",x,val = T)[1])))
@@ -124,7 +124,7 @@ cat("\n- Extract the cytotoxicity data from Calculations files:\n")
 resp <- check_existing(path = file.path(main.output.dir, "output"), pattern = "_cytotox", pause_between_steps)
 if (resp %in% c("r","a")) {
   source('cytotox_prep06.R')
-  run_cytotox_functions(basepath = main.output.dir, get_files_from_log = TRUE, filename = paste0(dataset_title,"_cytotox.csv"), 
+  run_cytotox_functions(basepath = main.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
                         append = append)
   rm(list = setdiff(ls(), keep_items))
 }

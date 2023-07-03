@@ -50,25 +50,25 @@ dataset_checks <- function(dat) {
   
   # view all by plate
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "t" & acsn == "CCTE_Shafer_MEA_dev_firing_rate_mean_DIV12"], vertical = T, pch = 1, method = "jitter", las = 2, cex.axis = 0.75,
-             col = "cornflowerblue", main = paste0(dataset_title," NFA Mean Firing Rate DIV12 by Plate"))
+             col = "cornflowerblue", main = paste0(project_name," NFA Mean Firing Rate DIV12 by Plate"))
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "n" & acsn == "CCTE_Shafer_MEA_dev_firing_rate_mean_DIV12"], vertical = T, pch = 19, method = "jitter", las = 2, cex.axis = 0.75,
              add = T)
   legend(x = "topright", legend = c("control","all treated"), col = c("black","cornflowerblue"), pch = c(19,1), bg = "transparent")
   
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "t" & acsn == "CCTE_Shafer_MEA_dev_firing_rate_mean"], vertical = T, pch = 1, method = "jitter", las = 2, cex.axis = 0.75,
-             col = "cornflowerblue", main = paste0(dataset_title," NFA Mean Firing Rate AUC by Plate"))
+             col = "cornflowerblue", main = paste0(project_name," NFA Mean Firing Rate AUC by Plate"))
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "n" & acsn == "CCTE_Shafer_MEA_dev_firing_rate_mean"], vertical = T, pch = 19, method = "jitter", las = 2, cex.axis = 0.75,
              add = T)
   legend(x = "topright", legend = c("control","all treated"), col = c("black","cornflowerblue"), pch = c(19,1), bg = "transparent")
   
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "t" & acsn == "CCTE_Shafer_MEA_dev_active_electrodes_number_DIV12"], vertical = T, pch = 1, method = "jitter", las = 2, cex.axis = 0.75,
-             col = "cornflowerblue", main = paste0(dataset_title," NFA # Active Electrodes DIV12 by Plate"))
+             col = "cornflowerblue", main = paste0(project_name," NFA # Active Electrodes DIV12 by Plate"))
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "n" & acsn == "CCTE_Shafer_MEA_dev_active_electrodes_number_DIV12"], vertical = T, pch = 19, method = "jitter", las = 2, cex.axis = 0.75,
              add = T)
   legend(x = "topright", legend = c("control","all treated"), col = c("black","cornflowerblue"), pch = c(19,1), bg = "transparent")
   
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "t" & acsn == "CCTE_Shafer_MEA_dev_active_electrodes_number"], vertical = T, pch = 1, method = "jitter", las = 2, cex.axis = 0.75,
-             col = "cornflowerblue", main = paste0(dataset_title," NFA # Active Electrodes AUC by Plate"))
+             col = "cornflowerblue", main = paste0(project_name," NFA # Active Electrodes AUC by Plate"))
   stripchart(rval ~ sub("_","\n",apid), dat[wllq == 1 & wllt == "n" & acsn == "CCTE_Shafer_MEA_dev_active_electrodes_number"], vertical = T, pch = 19, method = "jitter", las = 2, cex.axis = 0.75,
              add = T)
   legend(x = "topright", legend = c("control","all treated"), col = c("black","cornflowerblue"), pch = c(19,1), bg = "transparent")
@@ -81,7 +81,7 @@ dataset_checks <- function(dat) {
   
   # view all compounds together by dose
   stripchart(rval ~ conc_grp, plotdat[wllq == 1], vertical = T, pch = 1, method = "jitter", las = 2,
-             main = paste0("Mean Firing Rate AUC by dose for all compounds in ",dataset_title), ylab = "CCTE_Shafer_MEA_dev_firing_rate_mean (AUC)", xlab = "conc")
+             main = paste0("Mean Firing Rate AUC by dose for all compounds in ",project_name), ylab = "CCTE_Shafer_MEA_dev_firing_rate_mean (AUC)", xlab = "conc")
   if (plotdat[, any(wllq==0)])
     stripchart(rval ~ conc_grp, plotdat[wllq == 0], vertical = T, pch = 1, method = "jitter",
                add = T, col = "red")
@@ -106,10 +106,10 @@ dataset_checks <- function(dat) {
   conc_grps <- unique(plotdat$conc_grp)
   plotdat$conc_grp <- factor(plotdat$conc_grp, levels = c(grep("\n",conc_grps,val = T),sort(unique(as.numeric(conc_grps[!grepl("\n",conc_grps)])))), ordered = T)
   stripchart(rval ~ conc_grp, plotdat[wllq == 1 & grepl("AB",acsn)], las = 2,
-             vertical = TRUE, pch = 1, method = "jitter", xlab = "conc", main = paste0("AB Blank-Corrected Values for ",dataset_title,"\nwhere wllq == 1"))
+             vertical = TRUE, pch = 1, method = "jitter", xlab = "conc", main = paste0("AB Blank-Corrected Values for ",project_name,"\nwhere wllq == 1"))
   if (nrow(plotdat[wllq == 1 & grepl("LDH",acsn)]) > 0) {
     stripchart(rval ~ conc_grp, plotdat[wllq == 1 & grepl("LDH",acsn)], las = 2,
-               vertical = TRUE, pch = 1, method = "jitter", xlab = "conc", main = paste0("LDH Blank-Corrected Values for ",dataset_title,"\nwhere wllq == 1"))
+               vertical = TRUE, pch = 1, method = "jitter", xlab = "conc", main = paste0("LDH Blank-Corrected Values for ",project_name,"\nwhere wllq == 1"))
   }
   
   if(remove_spid_col) dat[, spid := NULL]
@@ -145,19 +145,19 @@ dataset_checks_wide <- function(dat, normalized = FALSE, direction = '') {
   if (normalized) {
     # adding section page to distinguish the normalized values
     plot.new()
-    text(0.5, 0.5, labels = paste0(dataset_title, '\nNormalized ', direction, ' AUC Visualizations'), cex = 2)
+    text(0.5, 0.5, labels = paste0(project_name, '\nNormalized ', direction, ' AUC Visualizations'), cex = 2)
   }
   
   # view all by plate
   dat[, apid := paste0(date,"_",Plate.SN)]
   stripchart(meanfiringrate_auc ~ sub("_","\n",apid), dat[wllq == 1 & dose != 0], vertical = T, pch = 1, method = "jitter", las = 2, cex.axis = 0.75,
-             col = "cornflowerblue", main = paste0(dataset_title,if(normalized) paste0(" Normalized ",direction)," Mean Firing Rate AUC by Plate"))
+             col = "cornflowerblue", main = paste0(project_name,if(normalized) paste0(" Normalized ",direction)," Mean Firing Rate AUC by Plate"))
   stripchart(meanfiringrate_auc ~ sub("_","\n",apid), dat[wllq == 1 & dose == 0], vertical = T, pch = 19, method = "jitter", las = 2, cex.axis = 0.75,
              add = T)
   legend(x = "topright", legend = c("control","all treated"), col = c("black","cornflowerblue"), pch = c(19,1), bg = "transparent")
   
   stripchart(nAE_auc ~ sub("_","\n",apid), dat[wllq == 1 & dose != 0], vertical = T, pch = 1, method = "jitter", las = 2, cex.axis = 0.75,
-             col = "cornflowerblue", main = paste0(dataset_title,if(normalized) paste0(" Normalized ",direction)," # Active Electrodes AUC by Plate"))
+             col = "cornflowerblue", main = paste0(project_name,if(normalized) paste0(" Normalized ",direction)," # Active Electrodes AUC by Plate"))
   stripchart(nAE_auc ~ sub("_","\n",apid), dat[wllq == 1 & dose == 0], vertical = T, pch = 19, method = "jitter", las = 2, cex.axis = 0.75,
              add = T)
   legend(x = "topright", legend = c("control","all treated"), col = c("black","cornflowerblue"), pch = c(19,1), bg = "transparent")
@@ -169,7 +169,7 @@ dataset_checks_wide <- function(dat, normalized = FALSE, direction = '') {
   
   # view all compounds together by dose
   stripchart(meanfiringrate_auc ~ conc_grp, dat[wllq == 1], vertical = T, pch = 1, method = "jitter", las = 2,
-             main = paste0(if(normalized) paste0(" Normalized ",direction," "),"Mean Firing Rate AUC by dose for all compounds in ",dataset_title), ylab = paste0(if(normalized) paste0(" Normalized ",direction), 'Mean Firing Rate AUC'), xlab = "conc")
+             main = paste0(if(normalized) paste0(" Normalized ",direction," "),"Mean Firing Rate AUC by dose for all compounds in ",project_name), ylab = paste0(if(normalized) paste0(" Normalized ",direction), 'Mean Firing Rate AUC'), xlab = "conc")
   if (dat[, any(wllq==0)])
     stripchart(meanfiringrate_auc ~ conc_grp, dat[wllq == 0], vertical = T, pch = 1, method = "jitter",
                add = T, col = "red")

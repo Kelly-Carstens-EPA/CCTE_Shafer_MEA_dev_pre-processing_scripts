@@ -16,7 +16,7 @@
 # basepath <- main.output.dir
 
 # set the name of the output file
-# filename = paste0(dataset_title,"_cytotox_longfile.csv")
+# filename = paste0(project_name,"_cytotox_longfile.csv")
 
 # check if the filename already exists first?
 # remake_all <- TRUE

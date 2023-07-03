@@ -9,7 +9,7 @@
 # set location where output file should be created
 basepath <- main.output.dir
 # Set output file name
-filename <- paste0(dataset_title,"_AUC.csv")
+filename <- paste0(project_name,"_AUC.csv")
 get_files_under_basepath <- TRUE
 # set the DIVs that should be included
 use_divs <- c(5,7,9,12) # note that a point of DIV = 2 value = 0 will be added for every endpoint regardless
@@ -260,7 +260,7 @@ all_data <- as.data.frame(all_data)
 all_data$dose <- as.character(signif(all_data$dose, 4)) # 1 more sig fig than is used in TCPL, to ensure more than enough precision
 
 # save a snapshot of the combined prepared data, with the added/interpolated rows where DIV where missing
-write.csv(all_data, file = file.path(basepath,"output",paste0(dataset_title,"_parameters_by_DIV.csv")), row.names = FALSE)
+write.csv(all_data, file = file.path(basepath,"output",paste0(project_name,"_parameters_by_DIV.csv")), row.names = FALSE)
 
 #Replace all NAs with zeros for AUC calculations - This may be undesirable for MEA parameters that are derived from other parameters.
 all_data[is.na(all_data)] <- 0
