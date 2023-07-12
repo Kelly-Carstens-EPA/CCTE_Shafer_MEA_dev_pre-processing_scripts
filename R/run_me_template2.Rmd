@@ -1,115 +1,206 @@
-rm(list=ls()) # clear environment
-graphics.off() # clear plot history
-# ------------------------------------------------------------------------ #
-# USER INPUT
-# ------------------------------------------------------------------------ #
-project_name <- "DNT_NTP2021" # the name for the current dataset, e.g. "name2020" (this should match the name of the folder under 'pre-process_mea_nfa_for_tcpl', e.g. 'Frank2017' or 'ToxCast2016')
-pause_between_steps <- TRUE # probs want to be true when you first run
-save_notes_graphs <- FALSE # Do this after have run thru once, to save a log of the steps. Set pause_between_steps to FALSE if saving notes and graphs for speed
+---
+title: "MEA NFA script to complete pre-processing steps"
+author: ""
+date: ""
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    df_print: kable
+---
 
-spidmap_file <- ""
-spid_sheet <- ""
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-project.dir <- "L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021" # project main folder (where will look for README files)
-scripts.dir <- "C:/Users/acarpe01/Documents/local_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/R" # update to the folder where the scripts are located
-root_output_dir <- "C:/Users/acarpe01/Documents/local_repos/data_process_prac" # where the project_name folder will be created
+# Set up
 
-update_concs_without_prompt <- FALSE
+## Load libraries 
 
-get_new_files_log <- FALSE # using a dummy created one, for now
-# ------------------------------------------------------------------------ #
-# END USER INPUT
-# ------------------------------------------------------------------------ #
-
-
+```{r}
+# General packages
 library(data.table)
 library(openxlsx)
-library(RMySQL)
+library(ggplot2)
 library(stringi)
+# library(RMySQL) # only needed if querying invitrodb directly
+
+# Packages for parameter calculation scripts/functions
+library(rhdf5) # used to create and read h5files, which is currently used as input to calculate all parameter values
+library(sjemea, exclude = c('construct.s','map2list')) # original package with functions to calculate parameters. Excluding objects that will be loaded with the meadq package
+library(meadq) # package with wrapper and/or modifications to several functions in sjemea
+library(pracma, exclude = 'peaks') # used for MI and trapz function for AUC calculation. Excluding the 'peaks' function because we want the 'peaks function from sjemea
+library(compiler) # used for MI calculation
+library(gtools, exclude = 'logit') # used for MI  calculation. Excluding logit becasue conflicts with pracma package
+
+print(sessionInfo())
+```
+
+
+## Project variables definitions 
+
+```{r}
+project_name <- "Test2023" # e.g. "name2020"
+
+spidmap_file <- "" # path to file that maps treatment names to sample IDs (optional)
+spid_sheet <- "" # desired sheet in spidmap_file (can be numeric or the sheet name) (optional)
+
+project.input.dir <- "L:/Lab/NHEERL_MEA/Project - DNT Test Set 2021 NTP" # main folder of experimental data for project
+scripts.dir <- "C:/Users/acarpe01/Documents/local_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/R" # directory containing the pre-processing scripts for the NFA
+root.output.dir <- "C:/Users/acarpe01/Documents/local_repos/data_process_prac" # main directory where the output should be saved
+project.output.dir <- file.path(root.output.dir, project_name)
+```
+
+If the scripts.dir is managed with version control, check that there are no local or uncommitted modifications, and then enter the following information to record the branch and most recent commit to the pre-processing scripts repository: 
+
+* **branch**: <enter branch>
+* **commit date**: <enter commit date>
+* **commit message**: <enter commit message>
+* **commit SHA**: <enter commit SHA>
+* **link to scripts**: <GitHub link followed by commit SHA>
+
+```{r}
+# Source scripts containing functions that may be used throughout
+
+# Functions to read and write files log
+source(file.path(scripts.dir, 'writeFilesLog.R'))
+source(file.path(scripts.dir, 'readFilesLog.R'))
+
+objects.to.keep <- ls()
+```
+
+
+# Check for READMEs and other well quality notes in project folder 
+
+Scan for txt files with notes that might affect dosing, wllq
+```{r}
+txt.files <- list.files(project.input.dir, pattern = '\\.txt', recursive = T, full.names = T)
+```
+
+View any README .txt files
+```{r}
+# Read in the READMEs
+readmes.filename <- txt.files[grepl('read( )*me',tolower(txt.files))]
+readmes.body <- sapply(readmes.filename, scan, what = character(), sep = '\n', quiet = T) # read the text files
+readmes.body <- sapply(readmes.body, paste0, collapse = "\n") # Make each note 1 string
+
+# If the README file only contains this generic text, then don't need to view
+# (modify as needed)
+generic.readme.text <- 'The following wells have been discarded from the Alamar Blue assay due to returning results outside the acceptable bounds of the assay:
+X
+
+The following wells have been discarded from the LDH assay due to returning results outside the acceptable bounds of the assay:
+X'
+readmes.body <- readmes.body[readmes.body != generic.readme.text]
+
+# View the readmes that have any non-generic text
+for (i in 1:length(readmes.body)) {
+  cat(i,'\n')
+  cat(names(readmes.body)[i],'\n')
+  cat(readmes.body[i])
+  cat('\n\n')
+}
+```
+
+
+Check for any other .txt files that appear may have relevant notes
+
+```{r}
+cat(setdiff(txt.files,readmes.filename), sep = "\n")
+```
+
+
+# Identify source experimental and meta data files
+
+Get the list of group folders from which you want to extract data
+```{r}
+group.folders <- list.files(path = project.input.dir, 
+                            pattern = ".*[0-9]{8}.*", 
+                            full.names = T, 
+                            recursive = F)
+group.folders
+```
+
+For each group folder, get the desired files (files containing cytotoxicity data, meta data, and spike list files) and save in the vector 'all.files'
+
+```{r}
+# Function to extract desired files for a given culture that is organization in the standard structure
+# Modify as needed for the given project
+get_NFA_files_by_group <- function(group.folderi) {
+  cytotox.files <- list.files(path = group.folderi, 
+                              pattern = '(Calculations)|(Summary)', 
+                              full.names = T)
+  mfiles <- list.files(path = group.folderi,
+                       pattern = 'MaestroExperimentLog',
+                       full.names = T, recursive = T)
+  slists <- list.files(path = group.folderi, 
+                       pattern = '_spike_list\\.csv', 
+                       full.names = T, recursive = T)
+  filesi <- c(cytotox.files, mfiles, slists)
+  return(filesi)
+}
+
+# For each culture, apply the above function to get the list of files
+all.files <- c()
+for (group.folderi in group.folders) {
+  all.files <- c(all.files, get_NFA_files_by_group(group.folderi))
+}
+
+# Basic cleaning:
+# Remove files dummy "ghost" files that contain "~$" in the file name
+all.files <- Filter(function(filei) !grepl('\\Q~$\\E',filei), all.files)
+# Remove files that contain the word "deprecated" anywhere in the file name
+all.files <- Filter(function(filei) !grepl('deprecated',tolower(filei)), all.files)
+
+# Additional filters as needed:
+
+# Total number of files
+length(all.files)
+```
+
+Check for the expected number of files per group
+
+```{r}
+for (group.folder in group.folders) {
+  cat("\n\n",group.folder,"\n",sep = "")
+  group.folder <- sub("\\(","\\\\(",group.folder)
+  group.folder <- sub("\\)","\\\\)",group.folder)
+  group.folder.files <- grep(group.folder, all.files, fixed = T, val = T)
+  
+  cat("Calculations/Summary files: ")
+  cat(sum(grepl("(Calculations)|(Summary)",group.folder.files)))
+  cat(' (',paste0(basename(grep("(Calculations)|(Summary)",group.folder.files, val = T)),collapse = ", "),')\n')
+  
+  cat("Number of MaestroExperimentLog files: ")
+  cat(sum(grepl("MaestroExperimentLog",group.folder.files)),"\n")
+  
+  cat("Number of spike list files: ")
+  cat(sum(grepl("_spike_list",group.folder.files)),"\n")
+  
+}
+```
+
+Save a log of the selected source files for reference
+
+```{r}
+writeFilesLog(all.files, files.log.dir = project.output.dir, project_name = project_name)
+rm(list = setdiff(ls(), objects.to.keep))
+```
+
 
 
 # Run main steps ----------------------------------------------------------
-
-# create a summary log file and store the
-if(save_notes_graphs) {
-  sink(file = file.path(root_output_dir, project_name, paste0(project_name,"_run_log_",as.character.Date(Sys.Date()),".txt")))
-  cat("Output from the script run_me_",project_name,".R\n",sep="")
-  cat("Date Ran:",as.character.Date(Sys.Date()),"\n")
-  cat(R.version.string,"\n")
-  cat("USER INPUT settings:\n")
-  print(sapply(ls(), get, envir = .GlobalEnv))
-  graphics.off()
-  pdf(file = file.path(root_output_dir, project_name, paste0(project_name,"_summary_plots_",as.character.Date(Sys.Date()),".pdf")), width = 10, height = 8)
-}
-
-# # Scan for readme's that might affect dosing, wllq
-# txt.files <- list.files(project.dir, pattern = '\\.txt', recursive = T, full.names = T)
-# readmes <- txt.files[grepl('read( )*me',tolower(txt.files))]
-# for (readme in readmes) {
-#   cat(dirname(readme),'\n')
-#   cat(scan(readme, what = character(), sep = '\n', quiet = T), sep = '\n')
-#   cat('\n')
-# }
-# length(readmes) # 25
-# readmes.list <- lapply(readmes, function(readme) scan(readme, what = character(), sep = '\n', quiet = T))
-# library(stringi)
-# # removing the string that apppears in every file
-# readmes.list.unique <- lapply(readmes.list,
-#                               function(readme) setdiff(readme,
-#                                                        c("The following wells have been discarded from the Alamar Blue assay due to returning results outside the acceptable bounds of the assay:",
-#                                                          "X",
-#                                                          "The following wells have been discarded from the LDH assay due to returning results outside the acceptable bounds of the assay:")))
-# names(readmes.list.unique) <- basename(dirname(readmes))
-# readmes.list.unique[which(lapply(readmes.list.unique, length) != 0)]
-
-
-# > Automated way to get files --------------------------------------------
-if (get_new_files_log) {
-  source(file.path(scripts.dir, 'gather_files_functions.R'))
-
-  get_NFA_standard_structue <- function(culture.folderi) {
-    cyto.files <- list.files(path = culture.folderi, pattern = '(Calculations)|(Summary)', full.names = T)
-    plate.dirs <- list.files(path = culture.folderi, pattern = '^(MW)*[0-9\\-]{7}$', full.names = T)
-    mfiles <- list.files(path = culture.folderi, pattern = 'MaestroExperimentLog', full.names = T, recursive = T)
-    slists <- list.files(path = culture.folderi, pattern = '_spike_list\\.csv', full.names = T, recursive = T)
-    filesi <- c(cyto.files, mfiles, slists)
-    return(filesi)
-  }
-
-  culture.folders <- list.files(path = project.dir, pattern = "[0-9]{8}", full.names = T, recursive = F)
-  all.files <- c()
-  for (culture.folderi in culture.folders) {
-    all.files <- c(all.files, get_NFA_standard_structue(culture.folderi))
-  }
-
-  #Basic cleaning
-  all.files <- Filter(function(filei) !grepl('\\Q~$\\E',filei), all.files)
-  all.files <- Filter(function(filei) !grepl('deprecated',tolower(filei)), all.files)
-  length(all.files)
-  # should be 20 groups * (1 Calc file + 3 plates * (4 DIV + 1 maestro exp log file))
-  20*(1+3*(4+1))
-  # [1] 320
-  length(all.files)
-  # 320, cool!
-
-  # Save the files log
-  writeLogFile(all.files, output.dir = file.path(root_output_dir, project_name), project_name, files_type = '')
-  # Writing 320 files to DNT_NTP2021_files_log_2022-05-10.txt ...
-  # [1] "L:/Lab/NHEERL_MEA/Carpenter_Amy/pre-process_mea_nfa_for_tcpl/DNT_NTP2021/DNT_NTP2021_files_log_2022-05-10.txt is ready."
-  rm(all.files, culture.folders, readmes, readmes.list, readmes.list.unique)
-}
-
-
-# Run main steps ----------------------------------------------------------
-
+```{r}
 # run the main steps
 source(file.path(scripts.dir, 'source_steps.R'))
-rm(list = setdiff(ls(),c('project_name','pause_between_steps','save_notes_graphs','default_ControlTreatmentName','spidmap_file','spid_sheet','project.dir','scripts.dir','root_output_dir','update_concs_without_prompt','get_new_files_log')))
-setwd(root_output_dir)
+rm(list = setdiff(ls(),c('project_name','pause_between_steps','save_notes_graphs','default_ControlTreatmentName','spidmap_file','spid_sheet','project.input.dir','scripts.dir','root.output.dir','update_concs_without_prompt','get_new_files_log')))
+setwd(root.output.dir)
 
 # run tcpl_MEA_dev_AUC
 source(file.path(scripts.dir, 'tcpl_MEA_dev_AUC.R'))
-dat <- tcpl_MEA_dev_AUC(basepath = file.path(root_output_dir,project_name), project_name)
+dat <- tcpl_MEA_dev_AUC(basepath = file.path(root.output.dir,project_name), project_name)
 # cytotox data does not have units. Will fill with NA
 # long-format data is ready.
 
@@ -330,7 +421,7 @@ spidmap[treatment %in% unique(dat$treatment), .N, by = .(treatment)][N > 1] # ch
 
 # update treatment names with entries in "supplemental_mea_treatment_name_map.csv" corresponding to dataset
 # (treatment -> "mea_treatment_name", "updated_treatment_name" column will match "PREFERRED_NAME"
-# dat <- update_treatment_names(dat, root_output_dir, project_name)
+# dat <- update_treatment_names(dat, root.output.dir, project_name)
 
 # assign spids
 # dat <- check_and_assign_spids(dat, spidmap)
@@ -370,7 +461,7 @@ dat[grepl('could not be determined',footnote), .N, by = .(treatment, footnote)]
 # 9 substances
 dat[footnote == 'Coded Plate Map stock conc <= 10. Exact concentration could not be determined.',
     wllq_notes_by_well := paste0(ifelse(is.na(wllq_notes_by_well) | wllq_notes_by_well == '', '', paste0(wllq_notes_by_well,'; ')),
-                         footnote)]
+                                 footnote)]
 
 
 
@@ -1147,7 +1238,7 @@ dat[, c('culture','conc_calc_file','conc_calc_file_log10','dilution_cndx_multipl
 setkey(dat, NULL)
 description <- paste0('DNTP MEA NFA prepared data
 Date Ran: ',as.character.Date(Sys.Date()))
-save(dat, description, file = file.path(root_output_dir, project_name, "output", paste0(project_name,"_longfile.RData")))
+save(dat, description, file = file.path(root.output.dir, project_name, "output", paste0(project_name,"_longfile.RData")))
 rm(dat)
 
 cat("\nDone!\n")

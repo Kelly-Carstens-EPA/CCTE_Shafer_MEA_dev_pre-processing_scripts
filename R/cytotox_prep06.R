@@ -345,9 +345,9 @@ run_cytotox_functions <- function(basepath, get_files_from_log = TRUE, filename 
 
   # get the source files, either from log file or by selecting
   if(get_files_from_log) {
-    cytoFiles <- readLogFile(basepath, files_type = "Calculations")
-    cytoFiles <- c(cytoFiles, readLogFile(basepath, files_type = "Summary"))
-    if(copy_maestro_exp_log_treatments) masterChemFiles <- readLogFile(basepath, files_type = "MaestroExperimentLog")
+    cytoFiles <- readFilesLog(basepath, files_type = "Calculations")
+    cytoFiles <- c(cytoFiles, readFilesLog(basepath, files_type = "Summary"))
+    if(copy_maestro_exp_log_treatments) masterChemFiles <- readFilesLog(basepath, files_type = "MaestroExperimentLog")
     else masterChemFiles <- c()
   }
   else {

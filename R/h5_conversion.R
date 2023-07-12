@@ -6,7 +6,7 @@ library(rhdf5)
 library(meadq)
 
 #get files
-analysis <- readLogFile(main.output.dir, files_type = "spike_list")
+analysis <- readFilesLog(main.output.dir, files_type = "spike_list")
 spkListFiles <- sort(analysis)
 
 ###################################################################################
@@ -42,7 +42,7 @@ if (!remake_all) {
 }
 
 #get master chemical lists
-masterChemFiles <- readLogFile(main.output.dir, files_type = "MaestroExperimentLog")
+masterChemFiles <- readFilesLog(main.output.dir, files_type = "MaestroExperimentLog")
 
 if (length(spkListFiles)/4 > length(masterChemFiles)) {
   cat("Only",length(masterChemFiles), "master experiment log file selected for",length(spkListFiles),"spike list files.\n")

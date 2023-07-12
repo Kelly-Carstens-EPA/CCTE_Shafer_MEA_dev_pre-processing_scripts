@@ -6,7 +6,7 @@
 #load necessary packages
 library(sjemea)
 library(rhdf5)
-library(lattice)
+# library(lattice) # no longer needed
 # library(tcltk) # tk_choose.files() is intolerant of spaces in file names
 library(meadq)
 

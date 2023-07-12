@@ -47,33 +47,6 @@ setwd(scripts.dir)
 main.output.dir <- file.path(root_output_dir, project_name)
 if (!dir.exists(main.output.dir)) dir.create(main.output.dir)
 
-# select all files needed for analysis
-source('gather_files_functions.R')
-keep_items <- c(ls(), 'keep_items') # will clear all items except for these after each step
-cat("\n- Select files for files_log:\n")
-resp <- check_existing(path = main.output.dir, pattern = "_files_log_", pause_between_steps)
-if(resp %in% c("r","a")) {
-  selectInputFiles(start.dir = dirname(dirname(main.output.dir)), main.output.dir, project_name, append = append)
-  # view summary of files
-  file_names <- readLogFile(main.output.dir)
-  # cultures <- sort(unique(sapply(strsplit(file_names, "\\\\"), function(x) grep("([Cc]ulture)|([Oo]ntogeny)",x,val = T)[1])))
-  # cultures <- lapply(cultures, function(x) ifelse(length(x)==0, "", x)) # for datasets that don't have Culture tag phrase
-  cultures <- unique(stri_extract(file_names, regex = '[0-9]{8}'))
-  for (culture in cultures) {
-    cat("\n\n",culture,"\n",sep = "")
-    culture <- sub("\\(","\\\\(",culture)
-    culture <- sub("\\)","\\\\)",culture)
-    cat("Number of spike list files: ")
-    cat(sum(grepl(culture, file_names) & grepl("_spike_list",file_names)),"\n")
-    cat("Number of Master chem lists: ")
-    cat(sum(grepl(culture, file_names) & grepl("MaestroExperimentLog",file_names)),"\n")
-    cat("Calculations/Summary files:\n")
-    cat(basename(file_names[grepl(culture, file_names) & grepl("(Calculations)|(Summary)",file_names)]),sep = ", ")
-  }
-  cat("\n")
-  rm(list = setdiff(ls(), keep_items))
-}
-
 # h5_conversion.R
 cat("\n- Create h5 files:\n")
 resp <- check_existing(path = file.path(main.output.dir,"h5files"), pattern = "\\.h5", pause_between_steps)

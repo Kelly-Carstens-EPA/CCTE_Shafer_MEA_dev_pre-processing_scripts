@@ -14,7 +14,7 @@ spidmap_file <- ""
 spid_sheet <- ""
 
 scripts.dir <- "L:/Lab/NHEERL_MEA/Carpenter_Amy/pre-process_mea_nfa_for_tcpl/nfa-spike-list-to-mc0-r-scripts/R"
-root_output_dir <- "L:/Lab/NHEERL_MEA/Carpenter_Amy/pre-process_mea_nfa_for_tcpl" # where the project_name folder will be created
+root.output.dir <- "L:/Lab/NHEERL_MEA/Carpenter_Amy/pre-process_mea_nfa_for_tcpl" # where the project_name folder will be created
 
 update_concs_without_prompt <- TRUE
 ###################################################################################
@@ -26,14 +26,14 @@ library(openxlsx)
 
 # create a summary log file and store the 
 if(save_notes_graphs) {
-  sink(file = file.path(root_output_dir, project_name, paste0(project_name,"_run_log_",as.character.Date(Sys.Date()),".txt")), append = F)
+  sink(file = file.path(root.output.dir, project_name, paste0(project_name,"_run_log_",as.character.Date(Sys.Date()),".txt")), append = F)
   cat("Output from the script run_me_",project_name,".R\n",sep="")
   cat("Date Ran:",as.character.Date(Sys.Date()),"\n")
   cat(R.version.string,"\n")
   cat("USER INPUT settings:\n")
   print(sapply(ls(), get, envir = .GlobalEnv))
   graphics.off()
-  pdf(file = file.path(root_output_dir, project_name, paste0(project_name,"_summary_plots_",as.character.Date(Sys.Date()),".pdf")), width = 10, height = 8)
+  pdf(file = file.path(root.output.dir, project_name, paste0(project_name,"_summary_plots_",as.character.Date(Sys.Date()),".pdf")), width = 10, height = 8)
 }
 
 
@@ -43,7 +43,7 @@ source(file.path(scripts.dir, 'source_steps.R'))
 
 # run tcpl_MEA_dev_AUC
 source(file.path(scripts.dir, 'tcpl_MEA_dev_AUC.R'))
-dat <- tcpl_MEA_dev_AUC(basepath = file.path(root_output_dir,project_name), project_name)
+dat <- tcpl_MEA_dev_AUC(basepath = file.path(root.output.dir,project_name), project_name)
 
 
 # change untreated wells to Control Treatment ------------------------------------
@@ -118,7 +118,7 @@ spidmap[treatment %in% unique(dat$treatment), .N, by = .(treatment)][N > 1] # ch
 
 # update treatment names with entries in "supplemental_mea_treatment_name_map.csv" corresponding to dataset
 # (treatment -> "mea_treatment_name", "updated_treatment_name" column will match "PREFERRED_NAME"
-dat <- update_treatment_names(dat, root_output_dir, project_name)
+dat <- update_treatment_names(dat, root.output.dir, project_name)
 
 # assign spids
 dat <- check_and_assign_spids(dat, spidmap)
@@ -250,7 +250,7 @@ dat <- cdat
 
 # save dat and graphs
 setkey(dat, NULL)
-save(dat, file = file.path(root_output_dir, project_name, "output", paste0(project_name,"_longfile.RData")))
+save(dat, file = file.path(root.output.dir, project_name, "output", paste0(project_name,"_longfile.RData")))
 rm(dat)
 
 if(save_notes_graphs) {
