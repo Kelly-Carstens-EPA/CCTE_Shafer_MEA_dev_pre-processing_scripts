@@ -3,18 +3,18 @@
 # 3-14-2014
 # purpose: to create a burst data automatically from package
 
-#load necessary packages
-library(sjemea)
-library(rhdf5)
-# library(lattice) # no longer needed
-# library(tcltk) # tk_choose.files() is intolerant of spaces in file names
-library(meadq)
+create_ont_csv<-function(project.output.dir, remake_all = TRUE, get_h5Files_under_project.output.dir = TRUE, save.rdata = FALSE, param.file = NULL, AEfile = FALSE){  
 
-create_ont_csv<-function(basepath, get_h5Files_under_basepath = TRUE, save.rdata = FALSE, param.file = NULL, AEfile = FALSE, remake_all = TRUE){  
-
+  #load necessary packages
+  library(sjemea)
+  library(rhdf5)
+  # library(lattice) # no longer needed
+  # library(tcltk) # tk_choose.files() is intolerant of spaces in file names
+  library(meadq)
+  
   cat("\nStarting parameter calculations...\n")
-  if (get_h5Files_under_basepath) {
-    h5Files <- list.files(path = file.path(basepath, "h5Files"), pattern = "\\.h5$", full.names = TRUE, recursive = FALSE)
+  if (get_h5Files_under_project.output.dir) {
+    h5Files <- list.files(path = file.path(project.output.dir, "h5Files"), pattern = "\\.h5$", full.names = TRUE, recursive = FALSE)
   }
   else {
     h5Files<-sort(choose.files(caption="Select .h5 Files") )
@@ -22,8 +22,7 @@ create_ont_csv<-function(basepath, get_h5Files_under_basepath = TRUE, save.rdata
   
   #create directories
   assign("h5.dir", dirname(h5Files[1]), envir = .GlobalEnv )
-  if(basepath == "use_h5Files_dir") basepath <- dirname(h5.dir)
-  assign("prepared.dir", paste(basepath, "prepared_data", sep="/"), envir = .GlobalEnv )
+  assign("prepared.dir", paste(project.output.dir, "prepared_data", sep="/"), envir = .GlobalEnv )
   if(!dir.exists(prepared.dir)) dir.create( prepared.dir )
 
   # output file names
@@ -44,9 +43,7 @@ create_ont_csv<-function(basepath, get_h5Files_under_basepath = TRUE, save.rdata
   }
 
   create_burst_ont_Data(h5Files=h5Files, save.rdata=save.rdata, AEfile=AEfile, remake_all = remake_all)
-
-} # end of create_ont_csv.R
-
-
-# Execute the function
-# create_ont_csv()
+  
+  cat('Prepared data files are ready under',prepared.dir,'\n')
+  
+}

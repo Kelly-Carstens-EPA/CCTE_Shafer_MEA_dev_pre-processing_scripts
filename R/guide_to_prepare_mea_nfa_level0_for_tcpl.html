@@ -1624,29 +1624,87 @@ Pipeline</h1>
 ##  [9] jquerylib_0.1.4 bslib_0.4.2     rmarkdown_2.20  tools_4.2.1    
 ## [13] xfun_0.36       yaml_2.3.6      fastmap_1.1.0   compiler_4.2.1 
 ## [17] htmltools_0.5.4 knitr_1.42      sass_0.4.5</code></pre>
-<div id="next-steps" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Next steps</h1>
+<div id="known-issues-with-the-pre-processing-workflow" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Known issues with the
+pre-processing workflow</h1>
 <ul>
-<li>Confirm that what I have so far compiles decently &amp; looks
-okay</li>
-<li>Review recent updates to the HCI data pre-processing. Note any to
-integrate here or in run_me.</li>
+<li>Would be better to read the cytotoxicity data from the raw files
+directly… ugh. This is semi-critical but rare. Maybe see what you do for
+the acute? Theoretically this coudl really save some steps…</li>
+<li>The source files
+<ul>
+<li>Background: All experimental and meta data sources files used to
+pre-process data for the ToxCast Pipeline will ultimately be saved in
+Clowder (to Amy’s knowledge). With the current pre-processing approach,
+the file paths to the source files used are recorded in the
+files_log.txt. However, these source files could be modified after the
+pre-processing is completed. Therefore, theoretically the source files
+should be copied to a stable location before running the pre-processing
+scripts. However, this seems like it could result in a lot of data
+copying, especially if the files will need to be copied again to the
+ToxCast_data drive. Going forward, work with the ToxCast data team to
+determine the best path, and check for any modifications to the source
+files that occurred after pre-processing before sharing with the ToxCast
+team.</li>
+</ul></li>
+<li>The ‘srcf’ columns:
+<ul>
+<li>Background: The mc0 and sc0 files that are loaded into the ToxCast
+pipeline are expected to include the column ‘srcf’ (read “source file”).
+This column should contain the name of the file that was used to
+generate the data</li>
+<li>However, for the NFA, usually multiple source files are used to
+generate the numeric and meta data for a single data row</li>
+<li>Thus, a solution is to package the source files into .zip files
+(e.g., 1 for each plate for the MEA endpoints). These .zip files would
+become the new ‘srcf’. This solution was proposed by Jason Brown to
+address a similar issue for the HCI data.</li>
+</ul></li>
+</ul>
+</div>
+<div id="completed" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Completed</h1>
+<ul>
 <li>Quickly search for old notes of things to do for NFA / general
 pre-processing. Triage those somewhere where I will seem them. Goal is
 to priortize (noting only have so much time left!)</li>
-<li>Go through the run_me and make this guide actually follow that!</li>
-<li>To update in scripts as you go</li>
+<li>Making this an RMD -&gt; going to do it!</li>
+</ul>
+</div>
+<div id="next-steps" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Next steps</h1>
+<p>*** Monday = minimally viable product!! ********* COB - have
+something that will work, with known issues / bugs / to-d articulated at
+the top, in such a way that Man/Kelly could interpret</p>
+<ul>
+<li>Go through the run_me, make it good, and make this guide actually
+follow that! (time to go line by line &amp; make it work!!)
+<ul>
+<li>Make it a working RMD as you go!</li>
+<li>Review recent updates to the HCI data pre-processing. Note any to
+integrate here or in run_me.</li>
+<li>Cross check template with most recent NFA run_me that has been
+ran</li>
+</ul></li>
+<li>To update in scripts as you go
+<ul>
+<li>Confirm that package load order is okay</li>
 <li>well quality notes - updated name &amp; format of wllq notes tables
 (see how doing it for the HCI!)</li>
 <li>make sure include functionality to merge wllq notes / wllq within
 and across tables</li>
 <li>check back with the notes template to confirm that instructions
 align with function</li>
+</ul></li>
+<li>See “to do now” in shafer lab pre-pro, documents, NFA pre-pro to do
+Now section for any funtionality notes to address now.</li>
 <li>See neat updates from e.g., TSCA2019 for handling larger datasets
 for documenting wllq…? (could I triage to later if there is more
 time?)</li>
 <li>Would this run_me work for sc too? Give some hints of what to do for
 M if she encounters that.</li>
+<li>Update/revisit/confirm the detaisl on parameter calculations? at
+least save that somewhere</li>
 </ul>
 <p><strong>Checky-checky stuff</strong>:</p>
 <ul>
@@ -1671,8 +1729,8 @@ just have to select the “wide” version</p>
 collection step. Console will say ‘user elected to stop’. This is fine,
 you can move on.</p>
 </div>
-<div id="abbreviations" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Abbreviations</h1>
+<div id="abbreviations" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Abbreviations</h1>
 <div class="kable-table">
 <table>
 <thead>
@@ -1683,6 +1741,10 @@ you can move on.</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">MCL or Master Chemical List</td>
+<td align="left">MaestroExperimentLog file</td>
+</tr>
+<tr class="even">
 <td align="left">NFA</td>
 <td align="left">Network Formation Assay</td>
 </tr>
@@ -1690,8 +1752,70 @@ you can move on.</p>
 </table>
 </div>
 </div>
-<div id="overview-of-the-process" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Overview of the
+<div id="notes" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Notes</h1>
+<ul>
+<li>This document and the run_me_template.Rmd are meant to be living
+documents - update them as needed as the process evolves!</li>
+<li>Some things will be shfaer lab specific… I”M thinking of jsut givign
+this out to the public as-is, and people can adapt as needed (bc there
+are so many notes here that the average user would need, e.g., to ignore
+the ‘no network spikes found’ warning)</li>
+</ul>
+</div>
+<div id="r-things-id-suggest-manasvinee-learn" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> R things I’d suggest
+Manasvinee learn</h1>
+<ul>
+<li>= vs == vs &lt;-</li>
+<li>grepl and grep</li>
+<li>subsetting a list with [] and either integers or boolean</li>
+<li>stringi, regex</li>
+<li>boolean**</li>
+<li>other data types (vectors vs list)</li>
+<li>for loops!</li>
+<li>functions</li>
+<li>sapply, lapply</li>
+</ul>
+</div>
+<div id="potentially-helpful-rmd-tips" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Potentially helpful RMD
+tips</h1>
+<ul>
+<li>For any code chunk that you have completed and that you don’t want
+to have to run again, you can set R chunk options to
+<code>eval = FALSE</code>.</li>
+<li>When you re-open the run_me after restarting RStudio (aka Posit) you
+resume from where you left off by running all code chunk above where you
+left off. Go to the current code chunk, and click the triangle pointing
+down or type Ctrl + alt + shift + P.</li>
+<li>If is runnign really slow from the .Rproj on the L drive, you can
+create a .Rproj on your local machine and open the .Rmd from there</li>
+</ul>
+</div>
+<div id="potentially-helpful-nfa-specific-notes" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Potentially helpful
+NFA-specific notes</h1>
+<ul>
+<li>Background on sjemea, then meadq made on top of that (links). Then i
+made some functions that replace some of the ones from meadq. So… there
+are 3 places where functions may reside where may have to debug</li>
+</ul>
+</div>
+<div id="notes-to-kathleen" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Notes to Kathleen</h1>
+<div id="maestro-experiment-log" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> maestro experiment
+log</h2>
+<ul>
+<li>Please keep the phrase “MaestroExperimentLog” in these files</li>
+<li>spike list files are matched to the maestro experiment log by the
+present of the culturedate_platenumber[_ ]. OKay?</li>
+</ul>
+</div>
+</div>
+<div id="overview-of-the-process" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Overview of the
 process</h1>
 <p>This document outlines the process of transforming the recordings
 from a Microelectrode Array Network Formation Assay into an “mc0” file
@@ -1704,8 +1828,8 @@ across each DIV</li>
 activity metrics for 17 endpoints</li>
 </ul>
 </div>
-<div id="setting-up-the-pre-processing-project-folder" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Setting up the
+<div id="setting-up-the-pre-processing-project-folder" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Setting up the
 pre-processing project folder</h1>
 <ul>
 <li>Define the project name for the project (usually the name of the
@@ -1716,8 +1840,8 @@ e.g. “PFAS2018”). Don’t use any spaces.</li>
 Rename the copy of the folder with the project name.</li>
 </ul>
 </div>
-<div id="prepare-notebook-section" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Prepare notebook
+<div id="prepare-notebook-section" class="section level1" number="12">
+<h1><span class="header-section-number">12</span> Prepare notebook
 section</h1>
 <ul>
 <li>Open the pre-processing notebook for the NFA:
@@ -1729,8 +1853,8 @@ save email records as you pre-process the data. Review the suggested
 usage of this notebook in the “Overview” page.</li>
 </ul>
 </div>
-<div id="check-out-the-project-folder" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Check out the project
+<div id="check-out-the-project-folder" class="section level1" number="13">
+<h1><span class="header-section-number">13</span> Check out the project
 folder</h1>
 <p>Familiarize yourself with the project folder. Get a sense of where
 all of the culture folders are located, how many there are, which are
@@ -1739,9 +1863,9 @@ single- and which are multiple-concentration screens, etc.</p>
 were used for the analysis, and which were excluded (because of quality
 concerns). See “Experimental Summary of Data” file if present.</p>
 </div>
-<div id="review-lab-notebook-for-well-quality-notes" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Review lab notebook for
-well quality notes</h1>
+<div id="review-lab-notebook-for-well-quality-notes" class="section level1" number="14">
+<h1><span class="header-section-number">14</span> Review lab notebook
+for well quality notes</h1>
 <ul>
 <li>Read through the lab notebook for well quality notes (usually you
 can just scan for any hand-written notes)</li>
@@ -1753,8 +1877,8 @@ DMSO</li>
 described below</li>
 </ul>
 </div>
-<div id="adjust-well-quality-or-add-well-quality-notes" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Adjust well quality or
+<div id="adjust-well-quality-or-add-well-quality-notes" class="section level1" number="15">
+<h1><span class="header-section-number">15</span> Adjust well quality or
 add well quality notes</h1>
 <p><strong>Background</strong>: Every level 0 table processed with the
 ToxCast pipeline must contain a binary ‘wllq’ column (read “well
@@ -1769,8 +1893,8 @@ used for internal record-keeping and follow-up analyses.</p>
 <p>There are 2 ways to set the wllq to 0 or add a well quality note
 (described below). Either option can be used; choose whichever option is
 easiest for each wllq situation.</p>
-<div id="update-the-wllq-when-the-well-id-is-known" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> Update the wllq when
+<div id="update-the-wllq-when-the-well-id-is-known" class="section level2" number="15.1">
+<h2><span class="header-section-number">15.1</span> Update the wllq when
 the well ID is known</h2>
 <p>For wells where you know the specific plate, well and (optionally)
 DIV that are affected: Enter wells that should be excluded from the
@@ -1845,8 +1969,8 @@ learned about the well quality note)</td>
 </table>
 </div>
 </div>
-<div id="update-the-wllq-when-the-treatment-is-known" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> Update the wllq when
+<div id="update-the-wllq-when-the-treatment-is-known" class="section level2" number="15.2">
+<h2><span class="header-section-number">15.2</span> Update the wllq when
 the treatment is known</h2>
 <p>For wells where you know the treatment, culture date, and
 (optionally) concentration index that are affected: Enter info in the
@@ -1922,8 +2046,8 @@ learned about the well quality note)</td>
 </table>
 </div>
 </div>
-<div id="notes" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> Notes</h2>
+<div id="notes-1" class="section level2" number="15.3">
+<h2><span class="header-section-number">15.3</span> Notes</h2>
 <p>It is okay if there are multiple rows in either well quality notes
 table affect the same well. (This may occur if e.g., all wells on plate
 X were affected because the plate was shaken and an individual well on
@@ -1931,8 +2055,8 @@ plate X had a contamination). The scripts will collapse these notes and
 take the minimum wllq for each well.</p>
 </div>
 </div>
-<div id="determine-if-any-samples-ids-need-to-be-registered" class="section level1" number="9">
-<h1><span class="header-section-number">9</span> Determine if any
+<div id="determine-if-any-samples-ids-need-to-be-registered" class="section level1" number="16">
+<h1><span class="header-section-number">16</span> Determine if any
 samples IDs need to be registered</h1>
 <p><strong>Background</strong>: In order to process the data with the
 EPA’s ToxCast pipeline and loaded into invitrodb, every treatment must
@@ -1944,30 +2068,32 @@ The sample ID column is often named “EPA_SAMPLE_ID” or something
 similar.</p>
 <p>If the sample IDs for a given project have not been registered
 (whether the test compounds or control compound samples created in the
-lab for which we want a TCPL to make a hit call determination), ask the
+lab for which we want TCPL to make a hit call determination), ask the
 product owner of ChemTrack to register the samples. For each compound,
 provide the name of the treatment (as it appears in the
 MaestroExperimentLog), DTXSID (if available), stock concentration,
 supplier, lot number, and any additional useful information such as the
 CASN, purity, etc. The ChemTrack product owner is Madison Feshuk (<a href="mailto:feshuk.madison@epa.gov" class="email">feshuk.madison@epa.gov</a>) as of Summer 2023.</p>
 </div>
-<div id="install-required-r-packages" class="section level1" number="10">
-<h1><span class="header-section-number">10</span> Install required R
+<div id="install-required-r-packages" class="section level1" number="17">
+<h1><span class="header-section-number">17</span> Install required R
 packages</h1>
 <ol style="list-style-type: decimal">
-<li>Use the command install.packages(“package name”) to install any of
-the following packages that you do not already have:</li>
+<li>Use the command <code>install.packages(“package name”)</code> to
+install any of the following packages that you do not already have:</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
 <li><code>openxlsx</code> – includes functions for reading .xlsx Excel
 files</li>
 <li><code>data.table</code> – for robust data manipulation</li>
-<li><code>gtools</code> – includes useful functions such as ‘asc’ for
-getting ascii character code</li>
-<li><code>devtools</code> – includes function needed to install packages
-from GitHub</li>
+<li><code>ggplot2</code> – plotting package (not essential,
+recommended)</li>
+<li><code>stringi</code> – string matching package (not essential,
+recommended)</li>
 <li><code>pracma</code> – used in mutual information scripts</li>
 <li><code>compiler</code> – used in mutual information scripts</li>
+<li><code>gtools</code> – includes useful functions such as ‘asc’ for
+getting ascii character code</li>
 </ol>
 <ol start="2" style="list-style-type: decimal">
 <li>Install the package <code>rhdf5</code> for reading, writing, and
@@ -1976,28 +2102,12 @@ opening h5 files. Use the following commands:</li>
 <pre class="r"><code>if(!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
   install.packages(&quot;BiocManager&quot;)
 BiocManager::install(&quot;rhdf5&quot;)</code></pre>
-<pre><code>## Bioconductor version 3.16 (BiocManager 1.30.19), R 4.2.1 (2022-06-23 ucrt)</code></pre>
-<pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
-##   `force = TRUE` to re-install: &#39;rhdf5&#39;</code></pre>
-<pre><code>## Old packages: &#39;AnnotationDbi&#39;, &#39;BiocFileCache&#39;, &#39;BiocManager&#39;, &#39;biomaRt&#39;,
-##   &#39;blob&#39;, &#39;broom&#39;, &#39;bslib&#39;, &#39;cachem&#39;, &#39;chron&#39;, &#39;class&#39;, &#39;cli&#39;, &#39;clue&#39;,
-##   &#39;codetools&#39;, &#39;colorspace&#39;, &#39;commonmark&#39;, &#39;cpp11&#39;, &#39;curl&#39;, &#39;data.table&#39;,
-##   &#39;dbplyr&#39;, &#39;deSolve&#39;, &#39;digest&#39;, &#39;downlit&#39;, &#39;dplyr&#39;, &#39;DT&#39;, &#39;evaluate&#39;, &#39;fansi&#39;,
-##   &#39;fastmap&#39;, &#39;fs&#39;, &#39;future&#39;, &#39;future.apply&#39;, &#39;GenomeInfoDb&#39;, &#39;ggh4x&#39;,
-##   &#39;ggplot2&#39;, &#39;gtable&#39;, &#39;hms&#39;, &#39;htmltools&#39;, &#39;htmlwidgets&#39;, &#39;httr&#39;, &#39;jsonlite&#39;,
-##   &#39;KernSmooth&#39;, &#39;knitr&#39;, &#39;later&#39;, &#39;lattice&#39;, &#39;lme4&#39;, &#39;lubridate&#39;, &#39;markdown&#39;,
-##   &#39;MASS&#39;, &#39;Matrix&#39;, &#39;matrixStats&#39;, &#39;mgcv&#39;, &#39;mvtnorm&#39;, &#39;nlme&#39;, &#39;nnet&#39;,
-##   &#39;openssl&#39;, &#39;openxlsx&#39;, &#39;parallelly&#39;, &#39;pillar&#39;, &#39;pkgbuild&#39;, &#39;plotly&#39;,
-##   &#39;processx&#39;, &#39;ps&#39;, &#39;rcdk&#39;, &#39;Rcpp&#39;, &#39;RCurl&#39;, &#39;readr&#39;, &#39;rmarkdown&#39;, &#39;RSQLite&#39;,
-##   &#39;S4Vectors&#39;, &#39;sass&#39;, &#39;shiny&#39;, &#39;stringi&#39;, &#39;survey&#39;, &#39;survival&#39;, &#39;sys&#39;,
-##   &#39;tcplfit2&#39;, &#39;testthat&#39;, &#39;tibble&#39;, &#39;tinytex&#39;, &#39;truncnorm&#39;, &#39;tzdb&#39;, &#39;usethis&#39;,
-##   &#39;utf8&#39;, &#39;vctrs&#39;, &#39;viridisLite&#39;, &#39;vroom&#39;, &#39;waldo&#39;, &#39;webchem&#39;, &#39;xfun&#39;, &#39;XML&#39;,
-##   &#39;xml2&#39;, &#39;yaml&#39;, &#39;zip&#39;</code></pre>
 <p>If it asks to Update all/some/none packages, select all. Additional
 info: <a href="https://bioconductor.org/install" class="uri">https://bioconductor.org/install</a> and <a href="https://stackoverflow.com/questions/15974643/how-to-deal-with-hdf5-files-in-r" class="uri">https://stackoverflow.com/questions/15974643/how-to-deal-with-hdf5-files-in-r</a></p>
 <ol start="3" style="list-style-type: decimal">
-<li>Use the command devtools::install_github(<code>package name</code>)
-to install the following packages from GitHub:</li>
+<li>Use the command
+<code>devtools::install_github(&quot;package name&quot;)</code> to install the
+following packages from GitHub:</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
 <li><code>sje30/sjemea</code></li>
@@ -2006,49 +2116,202 @@ to install the following packages from GitHub:</li>
 <p>Links to the GitHub repositories: <a href="https://github.com/dianaransomhall/meadq" class="uri">https://github.com/dianaransomhall/meadq</a>, <a href="https://github.com/sje30/sjemea" class="uri">https://github.com/sje30/sjemea</a></p>
 <p>Additional information on installing packages from GitHub: <a href="https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html" class="uri">https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html</a></p>
 </div>
-<div id="running-the-pre-processing-script" class="section level1" number="11">
-<h1><span class="header-section-number">11</span> Running the
+<div id="running-the-pre-processing-script" class="section level1" number="18">
+<h1><span class="header-section-number">18</span> Running the
 pre-processing script</h1>
+<div id="set-up" class="section level2" number="18.1">
+<h2><span class="header-section-number">18.1</span> Set up</h2>
 <ul>
-<li><p>Go to the master pre-processing scripts repository on the L drive
-(<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_*scripts*</code>)
+<li><p>Go to the master pre-processing SCRIPTS repository on the L drive
+(<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts</code>)
 or on GitHub
 (<code>https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test</code>).
-Copy the script <code>run_me_template.R</code> and save in the
-<code>CCTE_Shafer_MEA_dev_pre-processing_*projects*</code> project
-folder you just created. Rename the script, replacing
-<code>template</code> with the project name.</p></li>
-<li><p>Open the .Rproj in the folder
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_*projects*</code>.
-Then open the newly created run_me script.</p></li>
-<li><p>Fill out the “USER INPUT” section:</p></li>
-<li><p>Set the project_name to the dataset name you created.</p></li>
-<li><p>Set pause_between_steps to TRUE, or FALSE if you have don’t want
-to pause between steps.</p></li>
-<li><p>Set save_notes_graphs to FALSE to view all output and graphs in
-the console. After you have ran through the steps, set to TRUE and re
-*source the run_me to save a log of the notes and plots.</p></li>
-<li><p>Set default_ControlTreatmentName. This is usually
-“DMSO”.</p></li>
-<li><p>If there are some compounds that have a vehicle control other
-than the default, enter the compound names in the string vector
-“different_vehicleControlCompounds.” If there are no other vehicle
-controls used, leave this variable as an empty list (c()).</p></li>
-<li><p>Add the corresponding vehicle control names to the variable
-“different_vehicleControls.” There should be a one to one correspondence
-between the control treatment names in this list and the
-“different_vehicleControlCompounds” list.</p></li>
-<li><p>Set spidmap_file to the file path of the Excel file containing
-the Sample ID’s and stock concentrations of the compounds in the current
-data set. Be sure to change all backslashes “” to forward slashes
-“/”.</p></li>
-<li><p>Set spid_sheet. To the sheet in the spidmap_file that you want to
-use. Can be a number or the name of the sheet.</p></li>
-<li><p>Set scripts.dir. Use the default setting. This is the folder
-containing the scripts that will be referenced.</p></li>
-<li><p>Set root.output.dir. This is where the output will be created.
-Use the default setting.</p></li>
+Copy the script <code>run_me_template.Rmd</code> and save in the
+PROJECTS folder you just created
+(<code>CCTE_Shafer_MEA_dev_pre-processing_projects\project_name</code>).
+Rename the script, replacing <code>template</code> with the project
+name.</p></li>
+<li><p>Start RStudio by opening the .Rproj in the PROJECTS folder:
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>.</p></li>
+<li><p>Open the script you just created
+(<code>run_me_[project_name].Rmd</code>)</p></li>
+<li><p>Load the packages in the first chunk.</p></li>
+<li><p>Go the directory containing the pre-processing scripts (e.g.,
+“L:_MEA_Shafer pre-process for
+TCPL_repos_Shafer_MEA_dev_pre-processing_scripts” or the GitHub
+repo).</p></li>
+<li><p>Fill out the “Project variables definitions” section. Note that
+all filepaths must use forward slashes (“/”) rather than backslashes
+(“&quot;).</p>
+<ul>
+<li><code>project_name</code> - the project name. Should be the same as
+the folder name created under ‘Setting up the pre-processing project
+folder’</li>
+<li><code>spidmap_file</code> - path to file that maps treatment names
+to registered sample IDs. Preferably, this file should also contain the
+stock concentrations for each sample</li>
+<li><code>spid_sheet</code> - desired sheet in spidmap_file (can be
+numeric or the sheet name)</li>
+<li><code>project.dir</code> - main directory of the experimental data
+for project, e.g., “L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021”. This
+folder is used to direct the scripts of where to search for experimental
+data files and .txt files that might affect the well quality.</li>
+<li><code>scripts.dir</code> - directory containing the pre-processing
+scripts for the NFA. Usually “L:_MEA_Shafer pre-process for
+TCPL_repos_Shafer_MEA_dev_pre-processing_scripts“. These scripts are
+also availabe on GitHub <link tba></li>
+<li><code>root.output.dir</code> - directory where the project_name
+folder is located, usually “L:_MEA_Shafer pre-process for
+TCPL_repos_Shafer_MEA_dev_pre-processing_projects”. This defines where
+the output will be saved.</li>
+</ul></li>
+<li><p>Fill out the information to record the version of the
+pre-processing scripts that will be used for the given project.</p>
+<ul>
+<li>To verify that there are no uncommitted modifications to the
+scripts, open Git Bash in the scripts.dir and run
+<code>git status</code>. Commit any recent modifications and then run
+<code>git push</code> to sync with the remote.</li>
+<li>Enter the branch of the pre-processing scripts that will be used for
+the given project. Should be the ‘master’ branch. (Run
+<code>git branch</code> to check which branch is currently displayed in
+the scripts.dir).</li>
+<li>Obtain the commit date, message, and SHA of the most recent commit
+to the scripts repository using either of the following methods
+<ul>
+<li>Navigate to the scripts GitHub repository (<a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test</a>),
+click “commits”, then view the most recent commit</li>
+<li>Open Git Bash in the scripts.dir. Sync with the remote (run
+<code>git pull origin</code>), then view the most recent commit with
+<code>git log -1</code></li>
+<li>Enter a link to the GitHub repository for the most recent commit.
+Should be the GitHub link, followed by “/tree/<SHA>”. For example, <a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/tree/5c0bf943f9752015ded8e7f54f864b3359e02f10" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/tree/5c0bf943f9752015ded8e7f54f864b3359e02f10</a>.
+As the pre-processing scripts are modified going forward, this link
+should serve as a stable reference to the version of the scripts used to
+pre-process the current project. Ideally, in the future, the NFA
+pre-processing scripts could be saved as a package. Then, this step
+could be replaced by simply referencing the package version.</li>
+</ul></li>
+</ul></li>
 </ul>
+</div>
+<div id="check-for-readmes-and-other-well-quality-notes-in-project-folder" class="section level2" number="18.2">
+<h2><span class="header-section-number">18.2</span> Check for READMEs
+and other well quality notes in project folder</h2>
+<ul>
+<li>The script is set up to scan for any files that end in “.txt” within
+the project.dir.</li>
+<li>First, the script will read the contents of the “README” .txt files.
+These files are created by the lab technicians and may record well
+quality notes (which may or may not be also be recorded in the lab
+notebook). Review the contents of each README file and update the well
+quality tables as needed (see “Adjust well or add well quality notes”
+section).</li>
+<li>Second, the script will show any additional .txt files found in the
+project.dir that are not named “README”. Check any of open any of these
+files that look like they may contain an important well quality or other
+note. Any “Overactive electrodes.txt” files can be ignored.</li>
+</ul>
+</div>
+<div id="identify-source-experimental-and-meta-data-files" class="section level2" number="18.3">
+<h2><span class="header-section-number">18.3</span> Identify source
+experimental and meta data files</h2>
+<p>Get a list of the group folders from which you want to pull the
+experimental data. By default, the script will identify all folders in
+the project.dir that contain a date (formatted as YYYYMMDD). Modify as
+needed. Confirm you have the expected number of group folders.</p>
+<p>Next we want to get the following files from each group folder: * 1
+Calculations or Summary file containing the cytotoxicity data (LDH and
+AB) (as well as other data) * 1 MaestroExperimentLog .csv file which
+contains the meta data (i.e., the treatment and concentration tested in
+each well) for each plate tested (usually 3 plates tested per
+culture/group) * 1 spike_list.csv file for each of the 4 DIV of
+recording (DIVs 5, 7, 9, and 12) for each plate</p>
+<p>If the group folders are structured as usual, the function
+‘get_NFA_files_by_group’ can be used to get the desired files. However,
+this function is relatively new and has not been tested on many
+projects, so it may need to be modified.</p>
+<p>Filter the list of all.files as needed. Then, check that the number
+of files from each group folder matches what you would expect:</p>
+<ul>
+<li>1 calculations file</li>
+<li>3 MaestroExperimentLog files (1 for each plate)</li>
+<li>12 spike list files (4 for each plate)</li>
+</ul>
+<p>If the expected number of files are not present in all.files, view
+the list to determine what is may be missing or added. The function
+‘basenames()’ may be helpful to display just the names of the files (and
+not the full file paths). Add additional filters or additions as
+needed.</p>
+<p>Finally, the list of files in all.files will be saved in a file name
+“project_name_files_log.txt”.</p>
+</div>
+<div id="run-the-main-steps" class="section level2" number="18.4">
+<h2><span class="header-section-number">18.4</span> Run the main
+steps</h2>
+<div id="convert-spike-list-files-to-h5-files" class="section level3" number="18.4.1">
+<h3><span class="header-section-number">18.4.1</span> Convert spike list
+files to h5 files</h3>
+<p>This step reads the data in the spike list files, performs some
+preliminary calculations/summaries, adds the meta data in the
+MaestroExperimentLog, and saves all of this information as h5files. One
+h5file is created for every spike list file.</p>
+<p>The primary function is h5_conversion(). This function calls the
+function axion.spkList.to.h5(), which is in the script
+<code>spike_list_functions.R</code>.</p>
+<p>h5_conversion() arguments:</p>
+<ul>
+<li>project.output.dir - folder in which the h5files should be
+created</li>
+<li>files.output.dir - folder in which the files_log is located (i.e.,
+the .txt file containing the list of spike list files and
+MaestroExperimentLog files to be read)</li>
+<li>remake_all - binary value indicating whether new h5files should be
+created for every spike list file in the files_log (TRUE) or only for
+the spike list files that have not already been created in the
+project.output.dir h5files folder (FALSE)</li>
+<li>check_nwells_per_plate - the number of wells that are expected to be
+present in a plate (usually 48 wells for the NFA). If this many wells
+not found in the MaestroExperimentLog, h5_conversion will throw an
+error</li>
+<li>recording_duration_sec - expected duration of the spike list file
+recording (in seconds). Data from the spike list file recording beyond
+the recording_duration_sec will be ignored. If a recording was more than
+3 minutes less than the recording_duration_sec, the function will throw
+an error</li>
+</ul>
+<p>This function will take several minutes to run. As it runs, output
+will be displayed to the console that summarizes each spike list file.
+You may see the following message:</p>
+<ul>
+<li><blockquote>
+<p>You created a large dataset with compression and chunking. The chunk
+size is equal to the dataset dimensions. If you want to read subsets of
+the dataset, you should testsmaller chunk sizes to improve read
+times.</p>
+</blockquote></li>
+</ul>
+<p>(This message indicates that there are more efficient ways to handle
+the data, but the data itself should not be compromised. So this message
+can be ignored.)</p>
+<p><strong>Note</strong>: If you have to terminate R part way through
+this step, the h5file that it was currently working on may be
+incomplete. Be sure to delete that partial h5file so that it will be
+recreated when you restart.</p>
+<p><strong>Common issues</strong>:</p>
+<ul>
+<li>If there is no MaestroExperimentLog files that have a culture date
+and plate.id that match a given spike list file, h5_conversion will
+throw an error. Check the spike list file and MaestroExperimentLog (both
+the file name and the contents) for any mismatches in the culture date
+or plate.id.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="resume-below-then-resume-with-step-in-run_me-explaining" class="section level1" number="19">
+<h1><span class="header-section-number">19</span> RESUME BELOW (then
+resume with step in run_me, explaining)</h1>
 <p>Source the run_me script line by line: * Under the section “run the
 main steps”, source the script source_steps.R. This script will
 automatically run through each step. If pause_between_steps is set to
@@ -2057,8 +2320,8 @@ script will also check if a step has been run before. If so, you will be
 able to select if you want to continue with the existing files, remake
 all of them (i.e., overwrite), append to the existing files, or quit.
 You can quit and re-source this line as many times as needed.</p>
-<div id="selecting-files" class="section level2" number="11.1">
-<h2><span class="header-section-number">11.1</span> Selecting files</h2>
+<div id="selecting-files" class="section level2" number="19.1">
+<h2><span class="header-section-number">19.1</span> Selecting files</h2>
 <ul>
 <li>Select all file types needed for the analysis (_spike_list.csv,
 _MaestroExperimentLog_Ontogeny.csv, and Calculations/Summary xlsx files
@@ -2169,8 +2432,8 @@ save_notes_graphs &lt;- FALSE</code></pre>
 files.</p>
 </div>
 </div>
-<div id="final-checks-before-sending-data-to-tcpl" class="section level1" number="12">
-<h1><span class="header-section-number">12</span> Final checks before
+<div id="final-checks-before-sending-data-to-tcpl" class="section level1" number="20">
+<h1><span class="header-section-number">20</span> Final checks before
 sending data to TCPL</h1>
 <p>(per recommendation from Kelly)</p>
 <ol style="list-style-type: lower-alpha">

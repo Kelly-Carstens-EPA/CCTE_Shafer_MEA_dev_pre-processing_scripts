@@ -8,7 +8,7 @@ library('compiler')
 require('gtools')
 
 create_nmi_files <- function(h5Files, mi.dir, remake_all = TRUE) {
-  
+
   # get a list of the date-plate combinations selected
   date_plates <- unique( lapply(h5Files, function(x) strsplit(basename(x), split = "_")[[1]][2:3]) )
   
@@ -45,11 +45,11 @@ create_nmi_files <- function(h5Files, mi.dir, remake_all = TRUE) {
 }
 
 
-run_mi_functions <- function(basepath, get_h5Files_under_basepath = TRUE, remake_all = TRUE) {
+run_mi_functions <- function(project.output.dir, get_h5Files_under_project.output.dir = TRUE, remake_all = TRUE) {
   
   cat("\nStarting Normalized Mutual Information Calculations...\n")
-  if (get_h5Files_under_basepath) {
-    h5Files <- list.files(path = file.path(basepath, "h5Files"), pattern = "\\.h5$", full.names = TRUE, recursive = FALSE)
+  if (get_h5Files_under_project.output.dir) {
+    h5Files <- list.files(path = file.path(project.output.dir, "h5Files"), pattern = "\\.h5$", full.names = TRUE, recursive = FALSE)
   }
   else {
     h5Files<-choose.files(caption="Select .h5 Files for NMI calculation")
@@ -58,13 +58,10 @@ run_mi_functions <- function(basepath, get_h5Files_under_basepath = TRUE, remake
   h5Files <- sort(h5Files)
   
   # create All_MI directory
-  if(basepath == "use_h5Files_dir") basepath <- dirname(dirname(h5Files[1]))
-  mi.dir<-paste(basepath, "/All_MI",sep="")
+  if(project.output.dir == "use_h5Files_dir") project.output.dir <- dirname(dirname(h5Files[1]))
+  mi.dir<-paste(project.output.dir, "/All_MI",sep="")
   if(!(dir.exists(mi.dir))) dir.create(mi.dir)
   
   # calc the NMI for each h5File and save in csv!
   create_nmi_files(h5Files, mi.dir, remake_all = remake_all)
 }
-
-# Execute the function on it's own:
-# run_mi_functions(basepath = "use_h5Files_dir", get_h5Files_under_basepath = FALSE)

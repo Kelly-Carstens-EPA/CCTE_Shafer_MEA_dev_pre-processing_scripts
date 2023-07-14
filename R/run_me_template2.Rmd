@@ -50,7 +50,9 @@ spid_sheet <- "" # desired sheet in spidmap_file (can be numeric or the sheet na
 project.input.dir <- "L:/Lab/NHEERL_MEA/Project - DNT Test Set 2021 NTP" # main folder of experimental data for project
 scripts.dir <- "C:/Users/acarpe01/Documents/local_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/R" # directory containing the pre-processing scripts for the NFA
 root.output.dir <- "C:/Users/acarpe01/Documents/local_repos/data_process_prac" # main directory where the output should be saved
+
 project.output.dir <- file.path(root.output.dir, project_name)
+if (!dir.exists(project.output.dir)) dir.create(project.output.dir)
 ```
 
 If the scripts.dir is managed with version control, check that there are no local or uncommitted modifications, and then enter the following information to record the branch and most recent commit to the pre-processing scripts repository: 
@@ -68,7 +70,7 @@ If the scripts.dir is managed with version control, check that there are no loca
 source(file.path(scripts.dir, 'writeFilesLog.R'))
 source(file.path(scripts.dir, 'readFilesLog.R'))
 
-objects.to.keep <- ls()
+objects.to.keep <- c(ls(),'objects.to.keep')
 ```
 
 
@@ -184,21 +186,111 @@ for (group.folder in group.folders) {
 
 Save a log of the selected source files for reference
 
-```{r}
+```{r eval = FALSE}
 writeFilesLog(all.files, files.log.dir = project.output.dir, project_name = project_name)
 rm(list = setdiff(ls(), objects.to.keep))
 ```
 
 
 
-# Run main steps ----------------------------------------------------------
+# Extract raw data, calculate features, and calculate area under the curve
+
+Functions to source:
+
 ```{r}
-# run the main steps
-source(file.path(scripts.dir, 'source_steps.R'))
+source(file.path(scripts.dir, 'spike_list_functions.R'))
+source(file.path(scripts.dir, 'h5_conversion.R'))
+
+source(file.path(scripts.dir,'create_ont_csv.R'))
+source(file.path(scripts.dir,'create_burst_ont_Data.R'))
+source(file.path(scripts.dir,'local.corr.all.ont.ae.filter.R'))
+
+source(file.path(scripts.dir,'spikeLoadRoutines.R'))
+source(file.path(scripts.dir,'nmi2_final.R'))
+source(file.path(scripts.dir,'nmi_wrapper.R'))
+source(file.path(scripts.dir,'MI_script_all.R'))
+
+source(file.path(scripts.dir,'DIV-interpolation-functions.R'))
+source(file.path(scripts.dir,'estimate_missing_DIV.R'))
+source(file.path(scripts.dir,'burst_parameter_to_AUC.R'))
+```
+
+**Convert spike list files to h5 files**
+```{r}
+h5_conversion(project.output.dir, 
+              files.log.output.dir = project.output.dir,
+              remake_all = FALSE, 
+              check_nwells_per_plate = 48, 
+              recording_duration_sec = 900.00)
+```
+
+**Calculate micro-electrode array parameter values**
+
+```{r}
+create_ont_csv(project.output.dir, 
+               remake_all = FALSE,
+               get_h5Files_under_project.output.dir = TRUE)
+rm(list = setdiff(ls(), objects.to.keep))
+```
+
+**Calculate normalized mutual information**
+
+```{r}
+run_mi_functions(project.output.dir, 
+                 get_h5Files_under_project.output.dir = TRUE, 
+                 remake_all = FALSE)
+```
+
+**Calculate Area-Under-the-Curve values**
+```{r}
+parameter_values_to_AUC(project.output.dir, 
+                        project_name = project_name, 
+                        div_data_file_folders = file.path(project.output.dir,c('prepared_data')),
+                        use_DIVs = c(5,7,9,12),
+                        interpolate_diff_divs = TRUE,
+                        wllq.tb.by.well.file =file.path(project.output.dir, 
+                                                                      paste0(project_name,'_well_quality_assignments_by_well.csv')))
+
+
+# final
+parameter_values_to_AUC(project.output.dir, 
+                        project_name = project_name, 
+                        div_data_file_folders = file.path(project.output.dir,c('prepared_data','All_MI')),
+                        use_divs = c(5,7,9,12),
+                        interpolate_diff_divs = TRUE,
+                        wllq.tb.by.well.file =file.path(project.output.dir, 
+                                                                      paste0(project_name,'_well_quality_assignments_by_well.csv')))
+
+
+# cytotox prep
+cat("\n- Extract the cytotoxicity data from Calculations files:\n")
+resp <- check_existing(path = file.path(project.output.dir, "output"), pattern = "_cytotox", pause_between_steps)
+if (resp %in% c("r","a")) {
+  source(file.path(scripts.dir,'cytotox_prep06.R'))
+  run_cytotox_functions(basepath = project.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
+                        append = append)
+  rm(list = setdiff(ls(), keep_items))
+}
+
+cat("\n'source_steps.R' is complete.\n")
+
+
+
+
+```
+
+
+
+
+
+```{r}
 rm(list = setdiff(ls(),c('project_name','pause_between_steps','save_notes_graphs','default_ControlTreatmentName','spidmap_file','spid_sheet','project.input.dir','scripts.dir','root.output.dir','update_concs_without_prompt','get_new_files_log')))
 setwd(root.output.dir)
+```
+
 
 # run tcpl_MEA_dev_AUC
+```{r}
 source(file.path(scripts.dir, 'tcpl_MEA_dev_AUC.R'))
 dat <- tcpl_MEA_dev_AUC(basepath = file.path(root.output.dir,project_name), project_name)
 # cytotox data does not have units. Will fill with NA
@@ -1242,5 +1334,5 @@ save(dat, description, file = file.path(root.output.dir, project_name, "output",
 rm(dat)
 
 cat("\nDone!\n")
-
+```
 

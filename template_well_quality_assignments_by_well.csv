@@ -1,0 +1,301 @@
+affected_assays,date,Plate.SN,DIV,well,wllq,wllq_notes,wllq_ref
+CTB,20211124,MW78-6217,NA,all,0,CTB incubation time is less than one hour,lab notebook
+LDH,20220330,MW78-7118,NA,A8,0,cell debris,lab notebook
+LDH,20220413,MW78-7205,NA,D7,0,cell debris,lab notebook
+LDH,20220601,MW78-7217,NA,B3,0,"Not usabled, indicated by readme note",lab notebook
+"mea,CTB,LDH",20210929,MW75-9306,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9307,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9308,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9309,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9310,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9311,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211027,MW75-9315,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211027,MW75-9316,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6214,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6215,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6216,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6217,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6218,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6219,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6303,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6304,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6305,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6306,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6307,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6308,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9306,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9307,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9308,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9309,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9310,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20210929,MW75-9311,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211027,MW75-9315,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211027,MW75-9316,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6214,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6215,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6216,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6217,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6218,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211124,MW78-6219,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6303,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6304,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6305,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6306,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6307,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211208,MW78-6308,all,all,1,Hot water shut off in building,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A1,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A3,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A4,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A5,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A6,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A7,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,A8,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B1,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B3,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B4,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B5,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B6,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B7,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,B8,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C1,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C3,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C4,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C5,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C6,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C7,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,C8,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D1,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D3,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D4,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D5,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D6,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D7,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,D8,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E1,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E3,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E4,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E5,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E6,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E7,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,E8,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F1,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F3,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F4,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F5,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F6,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F7,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6208,all,F8,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A1,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A3,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A4,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A5,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A6,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A7,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,A8,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B1,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B3,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B4,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B5,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B6,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B7,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,B8,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C1,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C3,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C4,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C5,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C6,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C7,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,C8,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D1,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D3,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D4,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D5,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D6,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D7,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,D8,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E1,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E3,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E4,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E5,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E6,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E7,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,E8,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F1,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F3,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F4,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F5,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F6,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F7,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6209,all,F8,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A1,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A3,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A4,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A5,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A6,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A7,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,A8,0,(7126 C2) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B1,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B3,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B4,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B5,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B6,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B7,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,B8,0,(7126 C3) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C1,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C3,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C4,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C5,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C6,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C7,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,C8,0,(7126 C1) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D1,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D3,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D4,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D5,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D6,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D7,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,D8,0,(7126 C5) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E1,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E3,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E4,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E5,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E6,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E7,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,E8,0,(7126 C6) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F1,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F3,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F4,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F5,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F6,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F7,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6210,all,F8,0,(7126 C4) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A1,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A3,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A4,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A5,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A6,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A7,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,A8,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B1,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B3,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B4,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B5,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B6,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B7,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,B8,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C1,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C3,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C4,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C5,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C6,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C7,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,C8,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D1,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D3,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D4,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D5,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D6,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D7,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,D8,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F1,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F3,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F4,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F5,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F6,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F7,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6211,all,F8,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A1,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A3,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A4,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A5,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A6,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A7,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,A8,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B1,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B3,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B4,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B5,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B6,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B7,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,B8,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C1,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C3,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C4,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C5,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C6,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C7,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,C8,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D1,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D3,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D4,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D5,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D6,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D7,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,D8,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E1,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E3,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E4,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E5,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E6,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E7,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6212,all,E8,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A1,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A3,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A4,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A5,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A6,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A7,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,A8,0,(7126 C8) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B1,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B3,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B4,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B5,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B6,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B7,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,B8,0,(7126 C9) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C1,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C3,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C4,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C5,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C6,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C7,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,C8,0,(7126 C7) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E1,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E3,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E4,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E5,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E6,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E7,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,E8,0,(7126 C12) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F1,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F3,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F4,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F5,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F6,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F7,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+"mea,CTB,LDH",20211110,MW78-6213,all,F8,0,(7126 C10) Sample has >= 4 noisy endpoints and platewise median of controls < 2SD below mean of all NFA data for key general activity endpoints,lab notebook
+LDH,20220615,MW78-7220,,A1,0,Note from lab technicians indicated not usable (cell debris),lab notebook
+LDH,20220615,MW78-7220,,B2,0,Note from lab technicians indicated not usable (cell debris),lab notebook
+LDH,20220615,MW78-7220,,D4,0,Note from lab technicians indicated not usable (cell debris),lab notebook
+LDH,20220601,MW78-7219,,all,0,LDH data not collected for this plate,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E1,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E3,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E4,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E5,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E6,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E7,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook
+"mea,CTB,LDH",20211027,MW75-9317,all,E8,,Temporarily misdosed on DIV5 with 7126 H11 instead of Bisphenol A. Was aspirated then given new media and treated with Bisphenol A.,lab notebook

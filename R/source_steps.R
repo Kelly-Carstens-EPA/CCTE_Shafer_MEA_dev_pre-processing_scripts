@@ -3,7 +3,7 @@
 # it will select files, create h5files, create prepared data, AUC table, and collect cytotox data
 
 check_existing <- function(path, pattern, pause_between_steps) {
-  # save_objects <- c("check_existing","main.output.dir",
+  # save_objects <- c("check_existing","project.output.dir",
   #                   "project_name","pause_between_steps","save_notes_graphs",
   #                   "default_ControlTreatmentName",
   #                   "different_vehicleControlCompounds",
@@ -44,46 +44,46 @@ check_existing <- function(path, pattern, pause_between_steps) {
 }
 
 setwd(scripts.dir)
-main.output.dir <- file.path(root_output_dir, project_name)
-if (!dir.exists(main.output.dir)) dir.create(main.output.dir)
+project.output.dir <- file.path(root_output_dir, project_name)
+if (!dir.exists(project.output.dir)) dir.create(project.output.dir)
 
 # h5_conversion.R
 cat("\n- Create h5 files:\n")
-resp <- check_existing(path = file.path(main.output.dir,"h5files"), pattern = "\\.h5", pause_between_steps)
+resp <- check_existing(path = file.path(project.output.dir,"h5files"), pattern = "\\.h5", pause_between_steps)
 if (resp %in% c("r","a")) {
   source('spike_list_functions.R')
   remake_all <- !append
   source('h5_conversion.R')
-  cat("h5files are ready in folder",file.path(main.output.dir,"h5files"),"\n")
+  cat("h5files are ready in folder",file.path(project.output.dir,"h5files"),"\n")
   rm(list = setdiff(ls(), keep_items))
 }
 
 # create_ont_csv
 cat("\n- Calculate the components:\n")
-resp <- check_existing(path = file.path(main.output.dir,"prepared_data"), pattern = "\\.csv", pause_between_steps)
+resp <- check_existing(path = file.path(project.output.dir,"prepared_data"), pattern = "\\.csv", pause_between_steps)
 if (resp %in% c("r","a")) {
   source('create_ont_csv.R')
   source('create_burst_ont_Data.R')
   source('local.corr.all.ont.ae.filter.R')
-  create_ont_csv(basepath = main.output.dir, get_h5Files_under_basepath = TRUE, remake_all = !append)
+  create_ont_csv(basepath = project.output.dir, get_h5Files_under_basepath = TRUE, remake_all = !append)
   rm(list = setdiff(ls(), keep_items))
 }
 
 # normalized mutual information calculation
 cat("\n- Calculate the Mutual Information:\n")
-resp <- check_existing(path = file.path(main.output.dir,"All_MI"), pattern = "\\.csv", pause_between_steps)
+resp <- check_existing(path = file.path(project.output.dir,"All_MI"), pattern = "\\.csv", pause_between_steps)
 if (resp %in% c("r","a")) {
   source('spikeLoadRoutines.R')
   source('nmi2_final.R')
   source('nmi_wrapper.R')
   source('MI_script_all.R')
-  run_mi_functions(basepath = main.output.dir, get_h5Files_under_basepath = TRUE, remake_all = !append)
+  run_mi_functions(basepath = project.output.dir, get_h5Files_under_basepath = TRUE, remake_all = !append)
   rm(list = setdiff(ls(), keep_items))
 }
 
 # burst parameter to AUC
 cat("\n- Check over component values by DIV, calculate AUC:\n")
-resp <- check_existing(path = file.path(main.output.dir, "output"), pattern = "_AUC", pause_between_steps)
+resp <- check_existing(path = file.path(project.output.dir, "output"), pattern = "_AUC", pause_between_steps)
 if (resp %in% c("r","a")) {
   # append has no effect here. This fun is relatively fast, so will remake all regardless
   source('DIV-interpolation-functions.R')
@@ -94,10 +94,10 @@ if (resp %in% c("r","a")) {
 
 # cytotox prep
 cat("\n- Extract the cytotoxicity data from Calculations files:\n")
-resp <- check_existing(path = file.path(main.output.dir, "output"), pattern = "_cytotox", pause_between_steps)
+resp <- check_existing(path = file.path(project.output.dir, "output"), pattern = "_cytotox", pause_between_steps)
 if (resp %in% c("r","a")) {
   source('cytotox_prep06.R')
-  run_cytotox_functions(basepath = main.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
+  run_cytotox_functions(basepath = project.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
                         append = append)
   rm(list = setdiff(ls(), keep_items))
 }

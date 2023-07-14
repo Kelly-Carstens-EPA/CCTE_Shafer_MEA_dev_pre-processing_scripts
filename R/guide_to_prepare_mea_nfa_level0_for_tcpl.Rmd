@@ -25,11 +25,11 @@ print(sessionInfo())
 
 * Would be better to read the cytotoxicity data from the raw files directly... ugh. This is semi-critical but rare. Maybe see what you do for the acute? Theoretically this coudl really save some steps...
 * The source files
-  * Background: All experimental and meta data sources files used to pre-process data for the ToxCast Pipeline will ultimately be saved in Clowder (to Amy's knowledge). With the current pre-processing approach, the file paths to the source files used are recorded in the files_log.txt. However, these source files could be modified after the pre-processing is completed. Therefore, theoretically the source files should be copied to a stable location before running the pre-processing scripts. However, this seems like it could result in a lot of data copying, especially if the files will need to be copied again to the ToxCast_data drive. Going forward, work with the ToxCast data team to determine the best path, and check for any modifications to the source files that occurred after pre-processing before sharing with the ToxCast team.
+* Background: All experimental and meta data sources files used to pre-process data for the ToxCast Pipeline will ultimately be saved in Clowder (to Amy's knowledge). With the current pre-processing approach, the file paths to the source files used are recorded in the files_log.txt. However, these source files could be modified after the pre-processing is completed. Therefore, theoretically the source files should be copied to a stable location before running the pre-processing scripts. However, this seems like it could result in a lot of data copying, especially if the files will need to be copied again to the ToxCast_data drive. Going forward, work with the ToxCast data team to determine the best path, and check for any modifications to the source files that occurred after pre-processing before sharing with the ToxCast team.
 * The 'srcf' columns:
-  * Background: The mc0 and sc0 files that are loaded into the ToxCast pipeline are expected to include the column 'srcf' (read "source file"). This column should contain the name of the file that was used to generate the data
-  * However, for the NFA, usually multiple source files are used to generate the numeric and meta data for a single data row
-  * Thus, a solution is to package the source files into .zip files (e.g., 1 for each plate for the MEA endpoints). These .zip files would become the new 'srcf'. This solution was proposed by Jason Brown to address a similar issue for the HCI data.
+* Background: The mc0 and sc0 files that are loaded into the ToxCast pipeline are expected to include the column 'srcf' (read "source file"). This column should contain the name of the file that was used to generate the data
+* However, for the NFA, usually multiple source files are used to generate the numeric and meta data for a single data row
+* Thus, a solution is to package the source files into .zip files (e.g., 1 for each plate for the MEA endpoints). These .zip files would become the new 'srcf'. This solution was proposed by Jason Brown to address a similar issue for the HCI data.
 
 # Completed
 
@@ -42,17 +42,19 @@ print(sessionInfo())
 COB - have something that will work, with known issues / bugs / to-d articulated at the top, in such a way that Man/Kelly could interpret
 
 * Go through the run_me, make it good, and make this guide actually follow that! (time to go line by line & make it work!!)
-  * Make it a working RMD as you go!
-  * Review recent updates to the HCI data pre-processing. Note any to integrate here or in run_me.
-  * Cross check template with most recent NFA run_me that has been ran
+* Make it a working RMD as you go!
+* Review recent updates to the HCI data pre-processing. Note any to integrate here or in run_me.
+* Cross check template with most recent NFA run_me that has been ran
 * To update in scripts as you go
-  * Confirm that package load order is okay
-  * well quality notes - updated name & format of wllq notes tables (see how doing it for the HCI!)
-  * make sure include functionality to merge wllq notes / wllq within and across tables
-  * check back with the notes template to confirm that instructions align with function
+* Confirm that package load order is okay
+* well quality notes - updated name & format of wllq notes tables (see how doing it for the HCI!)
+* make sure include functionality to merge wllq notes / wllq within and across tables
+* check back with the notes template to confirm that instructions align with function
 * See "to do now" in shafer lab pre-pro, documents, NFA pre-pro to do Now section for any funtionality notes to address now.
 * See neat updates from e.g., TSCA2019 for handling larger datasets for documenting wllq...? (could I triage to later if there is more time?)
 * Would this run_me work for sc too? Give some hints of what to do for M if she encounters that.
+* Update/revisit/confirm the detaisl on parameter calculations? at least save that somewhere
+* Add note for chgv_paraemers.R - this is loaded in create_ont_csv. So that's where you coudl modify!
 
 **Checky-checky stuff**:
 
@@ -72,13 +74,23 @@ Overlap with above process:
 If don’t have cytotox data, just select ‘n’ at Cytotoxicity data collection step.
 Console will say ‘user elected to stop’. This is fine, you can move on.
 
+# Would loooooove to do if time to make future debugging easy
 
+* Document all I've learned about create ont burst data, so people know what is going on
+* Make that funciton way more streamlined!!
+
+* clean up creat ont csv
+
+# Info that someoneo outside EPA would need
+
+* how maestroexperimentlog files should be formatted - maybe include an example?
 
 # Abbreviations
 
 ```{r echo = FALSE}
 abb.tb <- rbind(
-  data.table('NFA','Network Formation Assay')
+  data.table('NFA','Network Formation Assay'),
+  data.table('MCL or Master Chemical List','MaestroExperimentLog file')
 )
 names(abb.tb) <- c('Abbrev','Defn')
 abb.tb[order(Abbrev)]
@@ -87,10 +99,36 @@ abb.tb[order(Abbrev)]
 # Notes
 
 * This document and the run_me_template.Rmd are meant to be living documents - update them as needed as the process evolves!
+* Some things will be shfaer lab specific... I"M thinking of jsut givign this out to the public as-is, and people can adapt as needed (bc there are so many notes here that the average user would need, e.g., to ignore the 'no network spikes found' warning)
 
-# Potentially helpful notes
+# R things I'd suggest Manasvinee learn
+
+* = vs == vs <-
+* grepl and grep
+* subsetting a list with [] and either integers or boolean
+* stringi, regex
+* boolean**
+* other data types (vectors vs list)
+* for loops!
+* functions
+* sapply, lapply
+* data.table basics (e.g., :=, NULL, etc)
+
+# Potentially helpful RMD tips
 
 * For any code chunk that you have completed and that you don't want to have to run again, you can set R chunk options to `eval = FALSE`.
+* When you re-open the run_me after restarting RStudio (aka Posit) you resume from where you left off by running all code chunk above where you left off. Go to the current code chunk, and click the triangle pointing down or type Ctrl + alt + shift + P.
+* If is runnign really slow from the .Rproj on the L drive, you can create a .Rproj on your local machine and open the .Rmd from there
+
+# Potentially helpful NFA-specific notes
+
+* Background on sjemea, then meadq made on top of that (links). Then i made some functions that replace some of the ones from meadq. So... there are 3 places where functions may reside where may have to debug
+
+# Notes to Kathleen
+
+## maestro experiment log
+* Please keep the phrase "MaestroExperimentLog" in these files
+* spike list files are matched to the maestro experiment log by the present of the culturedate_platenumber[_ ]. OKay?
 
 # Overview of the process
 
@@ -131,6 +169,9 @@ Every level 0 table processed with the ToxCast pipeline must contain a binary 'w
 
 There are 2 ways to set the wllq to 0 or add a well quality note (described below). Either option can be used; choose whichever option is easiest for each wllq situation. 
 
+Note that the wllq notes entered in the first table ("[project_name]_well_quality_assigments_by_well.csv") will be applied from within the function parameter_values_to_AUC(). The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you.
+
+
 ## Update the wllq when the well ID is known
 
 For wells where you know the specific plate, well and (optionally) DIV that are affected:
@@ -140,17 +181,21 @@ For each well, fill out the columns:
 
 ```{r echo = FALSE}
 wllq.by.well.desc <- data.table(
-  'Column' = c('affected_assays','culture_date','plate','well','DIV','wllq','wllq_notes','wllq_ref'), 'Description' = c("Comma-separated list of which assays the well-quality affects (mea, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay may also be referred to as Alamar Blue)",
-                                                                                                                        "Culture date (YYYYMMDD)",
-                                                                                                                        "Plate Serial Number. Should begin with 'MW'","Affected well. Should begin with a letter (for the row) and end with a number. If all of the wells on a given plate are affected, enter 'all'.","Day in vitro. If all DIV are affected, enter 'all'. If the affected assay is a cytotoxicity assay (LDH or CTB), this column will be ignored.","Well quality (1 = usable, 0 = not usable)","Well quality note ","Well quality reference (i.e., the source from which you learned about the well quality note)"),
-  'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: mea,CTB,LDH",
-"20201109",
-"MW71-7905",
-"A4",
-"12",
-"1; 0",
-"Contamination; Misdosed; Recording too short; Temperature lower than usual",
-"Lab notebook; Readme note")
+  'Column' = c('affected_assays','date','Plate.SN','well','DIV','wllq','wllq_notes','wllq_ref'), 
+  'Description' = c("Comma-separated list of which assays the well-quality affects, including mea, CTB (Cell Titer Blue), or LDH. (Note that the CTB assay may also be referred to as Alamar Blue)",
+                    "Culture date (YYYYMMDD)",
+                    "Plate Serial Number. Should begin with 'MW'","Affected well. Should begin with a letter (for the row) and end with a number. If all of the wells on a given plate are affected, enter 'all'.",
+                    "Day in vitro. If all DIV are affected, enter 'all'. (If any DIV other than 5, 7, 9, and 12 are affected, create a separate row in the well quality table for each DIV). If the affected assay is a cytotoxicity assay (LDH or CTB), this column will be ignored.",
+                    "Well quality (1 = usable, 0 = not usable)","Well quality note ",
+                    "Well quality reference (i.e., the source from which you learned about the well quality note)"),
+  'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: nfa,CTB,LDH",
+                 "20201109",
+                 "MW71-7905",
+                 "A4",
+                 "12",
+                 "1; 0",
+                 "Contamination; Misdosed; Recording too short; Temperature lower than usual",
+                 "Lab notebook; Readme note")
 )
 wllq.by.well.desc
 
@@ -216,8 +261,8 @@ For each well, fill out the columns:
 ```{r echo = FALSE}
 wllq.by.well.trt <- data.table(
   'Column' = c("affected_assays","compound_name","cndx","culture_date","wllq","wllq_notes","wllq_ref"),
-  'Description' = c("Comma-separated list of which assays the well-quality affects (mea, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay may also be referred to as Alamar Blue)","Name of affected compound (treatment), as it appears in the MaestroExperimentLog file","Concentration index tested for the given treatment, with 1 = lowest concentration tested and 7 = highest concentration. Note that this should be the concentration index ON A GIVEN PLATE (rather than all concentrations tested for the treatment in the project). If all concentrations tested are affected, enter 'all.'","Culture date (YYYYMMDD)","Well quality (1 = usable, 0 = not usable)","Well quality note ","Well quality reference (i.e., the source from which you learned about the well quality note)"),
-  'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: mea,CTB,LDH",
+  'Description' = c("Comma-separated list of which assays the well-quality affects (nfa, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay may also be referred to as Alamar Blue)","Name of affected compound (treatment), as it appears in the MaestroExperimentLog file","Concentration index tested for the given treatment, with 1 = lowest concentration tested and 7 = highest concentration. Note that this should be the concentration index ON A GIVEN PLATE (rather than all concentrations tested for the treatment in the project). If all concentrations tested are affected, enter 'all.'","Culture date (YYYYMMDD)","Well quality (1 = usable, 0 = not usable)","Well quality note ","Well quality reference (i.e., the source from which you learned about the well quality note)"),
+  'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: nfa,CTB,LDH",
                  "7126 C7; DMSO","1","20201109","1; 0",
                  "Precipitate observed, actual concentration is dubious; Cell debris",
                  "Lab notebook; Readme note"))
@@ -240,13 +285,13 @@ If the sample IDs for a given project have not been registered (whether the test
 # Install required R packages
 
 1.	Use the command `install.packages(“package name”)` to install any of the following packages that you do not already have:
-  a.	`openxlsx` – includes functions for reading .xlsx Excel files
-  b.	`data.table` – for robust data manipulation
-  c.	`ggplot2` – plotting package (not essential, recommended)
-  d.	`stringi` – string matching package (not essential, recommended)
-  e.	`pracma` – used in mutual information scripts
-  f.	`compiler` – used in mutual information scripts
-  g.	`gtools` – includes useful functions such as ‘asc’ for getting ascii character code
+a.	`openxlsx` – includes functions for reading .xlsx Excel files
+b.	`data.table` – for robust data manipulation
+c.	`ggplot2` – plotting package (not essential, recommended)
+d.	`stringi` – string matching package (not essential, recommended)
+e.	`pracma` – used in mutual information scripts
+f.	`compiler` – used in mutual information scripts
+g.	`gtools` – includes useful functions such as ‘asc’ for getting ascii character code
 
 2.	Install the package `rhdf5` for reading, writing, and opening h5 files. Use the following commands:
 
@@ -260,8 +305,8 @@ If it asks to Update all/some/none packages, select all.
 Additional info: https://bioconductor.org/install and  https://stackoverflow.com/questions/15974643/how-to-deal-with-hdf5-files-in-r
 
 3.	Use the command `devtools::install_github("package name")` to install the following packages from GitHub:
-  a.	`sje30/sjemea`
-  b.	`dianaransomhall/meadq`
+a.	`sje30/sjemea`
+b.	`dianaransomhall/meadq`
 
 Links to the GitHub repositories: https://github.com/dianaransomhall/meadq, https://github.com/sje30/sjemea
 
@@ -283,21 +328,21 @@ https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.ht
 * Go the directory containing the pre-processing scripts (e.g., "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R" or the GitHub repo).
 
 * Fill out the “Project variables definitions” section. Note that all filepaths must use forward slashes ("/") rather than backslashes ("\").
-  * `project_name` - the project name. Should be the same as the folder name created under 'Setting up the pre-processing project folder'
-  * `spidmap_file` - path to file that maps treatment names to registered sample IDs. Preferably, this file should also contain the stock concentrations for each sample
-  * `spid_sheet` - desired sheet in spidmap_file (can be numeric or the sheet name)
-  * `project.dir` -  main directory of the experimental data for project, e.g., "L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021". This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
-  * `scripts.dir` - directory containing the pre-processing scripts for the NFA. Usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R". These scripts are also availabe on GitHub <link tba>
-  * `root.output.dir` - directory where the project_name folder is located, usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects". This defines where the output will be saved.
+* `project_name` - the project name. Should be the same as the folder name created under 'Setting up the pre-processing project folder'
+* `spidmap_file` - path to file that maps treatment names to registered sample IDs. Preferably, this file should also contain the stock concentrations for each sample
+* `spid_sheet` - desired sheet in spidmap_file (can be numeric or the sheet name)
+* `project.dir` -  main directory of the experimental data for project, e.g., "L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021". This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
+* `scripts.dir` - directory containing the pre-processing scripts for the NFA. Usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R". These scripts are also availabe on GitHub <link tba>
+* `root.output.dir` - directory where the project_name folder is located, usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects". This defines where the output will be saved.
 
 * Fill out the information to record the version of the pre-processing scripts that will be used for the given project. 
-  * To verify that there are no uncommitted modifications to the scripts, open Git Bash in the scripts.dir and run `git status`. Commit any recent modifications and then run `git push` to sync with the remote.
-  * Enter the branch of the pre-processing scripts that will be used for the given project. Should be the 'master' branch. (Run `git branch` to check which branch is currently displayed in the scripts.dir). 
-  * Obtain the commit date, message, and SHA of the most recent commit to the scripts repository using either of the following methods
-    * Navigate to the scripts GitHub repository (https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test), click "commits", then view the most recent commit
-    * Open Git Bash in the scripts.dir. Sync with the remote (run `git pull origin`), then view the most recent commit with `git log -1`
-    * Enter a link to the GitHub repository for the most recent commit. Should be the GitHub link, followed by "/tree/<SHA>". For example, https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/tree/5c0bf943f9752015ded8e7f54f864b3359e02f10. As the pre-processing scripts are modified going forward, this link should serve as a stable reference to the version of the scripts used to pre-process the current project. Ideally, in the future, the NFA pre-processing scripts could be saved as a package. Then, this step could be replaced by simply referencing the package version.
-    
+* To verify that there are no uncommitted modifications to the scripts, open Git Bash in the scripts.dir and run `git status`. Commit any recent modifications and then run `git push` to sync with the remote.
+* Enter the branch of the pre-processing scripts that will be used for the given project. Should be the 'master' branch. (Run `git branch` to check which branch is currently displayed in the scripts.dir). 
+* Obtain the commit date, message, and SHA of the most recent commit to the scripts repository using either of the following methods
+* Navigate to the scripts GitHub repository (https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test), click "commits", then view the most recent commit
+* Open Git Bash in the scripts.dir. Sync with the remote (run `git pull origin`), then view the most recent commit with `git log -1`
+* Enter a link to the GitHub repository for the most recent commit. Should be the GitHub link, followed by "/tree/<SHA>". For example, https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/tree/5c0bf943f9752015ded8e7f54f864b3359e02f10. As the pre-processing scripts are modified going forward, this link should serve as a stable reference to the version of the scripts used to pre-process the current project. Ideally, in the future, the NFA pre-processing scripts could be saved as a package. Then, this step could be replaced by simply referencing the package version.
+
 ## Check for READMEs and other well quality notes in project folder 
 
 * The script is set up to scan for any files that end in ".txt" within the project.dir. 
@@ -325,7 +370,83 @@ If the expected number of files are not present in all.files, view the list to d
 
 Finally, the list of files in all.files will be saved in a file name "project_name_files_log.txt".
 
+## Run the main steps
 
+### Convert spike list files to h5 files
+
+This step reads the data in the spike list files, performs some preliminary calculations/summaries, merges in the meta data in the MaestroExperimentLog, and saves all of this information as h5files. One h5file is created for every spike list file. The output will be saved in the project.output.dir.
+
+The primary function is h5_conversion(). This function calls the function axion.spkList.to.h5(), which is in the script `spike_list_functions.R`. 
+
+h5_conversion() arguments:
+
+* project.output.dir - folder in which the h5files should be created
+* files.output.dir - folder in which the files_log is located (i.e., the .txt file containing the list of spike list files and MaestroExperimentLog files to be read)
+* remake_all - binary value indicating whether new h5files should be created for every spike list file in the files_log (TRUE) or only for the spike list files that have not already been created in the project.output.dir h5files folder (FALSE)
+* check_nwells_per_plate - the number of wells that are expected to be present in a plate (usually 48 wells for the NFA). If this many wells are not found in the MaestroExperimentLog, h5_conversion will throw an error
+* recording_duration_sec - expected duration of the spike list file recording (in seconds). This should be 900 (i.e., 15 minutes) for Network Formation Assay experiments done in the Shafer lab. Spikes recorded more than recording_duration_sec beyond the time of the first spike will be ignored. If a recording was more than 3 minutes less than the recording_duration_sec, the function will throw an error.
+
+This function will take several minutes to run. As it runs, output will be displayed to the console that summarizes each spike list file. You may see the following message:
+
+> You created a large dataset with compression and chunking.
+The chunk size is equal to the dataset dimensions.
+If you want to read subsets of the dataset, you should testsmaller chunk sizes to improve read times.
+
+This message indicates that there are more efficient ways to handle the data, but the data itself should not be compromised. So this message can be ignored.
+
+**Notes**: If you have to terminate R part way through this step, the h5file that it was currently working on may be incomplete. Be sure to delete that partial h5file so that it will be recreated when you restart.
+
+**Common issues**:
+
+* If there is no MaestroExperimentLog files that have a culture date and plate.id that match a given spike list file, h5_conversion will throw an error. Check the spike list file and MaestroExperimentLog (both the file name and the contents) for any mismatches in the culture date or plate.id.
+
+### Calculate micro-electrode array parameter values
+
+This step calls the function create_ont_csv(), which is a wrapper for the function create_burst_ont_Data(). The function create_burst_ont_Data() handles the calculation of 16 parameters. (Parameters = mean firing rate, burst rate, number of network spikes, etc). Parameters may also be referred to as "components" or "features". This function takes the h5files as input. The output will be saved in the project.output.dir in a folder called 'prepared_data'. One .csv file will be created for every plate. Within a csv file, every data row corresponds to 1 well from 1 recording (DIV).
+
+**Notes**:
+
+* As the function runs, you will see the following message repeated many times:
+
+> '*** No network spikes found'
+
+This message can be ignored. (Unfortunately, this is produced by a function within either the `meadq` or `sjemea` packages and I do not know how to modify it).
+
+* The output csv files will contain 'ABEfilt' in the file name. This stands for "Actively Bursting Electrodes filter." Briefly, this means that, for relevant parameters, the calculations were restricted to the 'actively bursting electrodes' (i.e., electrodes with >= 0.5 bursts per minute) or the 'active electrodes' (i.e., electrodes with >= 5 spikes per minute) as appropriate for each parameter. See parameter calculation notes or create_burst_ont_Data() for more details.
+
+### Calculate normalized mutual information
+
+This step calculates the normalized mutual information. This is a parameter developed by Ken Ball. This parameter is calculated separately from the other MEA parameters because it was developed separately (by Ken Ball) from the other 16 parameters (developed by Diana Hall and Stephen Eglen) and because it takes significantly longer to calculate than the other parameters. This function takes the h5files as input. The output will be saved in the project.output.dir in a folder called 'All_MI'. One .csv file will be created for every plate. Within a csv file, every data row corresponds to 1 well from 1 recording (DIV).
+
+This is the most computationally-intensive step. Each plate (corresponding to 4 recordings) takes about 10-15 minutes to run.
+
+### Calculate Area-Under-the-Curve values
+
+In order to combine the parameter values from each DIV, we calculate the trapezoidal Area-Under-the-Curve (AUC) values for each parameter value in every well. This step performs that calculation, in addition to some other checks. The function parameter_values_to_AUC() takes the csv files that contain the 16 parameters and the mutual information for each DIV as input. Two output files are saved in the project.output.dir in a folder called 'output'. The first file, with the suffix _parameters_by_DIV, contains all of the input parameter data files. The second file, with the suffix _AUC, contains the AUC values with every data row corresponding to 1 well.
+
+parameter_value_to_AUC() arguments:
+
+* project_output_dir - folder where output should be saved
+* project_name - project_name
+* div_data_file_folders - folders that contain the .csv files with the parameter data by DIV (can include multiple folder, usually 1 for the 16-parameter files and one for the MI files). Should be the full path to the folders
+* id.columns - columns in the input parameter data by DIV that should be interpreted as ID columns. Must include "DIV"
+* dose_column_name - (optional) name of column in input data files containing the dose. This column will be converted to character to ensure that any minor discrepancies in the numeric dose value do not interfere with the data grouping for the AUC calculation
+* use_divs = c(5,7,9,12),
+* interpolate_diff_divs = TRUE,
+* add_DIV2_values_of_0 - binary of whether a value of "0" should be added at DIV 2 for every well and parameter value. **If you want to be consistent with data produced by Shafer lab, this should be true**. Background: Earlier in the development of the NFA, recordings were made on DIV 2, 5, 7, 9, and 12. Eventually, because so little activity was observed on DIV 2, they stopped recording on DIV 2. When the script `burst_parameter_to_AUC.R` was made, the writer decided to add a point at (DIV= 2, value = 0) for every well and parameter value. This choice to impute a dummy data at DIV 2 has been the practice in the Shafer lab for all data that has been pipelined in TCPL as of July 2023.
+
+
+**Notes**:
+
+* the function parameter_values_to_AUC() is a newer version of the function burst_parameter_to_AUC(). Both functions are desired to perform the same task, but parameter_values_to_AUC() should be more flexible and easier to debug.
+* Note that AFTER the _parameters_by_DIV.csv file is saved but BEFORE the AUC calculation, all NA parameter values are set to 0. This is done in order to have a data point at every DIV for the AUC calculation. However, this appropriateness of this practice is uncertain for some parameters.
+
+* You may see the message "Some rows in  [project_name]_well_quality_assignments_by_well.csv  did not match any rows in dat:". If there are no NFA-related well quality notes in THIS well quality notes table, that is okay. However, if you were expected some fields to match, then check that the affected_assays column in the well quality notes table contains 'nfa'
+
+To do:
+* check that there are 4 (or len of use.dIVs) per grouping of by term (or not is essentially already done)
+* confirm all same functionality! 
+* address the "Fix" thing
 
 
 # RESUME BELOW (then resume with step in run_me, explaining)

@@ -13,7 +13,7 @@
 # 'run_cytotox_functions()' below
 
 # set the location for the output file
-# basepath <- main.output.dir
+# basepath <- project.output.dir
 
 # set the name of the output file
 # filename = paste0(project_name,"_cytotox_longfile.csv")

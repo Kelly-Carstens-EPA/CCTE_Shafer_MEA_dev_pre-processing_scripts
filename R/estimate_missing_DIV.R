@@ -9,6 +9,9 @@
 
 estimate_missing_DIV <- function(dat, date_platei, add.DIV, use_all_plates = FALSE)
 {
+  
+  stop('Warning - this function is deprecated. Use only for reference')
+  
   require(data.table)
   if (!("date_plate" %in% names(dat))) dat[, date_plate := paste(date, Plate.SN, sep = "_")]
   trts <- dat[date_plate == date_platei & dose != 0, unique(trt)]
