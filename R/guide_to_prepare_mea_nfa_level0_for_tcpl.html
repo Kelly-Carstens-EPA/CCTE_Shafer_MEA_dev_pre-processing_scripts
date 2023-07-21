@@ -1631,8 +1631,7 @@ pre-processing workflow</h1>
 <li>Would be better to read the cytotoxicity data from the raw files
 directly… ugh. This is semi-critical but rare. Maybe see what you do for
 the acute? Theoretically this coudl really save some steps…</li>
-<li>The source files
-<ul>
+<li>The source files</li>
 <li>Background: All experimental and meta data sources files used to
 pre-process data for the ToxCast Pipeline will ultimately be saved in
 Clowder (to Amy’s knowledge). With the current pre-processing approach,
@@ -1646,9 +1645,7 @@ ToxCast_data drive. Going forward, work with the ToxCast data team to
 determine the best path, and check for any modifications to the source
 files that occurred after pre-processing before sharing with the ToxCast
 team.</li>
-</ul></li>
-<li>The ‘srcf’ columns:
-<ul>
+<li>The ‘srcf’ columns:</li>
 <li>Background: The mc0 and sc0 files that are loaded into the ToxCast
 pipeline are expected to include the column ‘srcf’ (read “source file”).
 This column should contain the name of the file that was used to
@@ -1659,7 +1656,6 @@ generate the numeric and meta data for a single data row</li>
 (e.g., 1 for each plate for the MEA endpoints). These .zip files would
 become the new ‘srcf’. This solution was proposed by Jason Brown to
 address a similar issue for the HCI data.</li>
-</ul></li>
 </ul>
 </div>
 <div id="completed" class="section level1" number="2">
@@ -1678,16 +1674,13 @@ something that will work, with known issues / bugs / to-d articulated at
 the top, in such a way that Man/Kelly could interpret</p>
 <ul>
 <li>Go through the run_me, make it good, and make this guide actually
-follow that! (time to go line by line &amp; make it work!!)
-<ul>
+follow that! (time to go line by line &amp; make it work!!)</li>
 <li>Make it a working RMD as you go!</li>
 <li>Review recent updates to the HCI data pre-processing. Note any to
 integrate here or in run_me.</li>
 <li>Cross check template with most recent NFA run_me that has been
 ran</li>
-</ul></li>
-<li>To update in scripts as you go
-<ul>
+<li>To update in scripts as you go</li>
 <li>Confirm that package load order is okay</li>
 <li>well quality notes - updated name &amp; format of wllq notes tables
 (see how doing it for the HCI!)</li>
@@ -1695,7 +1688,6 @@ ran</li>
 and across tables</li>
 <li>check back with the notes template to confirm that instructions
 align with function</li>
-</ul></li>
 <li>See “to do now” in shafer lab pre-pro, documents, NFA pre-pro to do
 Now section for any funtionality notes to address now.</li>
 <li>See neat updates from e.g., TSCA2019 for handling larger datasets
@@ -1705,6 +1697,8 @@ time?)</li>
 M if she encounters that.</li>
 <li>Update/revisit/confirm the detaisl on parameter calculations? at
 least save that somewhere</li>
+<li>Add note for chgv_paraemers.R - this is loaded in create_ont_csv. So
+that’s where you coudl modify!</li>
 </ul>
 <p><strong>Checky-checky stuff</strong>:</p>
 <ul>
@@ -1729,8 +1723,26 @@ just have to select the “wide” version</p>
 collection step. Console will say ‘user elected to stop’. This is fine,
 you can move on.</p>
 </div>
-<div id="abbreviations" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Abbreviations</h1>
+<div id="would-loooooove-to-do-if-time-to-make-future-debugging-easy" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Would loooooove to do
+if time to make future debugging easy</h1>
+<ul>
+<li><p>Document all I’ve learned about create ont burst data, so people
+know what is going on</p></li>
+<li><p>Make that funciton way more streamlined!!</p></li>
+<li><p>clean up creat ont csv</p></li>
+</ul>
+</div>
+<div id="info-that-someoneo-outside-epa-would-need" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Info that someoneo
+outside EPA would need</h1>
+<ul>
+<li>how maestroexperimentlog files should be formatted - maybe include
+an example?</li>
+</ul>
+</div>
+<div id="abbreviations" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Abbreviations</h1>
 <div class="kable-table">
 <table>
 <thead>
@@ -1748,12 +1760,16 @@ you can move on.</p>
 <td align="left">NFA</td>
 <td align="left">Network Formation Assay</td>
 </tr>
+<tr class="odd">
+<td align="left">wllq</td>
+<td align="left">well quality</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="notes" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Notes</h1>
+<div id="notes" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Notes</h1>
 <ul>
 <li>This document and the run_me_template.Rmd are meant to be living
 documents - update them as needed as the process evolves!</li>
@@ -1763,23 +1779,27 @@ are so many notes here that the average user would need, e.g., to ignore
 the ‘no network spikes found’ warning)</li>
 </ul>
 </div>
-<div id="r-things-id-suggest-manasvinee-learn" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> R things I’d suggest
-Manasvinee learn</h1>
+<div id="r-things-id-suggest-manasvinee-learn-that-i-havent-already-sent-her" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> R things I’d suggest
+Manasvinee learn (That I haven’t already sent her)</h1>
+<p>(send her this as need arises &amp; to break her in a bit)</p>
 <ul>
-<li>= vs == vs &lt;-</li>
-<li>grepl and grep</li>
-<li>subsetting a list with [] and either integers or boolean</li>
-<li>stringi, regex</li>
-<li>boolean**</li>
+<li>.Rproj, default settings re saving history!!</li>
+<li>shortcut to restart R, it’s recommened</li>
+<li><code>%in%</code>, match()</li>
+<li>stringi, regex (sent her some, but not stringi specifically)</li>
+<li>lists, maybe? She is already familar with vectors</li>
 <li>other data types (vectors vs list)</li>
-<li>for loops!</li>
-<li>functions</li>
+<li>functions - I already sent her some stuff, but maybe more?</li>
 <li>sapply, lapply</li>
+<li>data.table basics (e.g., :=, NULL, etc. I already sent her the
+vignette on data.table, but it didn’t include := !)</li>
+<li>peak into the wild wild west of editing functions - how to open up
+the standardized scripts, what those look like…</li>
 </ul>
 </div>
-<div id="potentially-helpful-rmd-tips" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Potentially helpful RMD
+<div id="potentially-helpful-rmd-tips" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Potentially helpful RMD
 tips</h1>
 <ul>
 <li>For any code chunk that you have completed and that you don’t want
@@ -1793,8 +1813,8 @@ down or type Ctrl + alt + shift + P.</li>
 create a .Rproj on your local machine and open the .Rmd from there</li>
 </ul>
 </div>
-<div id="potentially-helpful-nfa-specific-notes" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Potentially helpful
+<div id="potentially-helpful-nfa-specific-notes" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Potentially helpful
 NFA-specific notes</h1>
 <ul>
 <li>Background on sjemea, then meadq made on top of that (links). Then i
@@ -1802,10 +1822,10 @@ made some functions that replace some of the ones from meadq. So… there
 are 3 places where functions may reside where may have to debug</li>
 </ul>
 </div>
-<div id="notes-to-kathleen" class="section level1" number="9">
-<h1><span class="header-section-number">9</span> Notes to Kathleen</h1>
-<div id="maestro-experiment-log" class="section level2" number="9.1">
-<h2><span class="header-section-number">9.1</span> maestro experiment
+<div id="notes-to-kathleen" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Notes to Kathleen</h1>
+<div id="maestro-experiment-log" class="section level2" number="11.1">
+<h2><span class="header-section-number">11.1</span> maestro experiment
 log</h2>
 <ul>
 <li>Please keep the phrase “MaestroExperimentLog” in these files</li>
@@ -1814,8 +1834,8 @@ present of the culturedate_platenumber[_ ]. OKay?</li>
 </ul>
 </div>
 </div>
-<div id="overview-of-the-process" class="section level1" number="10">
-<h1><span class="header-section-number">10</span> Overview of the
+<div id="overview-of-the-process" class="section level1" number="12">
+<h1><span class="header-section-number">12</span> Overview of the
 process</h1>
 <p>This document outlines the process of transforming the recordings
 from a Microelectrode Array Network Formation Assay into an “mc0” file
@@ -1828,8 +1848,8 @@ across each DIV</li>
 activity metrics for 17 endpoints</li>
 </ul>
 </div>
-<div id="setting-up-the-pre-processing-project-folder" class="section level1" number="11">
-<h1><span class="header-section-number">11</span> Setting up the
+<div id="setting-up-the-pre-processing-project-folder" class="section level1" number="13">
+<h1><span class="header-section-number">13</span> Setting up the
 pre-processing project folder</h1>
 <ul>
 <li>Define the project name for the project (usually the name of the
@@ -1840,8 +1860,8 @@ e.g. “PFAS2018”). Don’t use any spaces.</li>
 Rename the copy of the folder with the project name.</li>
 </ul>
 </div>
-<div id="prepare-notebook-section" class="section level1" number="12">
-<h1><span class="header-section-number">12</span> Prepare notebook
+<div id="prepare-notebook-section" class="section level1" number="14">
+<h1><span class="header-section-number">14</span> Prepare notebook
 section</h1>
 <ul>
 <li>Open the pre-processing notebook for the NFA:
@@ -1853,8 +1873,8 @@ save email records as you pre-process the data. Review the suggested
 usage of this notebook in the “Overview” page.</li>
 </ul>
 </div>
-<div id="check-out-the-project-folder" class="section level1" number="13">
-<h1><span class="header-section-number">13</span> Check out the project
+<div id="check-out-the-project-folder" class="section level1" number="15">
+<h1><span class="header-section-number">15</span> Check out the project
 folder</h1>
 <p>Familiarize yourself with the project folder. Get a sense of where
 all of the culture folders are located, how many there are, which are
@@ -1863,8 +1883,8 @@ single- and which are multiple-concentration screens, etc.</p>
 were used for the analysis, and which were excluded (because of quality
 concerns). See “Experimental Summary of Data” file if present.</p>
 </div>
-<div id="review-lab-notebook-for-well-quality-notes" class="section level1" number="14">
-<h1><span class="header-section-number">14</span> Review lab notebook
+<div id="review-lab-notebook-for-well-quality-notes" class="section level1" number="16">
+<h1><span class="header-section-number">16</span> Review lab notebook
 for well quality notes</h1>
 <ul>
 <li>Read through the lab notebook for well quality notes (usually you
@@ -1877,8 +1897,8 @@ DMSO</li>
 described below</li>
 </ul>
 </div>
-<div id="adjust-well-quality-or-add-well-quality-notes" class="section level1" number="15">
-<h1><span class="header-section-number">15</span> Adjust well quality or
+<div id="adjust-well-quality-or-add-well-quality-notes" class="section level1" number="17">
+<h1><span class="header-section-number">17</span> Adjust well quality or
 add well quality notes</h1>
 <p><strong>Background</strong>: Every level 0 table processed with the
 ToxCast pipeline must contain a binary ‘wllq’ column (read “well
@@ -1893,20 +1913,27 @@ used for internal record-keeping and follow-up analyses.</p>
 <p>There are 2 ways to set the wllq to 0 or add a well quality note
 (described below). Either option can be used; choose whichever option is
 easiest for each wllq situation.</p>
-<div id="update-the-wllq-when-the-well-id-is-known" class="section level2" number="15.1">
-<h2><span class="header-section-number">15.1</span> Update the wllq when
+<p>Note that the wllq notes entered in the first table
+(“[project_name]_well_quality_assignments_by_well.csv”) will be applied
+from within the function parameter_values_to_AUC(). The wllq notes in
+the second table
+(“[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv”)
+will be applied within the run_me RMD AFTER the treatment names and
+concentrations have been verified by you.</p>
+<div id="update-the-wllq-when-the-well-id-is-known" class="section level2" number="17.1">
+<h2><span class="header-section-number">17.1</span> Update the wllq when
 the well ID is known</h2>
 <p>For wells where you know the specific plate, well and (optionally)
 DIV that are affected: Enter wells that should be excluded from the
 analysis in the excel file
-“[project_name]_well_quality_assigments_by_well.csv”</p>
+“[project_name]_well_quality_assignments_by_well.csv”</p>
 <p>For each well, fill out the columns:</p>
 <div class="kable-table">
 <table>
 <colgroup>
-<col width="6%" />
-<col width="64%" />
-<col width="29%" />
+<col width="4%" />
+<col width="75%" />
+<col width="19%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1919,18 +1946,18 @@ analysis in the excel file
 <tr class="odd">
 <td align="left">affected_assays</td>
 <td align="left">Comma-separated list of which assays the well-quality
-affects (mea, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay
-may also be referred to as Alamar Blue)</td>
+affects, including mea, CTB (Cell Titer Blue), or LDH. (Note that the
+CTB assay may also be referred to as Alamar Blue)</td>
 <td align="left">For only the CellTiter Blue assay: CTB; For all assays:
-mea,CTB,LDH</td>
+nfa,CTB,LDH</td>
 </tr>
 <tr class="even">
-<td align="left">culture_date</td>
+<td align="left">date</td>
 <td align="left">Culture date (YYYYMMDD)</td>
 <td align="left">20201109</td>
 </tr>
 <tr class="odd">
-<td align="left">plate</td>
+<td align="left">Plate.SN</td>
 <td align="left">Plate Serial Number. Should begin with ‘MW’</td>
 <td align="left">MW71-7905</td>
 </tr>
@@ -1943,8 +1970,10 @@ affected, enter ‘all’.</td>
 </tr>
 <tr class="odd">
 <td align="left">DIV</td>
-<td align="left">Day in vitro. If all DIV are affected, enter ‘all’. If
-the affected assay is a cytotoxicity assay (LDH or CTB), this column
+<td align="left">Day in vitro. If all DIV are affected, enter ‘all’. (If
+any DIV other than the standard expected DIV (5, 7, 9, and 12) are
+affected, create a separate row in the well quality table for each DIV).
+If the affected assay is a cytotoxicity assay (LDH or CTB), this column
 will be ignored.</td>
 <td align="left">12</td>
 </tr>
@@ -1969,8 +1998,8 @@ learned about the well quality note)</td>
 </table>
 </div>
 </div>
-<div id="update-the-wllq-when-the-treatment-is-known" class="section level2" number="15.2">
-<h2><span class="header-section-number">15.2</span> Update the wllq when
+<div id="update-the-wllq-when-the-treatment-is-known" class="section level2" number="17.2">
+<h2><span class="header-section-number">17.2</span> Update the wllq when
 the treatment is known</h2>
 <p>For wells where you know the treatment, culture date, and
 (optionally) concentration index that are affected: Enter info in the
@@ -2000,10 +2029,10 @@ parameters_by_DIV intermediate output files.</p>
 <tr class="odd">
 <td align="left">affected_assays</td>
 <td align="left">Comma-separated list of which assays the well-quality
-affects (mea, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay
+affects (nfa, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay
 may also be referred to as Alamar Blue)</td>
 <td align="left">For only the CellTiter Blue assay: CTB; For all assays:
-mea,CTB,LDH</td>
+nfa,CTB,LDH</td>
 </tr>
 <tr class="even">
 <td align="left">compound_name</td>
@@ -2046,8 +2075,8 @@ learned about the well quality note)</td>
 </table>
 </div>
 </div>
-<div id="notes-1" class="section level2" number="15.3">
-<h2><span class="header-section-number">15.3</span> Notes</h2>
+<div id="notes-1" class="section level2" number="17.3">
+<h2><span class="header-section-number">17.3</span> Notes</h2>
 <p>It is okay if there are multiple rows in either well quality notes
 table affect the same well. (This may occur if e.g., all wells on plate
 X were affected because the plate was shaken and an individual well on
@@ -2055,8 +2084,8 @@ plate X had a contamination). The scripts will collapse these notes and
 take the minimum wllq for each well.</p>
 </div>
 </div>
-<div id="determine-if-any-samples-ids-need-to-be-registered" class="section level1" number="16">
-<h1><span class="header-section-number">16</span> Determine if any
+<div id="determine-if-any-samples-ids-need-to-be-registered" class="section level1" number="18">
+<h1><span class="header-section-number">18</span> Determine if any
 samples IDs need to be registered</h1>
 <p><strong>Background</strong>: In order to process the data with the
 EPA’s ToxCast pipeline and loaded into invitrodb, every treatment must
@@ -2075,8 +2104,8 @@ MaestroExperimentLog), DTXSID (if available), stock concentration,
 supplier, lot number, and any additional useful information such as the
 CASN, purity, etc. The ChemTrack product owner is Madison Feshuk (<a href="mailto:feshuk.madison@epa.gov" class="email">feshuk.madison@epa.gov</a>) as of Summer 2023.</p>
 </div>
-<div id="install-required-r-packages" class="section level1" number="17">
-<h1><span class="header-section-number">17</span> Install required R
+<div id="install-required-r-packages" class="section level1" number="19">
+<h1><span class="header-section-number">19</span> Install required R
 packages</h1>
 <ol style="list-style-type: decimal">
 <li>Use the command <code>install.packages(“package name”)</code> to
@@ -2116,14 +2145,14 @@ following packages from GitHub:</li>
 <p>Links to the GitHub repositories: <a href="https://github.com/dianaransomhall/meadq" class="uri">https://github.com/dianaransomhall/meadq</a>, <a href="https://github.com/sje30/sjemea" class="uri">https://github.com/sje30/sjemea</a></p>
 <p>Additional information on installing packages from GitHub: <a href="https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html" class="uri">https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html</a></p>
 </div>
-<div id="running-the-pre-processing-script" class="section level1" number="18">
-<h1><span class="header-section-number">18</span> Running the
+<div id="running-the-pre-processing-script" class="section level1" number="20">
+<h1><span class="header-section-number">20</span> Running the
 pre-processing script</h1>
-<div id="set-up" class="section level2" number="18.1">
-<h2><span class="header-section-number">18.1</span> Set up</h2>
+<div id="set-up" class="section level2" number="20.1">
+<h2><span class="header-section-number">20.1</span> Set up</h2>
 <ul>
 <li><p>Go to the master pre-processing SCRIPTS repository on the L drive
-(<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts</code>)
+(<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R</code>)
 or on GitHub
 (<code>https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test</code>).
 Copy the script <code>run_me_template.Rmd</code> and save in the
@@ -2142,61 +2171,56 @@ TCPL_repos_Shafer_MEA_dev_pre-processing_scripts” or the GitHub
 repo).</p></li>
 <li><p>Fill out the “Project variables definitions” section. Note that
 all filepaths must use forward slashes (“/”) rather than backslashes
-(“&quot;).</p>
-<ul>
-<li><code>project_name</code> - the project name. Should be the same as
-the folder name created under ‘Setting up the pre-processing project
-folder’</li>
-<li><code>spidmap_file</code> - path to file that maps treatment names
-to registered sample IDs. Preferably, this file should also contain the
-stock concentrations for each sample</li>
-<li><code>spid_sheet</code> - desired sheet in spidmap_file (can be
-numeric or the sheet name)</li>
-<li><code>project.dir</code> - main directory of the experimental data
-for project, e.g., “L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021”. This
+(“&quot;).</p></li>
+<li><p><code>project_name</code> - the project name. Should be the same
+as the folder name created under ‘Setting up the pre-processing project
+folder’</p></li>
+<li><p><code>spidmap_file</code> - path to file that maps treatment
+names to registered sample IDs. Preferably, this file should also
+contain the stock concentrations for each sample</p></li>
+<li><p><code>spid_sheet</code> - desired sheet in spidmap_file (can be
+numeric or the sheet name)</p></li>
+<li><p><code>project.dir</code> - main directory of the experimental
+data for project, e.g., “L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021”. This
 folder is used to direct the scripts of where to search for experimental
-data files and .txt files that might affect the well quality.</li>
-<li><code>scripts.dir</code> - directory containing the pre-processing
-scripts for the NFA. Usually “L:_MEA_Shafer pre-process for
-TCPL_repos_Shafer_MEA_dev_pre-processing_scripts“. These scripts are
-also availabe on GitHub <link tba></li>
-<li><code>root.output.dir</code> - directory where the project_name
+data files and .txt files that might affect the well quality.</p></li>
+<li><p><code>scripts.dir</code> - directory containing the
+pre-processing scripts for the NFA. Usually “L:_MEA_Shafer pre-process
+for TCPL_repos_Shafer_MEA_dev_pre-processing_scripts“. These scripts are
+also availabe on GitHub <link tba></p></li>
+<li><p><code>root.output.dir</code> - directory where the project_name
 folder is located, usually “L:_MEA_Shafer pre-process for
 TCPL_repos_Shafer_MEA_dev_pre-processing_projects”. This defines where
-the output will be saved.</li>
-</ul></li>
+the output will be saved.</p></li>
 <li><p>Fill out the information to record the version of the
-pre-processing scripts that will be used for the given project.</p>
-<ul>
-<li>To verify that there are no uncommitted modifications to the
+pre-processing scripts that will be used for the given project.</p></li>
+<li><p>To verify that there are no uncommitted modifications to the
 scripts, open Git Bash in the scripts.dir and run
 <code>git status</code>. Commit any recent modifications and then run
-<code>git push</code> to sync with the remote.</li>
-<li>Enter the branch of the pre-processing scripts that will be used for
-the given project. Should be the ‘master’ branch. (Run
+<code>git push</code> to sync with the remote.</p></li>
+<li><p>Enter the branch of the pre-processing scripts that will be used
+for the given project. Should be the ‘master’ branch. (Run
 <code>git branch</code> to check which branch is currently displayed in
-the scripts.dir).</li>
-<li>Obtain the commit date, message, and SHA of the most recent commit
-to the scripts repository using either of the following methods
-<ul>
-<li>Navigate to the scripts GitHub repository (<a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test</a>),
-click “commits”, then view the most recent commit</li>
-<li>Open Git Bash in the scripts.dir. Sync with the remote (run
+the scripts.dir).</p></li>
+<li><p>Obtain the commit date, message, and SHA of the most recent
+commit to the scripts repository using either of the following
+methods</p></li>
+<li><p>Navigate to the scripts GitHub repository (<a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test</a>),
+click “commits”, then view the most recent commit</p></li>
+<li><p>Open Git Bash in the scripts.dir. Sync with the remote (run
 <code>git pull origin</code>), then view the most recent commit with
-<code>git log -1</code></li>
-<li>Enter a link to the GitHub repository for the most recent commit.
+<code>git log -1</code></p></li>
+<li><p>Enter a link to the GitHub repository for the most recent commit.
 Should be the GitHub link, followed by “/tree/<SHA>”. For example, <a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/tree/5c0bf943f9752015ded8e7f54f864b3359e02f10" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/tree/5c0bf943f9752015ded8e7f54f864b3359e02f10</a>.
 As the pre-processing scripts are modified going forward, this link
 should serve as a stable reference to the version of the scripts used to
 pre-process the current project. Ideally, in the future, the NFA
 pre-processing scripts could be saved as a package. Then, this step
-could be replaced by simply referencing the package version.</li>
-</ul></li>
-</ul></li>
+could be replaced by simply referencing the package version.</p></li>
 </ul>
 </div>
-<div id="check-for-readmes-and-other-well-quality-notes-in-project-folder" class="section level2" number="18.2">
-<h2><span class="header-section-number">18.2</span> Check for READMEs
+<div id="check-for-readmes-and-other-well-quality-notes-in-project-folder" class="section level2" number="20.2">
+<h2><span class="header-section-number">20.2</span> Check for READMEs
 and other well quality notes in project folder</h2>
 <ul>
 <li>The script is set up to scan for any files that end in “.txt” within
@@ -2213,8 +2237,8 @@ files that look like they may contain an important well quality or other
 note. Any “Overactive electrodes.txt” files can be ignored.</li>
 </ul>
 </div>
-<div id="identify-source-experimental-and-meta-data-files" class="section level2" number="18.3">
-<h2><span class="header-section-number">18.3</span> Identify source
+<div id="identify-source-experimental-and-meta-data-files" class="section level2" number="20.3">
+<h2><span class="header-section-number">20.3</span> Identify source
 experimental and meta data files</h2>
 <p>Get a list of the group folders from which you want to pull the
 experimental data. By default, the script will identify all folders in
@@ -2246,16 +2270,17 @@ needed.</p>
 <p>Finally, the list of files in all.files will be saved in a file name
 “project_name_files_log.txt”.</p>
 </div>
-<div id="run-the-main-steps" class="section level2" number="18.4">
-<h2><span class="header-section-number">18.4</span> Run the main
+<div id="run-the-main-steps" class="section level2" number="20.4">
+<h2><span class="header-section-number">20.4</span> Run the main
 steps</h2>
-<div id="convert-spike-list-files-to-h5-files" class="section level3" number="18.4.1">
-<h3><span class="header-section-number">18.4.1</span> Convert spike list
+<div id="convert-spike-list-files-to-h5-files" class="section level3" number="20.4.1">
+<h3><span class="header-section-number">20.4.1</span> Convert spike list
 files to h5 files</h3>
 <p>This step reads the data in the spike list files, performs some
-preliminary calculations/summaries, adds the meta data in the
+preliminary calculations/summaries, merges in the meta data in the
 MaestroExperimentLog, and saves all of this information as h5files. One
-h5file is created for every spike list file.</p>
+h5file is created for every spike list file. The output will be saved in
+the project.output.dir.</p>
 <p>The primary function is h5_conversion(). This function calls the
 function axion.spkList.to.h5(), which is in the script
 <code>spike_list_functions.R</code>.</p>
@@ -2272,29 +2297,28 @@ the spike list files that have not already been created in the
 project.output.dir h5files folder (FALSE)</li>
 <li>check_nwells_per_plate - the number of wells that are expected to be
 present in a plate (usually 48 wells for the NFA). If this many wells
-not found in the MaestroExperimentLog, h5_conversion will throw an
+are not found in the MaestroExperimentLog, h5_conversion will throw an
 error</li>
 <li>recording_duration_sec - expected duration of the spike list file
-recording (in seconds). Data from the spike list file recording beyond
-the recording_duration_sec will be ignored. If a recording was more than
-3 minutes less than the recording_duration_sec, the function will throw
-an error</li>
+recording (in seconds). This should be 900 (i.e., 15 minutes) for
+Network Formation Assay experiments done in the Shafer lab. Spikes
+recorded more than recording_duration_sec beyond the time of the first
+spike will be ignored. If a recording was more than 3 minutes less than
+the recording_duration_sec, the function will throw an error.</li>
 </ul>
 <p>This function will take several minutes to run. As it runs, output
 will be displayed to the console that summarizes each spike list file.
 You may see the following message:</p>
-<ul>
-<li><blockquote>
+<blockquote>
 <p>You created a large dataset with compression and chunking. The chunk
 size is equal to the dataset dimensions. If you want to read subsets of
 the dataset, you should testsmaller chunk sizes to improve read
 times.</p>
-</blockquote></li>
-</ul>
-<p>(This message indicates that there are more efficient ways to handle
+</blockquote>
+<p>This message indicates that there are more efficient ways to handle
 the data, but the data itself should not be compromised. So this message
-can be ignored.)</p>
-<p><strong>Note</strong>: If you have to terminate R part way through
+can be ignored.</p>
+<p><strong>Notes</strong>: If you have to terminate R part way through
 this step, the h5file that it was currently working on may be
 incomplete. Be sure to delete that partial h5file so that it will be
 recreated when you restart.</p>
@@ -2307,10 +2331,181 @@ the file name and the contents) for any mismatches in the culture date
 or plate.id.</li>
 </ul>
 </div>
+<div id="calculate-micro-electrode-array-parameter-values" class="section level3" number="20.4.2">
+<h3><span class="header-section-number">20.4.2</span> Calculate
+micro-electrode array parameter values</h3>
+<p>This step calls the function create_ont_csv(), which is a wrapper for
+the function create_burst_ont_Data(). The function
+create_burst_ont_Data() handles the calculation of 16 parameters.
+(Parameters = mean firing rate, burst rate, number of network spikes,
+etc). Parameters may also be referred to as “components” or “features”.
+This function takes the h5files as input. The output will be saved in
+the project.output.dir in a folder called ‘prepared_data’. One .csv file
+will be created for every plate. Within a csv file, every data row
+corresponds to 1 well from 1 recording (DIV).</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>As the function runs, you will see the following message repeated
+many times:</li>
+</ul>
+<blockquote>
+<p>‘*** No network spikes found’</p>
+</blockquote>
+<p>This message can be ignored. (Unfortunately, this is produced by a
+function within either the <code>meadq</code> or <code>sjemea</code>
+packages and I do not know how to modify it).</p>
+<ul>
+<li>The output csv files will contain ‘ABEfilt’ in the file name. This
+stands for “Actively Bursting Electrodes filter.” Briefly, this means
+that, for relevant parameters, the calculations were restricted to the
+‘actively bursting electrodes’ (i.e., electrodes with &gt;= 0.5 bursts
+per minute) or the ‘active electrodes’ (i.e., electrodes with &gt;= 5
+spikes per minute) as appropriate for each parameter. See parameter
+calculation notes or create_burst_ont_Data() for more details.</li>
+</ul>
+</div>
+<div id="calculate-normalized-mutual-information" class="section level3" number="20.4.3">
+<h3><span class="header-section-number">20.4.3</span> Calculate
+normalized mutual information</h3>
+<p>This step calculates the normalized mutual information. This is a
+parameter developed by Ken Ball. This parameter is calculated separately
+from the other MEA parameters because it was developed separately (by
+Ken Ball) from the other 16 parameters (developed by Diana Hall and
+Stephen Eglen) and because it takes significantly longer to calculate
+than the other parameters. This function takes the h5files as input. The
+output will be saved in the project.output.dir in a folder called
+‘All_MI’. One .csv file will be created for every plate. Within a csv
+file, every data row corresponds to 1 well from 1 recording (DIV).</p>
+<p>This is the most computationally-intensive step. Each plate
+(corresponding to 4 recordings) takes about 10-15 minutes to run.</p>
+</div>
+<div id="calculate-area-under-the-curve-values" class="section level3" number="20.4.4">
+<h3><span class="header-section-number">20.4.4</span> Calculate
+Area-Under-the-Curve values</h3>
+<p>In order to combine the parameter values from each DIV, we calculate
+the trapezoidal Area-Under-the-Curve (AUC) values for each parameter
+value in every well. This step performs that calculation, in addition to
+some other checks. The function prepare_parameter_values() takes the csv
+files that contain the 16 parameters and the mutual information for each
+DIV as input. This function merges all of the files, performs some
+checks and standardization, merges in the well quality information from
+the table “[project_name]_well_quality_assignments_by_well.csv” (using
+the function <code>add_wllq_by_well.R</code>), then saves a single .csv
+with all of the parameter values by DIV. The function
+parameter_values_to_AUC() read the output file created by
+prepare_parameter_values(), performs some checks, then calculates the
+trapzoidal AUC for each parameter in every well over the DIV.</p>
+<p>Refer to the scripts prepare_parameter_values.R and
+parameter_values_to_AUC.R for details on each argument.</p>
+<p><strong>prepare_parameter_values() notes</strong>:</p>
+<ul>
+<li><p>the default expected_DIVs for this script are c(5, 7, 9,
+12)</p></li>
+<li><p>NA parameter values are left as NA in output of this
+function.</p></li>
+<li><p>The function prepare_parameter_values() includes an option to add
+data rows for DIV 2 with a value of 0 for every parameter (see argument
+add_DIV2_values_of_0). This option should be set to TRUE to be
+consistent with all Shafer Lab’s AUC NFA data pipelined in invitroDB to
+date (July 2023).</p>
+<ul>
+<li>Background: Early in the development of the NFA, recordings were
+made on DIV 2, 5, 7, 9, and 12. Eventually, because so little activity
+was observed on DIV 2, they stopped recording on DIV 2. When the script
+<code>burst_parameter_to_AUC.R</code> was made (the predecessor to
+<code>parameter_values_to_AUC.R</code>), the writer decided to add a
+point at (DIV = 2, value = 0) for every well and parameter value. This
+choice to impute dummy data at DIV 2 has been the practice in the Shafer
+lab since before 2019.</li>
+</ul></li>
+<li><p>Wllq_by_well notes:</p>
+<ul>
+<li><p>The well quality in the output tables defaults to 1 unless
+otherwise specified in
+“[project_name]_well_quality_assignments_by_well.csv”. The well quality
+should not be considered finalized until the well quality notes from the
+other well quality table are also integrated
+(“[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv”).
+(The second well quality table has to be merged later on in the run_me,
+after the treatment and concentration is each well is
+verified).</p></li>
+<li><p>If some of the rows in the wllq.tb.by.well.file that include
+‘nfa’ in the affected assays do not match any of the data rows in the
+div_data, a warning will be given, e.g.</p></li>
+</ul></li>
+</ul>
+<blockquote>
+<p>Some rows in Test2023_well_quality_assignments_by_well.csv did not
+match any rows in dat</p>
+</blockquote>
+<p>This warning indicates that there was likely a typo in the meta data
+in the wllq.tb.by.well.file or the div_data (e.g., incorrect culture
+date or Plate.SN entered somewhere). If this warning is observed and the
+div_data_files includes the entire data set, check the preceding output
+and check if any of the meta data in the wllq.tb.by.well.file does not
+match the intended meta data in the div_data.</p>
+<ul>
+<li>Rare-but-sometimes-needed option: interpolate values from
+non-standard to standard DIVs: Usually, recordings are made on DIV 5, 7,
+9, and 12. However, occasionally, e.g., due to inclement weather,
+recordings may be made on non-standard DIV. For example, if there was
+inclement weather on DIV 9, a set of plates might have been recorded on
+DIVs 5, 7, 10, and 12. In order to aim to make the AUC value for these
+plates comparable to AUC values from other plates with recordings from
+DIV 5, 7, 9, and 12, the parameter values for DIV 9 can be linearly
+interpolated from DIVs 7 and 10. This is an imperfect solution, but it
+has been used occasionally in past projects.</li>
+</ul>
+<p>How values are interpolated with this script:</p>
+<p>The function prepare_parameter_values() will check for any
+non-standard DIV. If any non-standard DIV are present and
+interpolate_stnd_DIVs = TRUE, then this function will call the function
+linear_interpolate_DIV() to interpolate the parameter values at the
+standard DIVs from the DIVs that were recorded. The wllq_notes and
+file.name in the resulting table will indicate the data rows that were
+interpolated. However, note that the linear_interpolate_DIV() function
+was recently updated (July 2023) and has had limited use, so it has not
+been well-tested and may need to be updated for a given project.</p>
+<p>Note that interpolating values at standard DIVs from non-standard
+DIVs is not the same as interpolating a value when a DIV recording was
+just missed. See notes on ‘check for missing DIV’ below for how this is
+handled.</p>
+<p><strong>parameter_values_to_AUC() notes</strong>:</p>
+<ul>
+<li>the default expected_DIVs for this script are c(2, 5, 7, 9, 12)</li>
+<li>In order to calculate the area under the curve, this function sets
+any NA parameter values are set to 0. This has been the practice since
+before 2019; however, the appropriateness of this choice in uncertain
+for some parameters. Alternative approaches to summarizing the activity
+over the DIV recorded may be warranted in these cases.</li>
+<li><strong>Checks for missing DIVs:</strong>
+<ul>
+<li>Case #1: In some cases, a DIV recording may have been missed or not
+saved for a given plate. For example, a given plate may only have data
+for DIV 5, 9, and 12 (but not DIV 7). In this case, an AUC value could
+be calculated, but the appropriateness of comparing this AUC value to
+AUC values from plates with recordings on all of the expected_DIVs is
+uncertain. In some past projects (e.g., ~2014) with some missing DIV
+recordings for a single plate, parameter values from the other 2 plates
+tested in the same culture were used to generate filler data.
+Specifically, the median of wells that tested the same treatment and
+dose was used to generate filler data for each well of the plate with
+the missing DIV. The script estimate_missing_DIV.R was used to do this.
+However, this script has not been maintained and this practice is not
+optimal. Therefore, in the current implementation of
+<code>parameter_values_to_AUC()</code>, the well quality will be set to
+0 for the AUC value for any wells/parameters that do not have a value
+for every DIV in expected_DIVs.</li>
+<li>Case #2: If the well quality by well is 0 for any DIV for a given
+well/parameter, than the well quality by well for the AUC value for the
+well/parameter will also be set to 0.</li>
+</ul></li>
+</ul>
 </div>
 </div>
-<div id="resume-below-then-resume-with-step-in-run_me-explaining" class="section level1" number="19">
-<h1><span class="header-section-number">19</span> RESUME BELOW (then
+</div>
+<div id="resume-below-then-resume-with-step-in-run_me-explaining" class="section level1" number="21">
+<h1><span class="header-section-number">21</span> RESUME BELOW (then
 resume with step in run_me, explaining)</h1>
 <p>Source the run_me script line by line: * Under the section “run the
 main steps”, source the script source_steps.R. This script will
@@ -2320,8 +2515,8 @@ script will also check if a step has been run before. If so, you will be
 able to select if you want to continue with the existing files, remake
 all of them (i.e., overwrite), append to the existing files, or quit.
 You can quit and re-source this line as many times as needed.</p>
-<div id="selecting-files" class="section level2" number="19.1">
-<h2><span class="header-section-number">19.1</span> Selecting files</h2>
+<div id="selecting-files" class="section level2" number="21.1">
+<h2><span class="header-section-number">21.1</span> Selecting files</h2>
 <ul>
 <li>Select all file types needed for the analysis (_spike_list.csv,
 _MaestroExperimentLog_Ontogeny.csv, and Calculations/Summary xlsx files
@@ -2432,8 +2627,12 @@ save_notes_graphs &lt;- FALSE</code></pre>
 files.</p>
 </div>
 </div>
-<div id="final-checks-before-sending-data-to-tcpl" class="section level1" number="20">
-<h1><span class="header-section-number">20</span> Final checks before
+<div id="wrap-up" class="section level1" number="22">
+<h1><span class="header-section-number">22</span> Wrap up</h1>
+<p>Knit the doc to save it!</p>
+</div>
+<div id="final-checks-before-sending-data-to-tcpl" class="section level1" number="23">
+<h1><span class="header-section-number">23</span> Final checks before
 sending data to TCPL</h1>
 <p>(per recommendation from Kelly)</p>
 <ol style="list-style-type: lower-alpha">

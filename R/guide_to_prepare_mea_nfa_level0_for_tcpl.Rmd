@@ -90,7 +90,8 @@ Console will say ‘user elected to stop’. This is fine, you can move on.
 ```{r echo = FALSE}
 abb.tb <- rbind(
   data.table('NFA','Network Formation Assay'),
-  data.table('MCL or Master Chemical List','MaestroExperimentLog file')
+  data.table('MCL or Master Chemical List','MaestroExperimentLog file'),
+  data.table('wllq','well quality')
 )
 names(abb.tb) <- c('Abbrev','Defn')
 abb.tb[order(Abbrev)]
@@ -101,18 +102,21 @@ abb.tb[order(Abbrev)]
 * This document and the run_me_template.Rmd are meant to be living documents - update them as needed as the process evolves!
 * Some things will be shfaer lab specific... I"M thinking of jsut givign this out to the public as-is, and people can adapt as needed (bc there are so many notes here that the average user would need, e.g., to ignore the 'no network spikes found' warning)
 
-# R things I'd suggest Manasvinee learn
+# R things I'd suggest Manasvinee learn (That I haven't already sent her)
 
-* = vs == vs <-
-* grepl and grep
-* subsetting a list with [] and either integers or boolean
-* stringi, regex
-* boolean**
+(send her this as need arises & to break her in a bit)
+
+* .Rproj, default settings re saving history!!
+* shortcut to restart R, it's recommened
+* `%in%`, match()
+* stringi, regex (sent her some, but not stringi specifically)
+* lists, maybe? She is already familar with vectors
 * other data types (vectors vs list)
-* for loops!
-* functions
+* functions - I already sent her some stuff, but maybe more?
 * sapply, lapply
-* data.table basics (e.g., :=, NULL, etc)
+* data.table basics (e.g., :=, NULL, etc. I already sent her the vignette on data.table, but it didn't include := !)
+* peak into the wild wild west of editing functions - how to open up the standardized scripts, what those look like...
+
 
 # Potentially helpful RMD tips
 
@@ -169,13 +173,13 @@ Every level 0 table processed with the ToxCast pipeline must contain a binary 'w
 
 There are 2 ways to set the wllq to 0 or add a well quality note (described below). Either option can be used; choose whichever option is easiest for each wllq situation. 
 
-Note that the wllq notes entered in the first table ("[project_name]_well_quality_assigments_by_well.csv") will be applied from within the function parameter_values_to_AUC(). The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you.
+Note that the wllq notes entered in the first table ("[project_name]_well_quality_assignments_by_well.csv") will be applied from within the function parameter_values_to_AUC(). The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you.
 
 
 ## Update the wllq when the well ID is known
 
 For wells where you know the specific plate, well and (optionally) DIV that are affected:
-Enter wells that should be excluded from the analysis in the excel file "[project_name]_well_quality_assigments_by_well.csv"
+Enter wells that should be excluded from the analysis in the excel file "[project_name]_well_quality_assignments_by_well.csv"
 
 For each well, fill out the columns:
 
@@ -185,7 +189,7 @@ wllq.by.well.desc <- data.table(
   'Description' = c("Comma-separated list of which assays the well-quality affects, including mea, CTB (Cell Titer Blue), or LDH. (Note that the CTB assay may also be referred to as Alamar Blue)",
                     "Culture date (YYYYMMDD)",
                     "Plate Serial Number. Should begin with 'MW'","Affected well. Should begin with a letter (for the row) and end with a number. If all of the wells on a given plate are affected, enter 'all'.",
-                    "Day in vitro. If all DIV are affected, enter 'all'. (If any DIV other than 5, 7, 9, and 12 are affected, create a separate row in the well quality table for each DIV). If the affected assay is a cytotoxicity assay (LDH or CTB), this column will be ignored.",
+                    "Day in vitro. If all DIV are affected, enter 'all'. (If any DIV other than the standard expected DIV (5, 7, 9, and 12) are affected, create a separate row in the well quality table for each DIV). If the affected assay is a cytotoxicity assay (LDH or CTB), this column will be ignored.",
                     "Well quality (1 = usable, 0 = not usable)","Well quality note ",
                     "Well quality reference (i.e., the source from which you learned about the well quality note)"),
   'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: nfa,CTB,LDH",
@@ -317,7 +321,7 @@ https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.ht
 
 ## Set up
 
-* Go to the master pre-processing SCRIPTS repository on the L drive (`L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts`) or on GitHub (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test`). Copy the script `run_me_template.Rmd` and save in the PROJECTS folder you just created (`CCTE_Shafer_MEA_dev_pre-processing_projects\project_name`). Rename the script, replacing `template` with the project name.
+* Go to the master pre-processing SCRIPTS repository on the L drive (`L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R`) or on GitHub (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts_test`). Copy the script `run_me_template.Rmd` and save in the PROJECTS folder you just created (`CCTE_Shafer_MEA_dev_pre-processing_projects\project_name`). Rename the script, replacing `template` with the project name.
 
 * Start RStudio by opening the .Rproj in the PROJECTS folder: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`.
 
@@ -422,31 +426,44 @@ This is the most computationally-intensive step. Each plate (corresponding to 4 
 
 ### Calculate Area-Under-the-Curve values
 
-In order to combine the parameter values from each DIV, we calculate the trapezoidal Area-Under-the-Curve (AUC) values for each parameter value in every well. This step performs that calculation, in addition to some other checks. The function parameter_values_to_AUC() takes the csv files that contain the 16 parameters and the mutual information for each DIV as input. Two output files are saved in the project.output.dir in a folder called 'output'. The first file, with the suffix _parameters_by_DIV, contains all of the input parameter data files. The second file, with the suffix _AUC, contains the AUC values with every data row corresponding to 1 well.
+In order to combine the parameter values from each DIV, we calculate the trapezoidal Area-Under-the-Curve (AUC) values for each parameter value in every well. This step performs that calculation, in addition to some other checks. The function prepare_parameter_values() takes the csv files that contain the 16 parameters and the mutual information for each DIV as input. This function merges all of the files, performs some checks and standardization, merges in the well quality information from the table "[project_name]_well_quality_assignments_by_well.csv" (using the function `add_wllq_by_well.R`), then saves a single .csv with all of the parameter values by DIV. The function parameter_values_to_AUC() read the output file created by prepare_parameter_values(), performs some checks, then calculates the trapzoidal AUC for each parameter in every well over the DIV.
 
-parameter_value_to_AUC() arguments:
+Refer to the scripts prepare_parameter_values.R and parameter_values_to_AUC.R for details on each argument.
 
-* project_output_dir - folder where output should be saved
-* project_name - project_name
-* div_data_file_folders - folders that contain the .csv files with the parameter data by DIV (can include multiple folder, usually 1 for the 16-parameter files and one for the MI files). Should be the full path to the folders
-* id.columns - columns in the input parameter data by DIV that should be interpreted as ID columns. Must include "DIV"
-* dose_column_name - (optional) name of column in input data files containing the dose. This column will be converted to character to ensure that any minor discrepancies in the numeric dose value do not interfere with the data grouping for the AUC calculation
-* use_divs = c(5,7,9,12),
-* interpolate_diff_divs = TRUE,
-* add_DIV2_values_of_0 - binary of whether a value of "0" should be added at DIV 2 for every well and parameter value. **If you want to be consistent with data produced by Shafer lab, this should be true**. Background: Earlier in the development of the NFA, recordings were made on DIV 2, 5, 7, 9, and 12. Eventually, because so little activity was observed on DIV 2, they stopped recording on DIV 2. When the script `burst_parameter_to_AUC.R` was made, the writer decided to add a point at (DIV= 2, value = 0) for every well and parameter value. This choice to impute a dummy data at DIV 2 has been the practice in the Shafer lab for all data that has been pipelined in TCPL as of July 2023.
+**prepare_parameter_values() notes**:
+
+* the default expected_DIVs for this script are c(5, 7, 9, 12)
+* NA parameter values are left as NA in output of this function.
+* The function prepare_parameter_values() includes an option to add data rows for DIV 2 with a value of 0 for every parameter (see argument add_DIV2_values_of_0). This option should be set to TRUE to be consistent with all Shafer Lab's AUC NFA data pipelined in invitroDB to date (July 2023).
+  * Background: Early in the development of the NFA, recordings were made on DIV 2, 5, 7, 9, and 12. Eventually, because so little activity was observed on DIV 2, they stopped recording on DIV 2. When the script `burst_parameter_to_AUC.R` was made (the predecessor to `parameter_values_to_AUC.R`), the writer decided to add a point at (DIV = 2, value = 0) for every well and parameter value. This choice to impute dummy data at DIV 2 has been the practice in the Shafer lab since before 2019. 
+
+* Wllq_by_well notes: 
+
+  * The well quality in the output tables defaults to 1 unless otherwise specified in "[project_name]_well_quality_assignments_by_well.csv". The well quality should not be considered finalized until the well quality notes from the other well quality table are also integrated ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv"). (The second well quality table has to be merged later on in the run_me, after the treatment and concentration is each well is verified).
+
+  * If some of the rows in the wllq.tb.by.well.file that include 'nfa' in the affected assays do not match any of the data rows in the div_data, a warning will be given, e.g.
+
+> Some rows in Test2023_well_quality_assignments_by_well.csv did not match any rows in dat
+
+  This warning indicates that there was likely a typo in the meta data in the wllq.tb.by.well.file or the div_data (e.g., incorrect culture date or Plate.SN entered somewhere). If this warning is observed and the div_data_files includes the entire data set, check the preceding output and check if any of the meta data in the wllq.tb.by.well.file does not match the intended meta data in the div_data.
 
 
-**Notes**:
+* Rare-but-sometimes-needed option: interpolate values from non-standard to standard DIVs: Usually, recordings are made on DIV 5, 7, 9, and 12. However, occasionally, e.g., due to inclement weather, recordings may be made on non-standard DIV. For example, if there was inclement weather on DIV 9, a set of plates might have been recorded on DIVs 5, 7, 10, and 12. In order to aim to make the AUC value for these plates comparable to AUC values from other plates with recordings from DIV 5, 7, 9, and 12, the parameter values for DIV 9 can be linearly interpolated from DIVs 7 and 10. This is an imperfect solution, but it has been used occasionally in past projects. 
 
-* the function parameter_values_to_AUC() is a newer version of the function burst_parameter_to_AUC(). Both functions are desired to perform the same task, but parameter_values_to_AUC() should be more flexible and easier to debug.
-* Note that AFTER the _parameters_by_DIV.csv file is saved but BEFORE the AUC calculation, all NA parameter values are set to 0. This is done in order to have a data point at every DIV for the AUC calculation. However, this appropriateness of this practice is uncertain for some parameters.
+How values are interpolated with this script:
 
-* You may see the message "Some rows in  [project_name]_well_quality_assignments_by_well.csv  did not match any rows in dat:". If there are no NFA-related well quality notes in THIS well quality notes table, that is okay. However, if you were expected some fields to match, then check that the affected_assays column in the well quality notes table contains 'nfa'
+The function prepare_parameter_values() will check for any non-standard DIV. If any non-standard DIV are present and interpolate_stnd_DIVs = TRUE, then this function will call the function linear_interpolate_DIV() to interpolate the parameter values at the standard DIVs from the DIVs that were recorded. The wllq_notes and file.name in the resulting table will indicate the data rows that were interpolated. However, note that the linear_interpolate_DIV() function was recently updated (July 2023) and has had limited use, so it has not been well-tested and may need to be updated for a given project. 
 
-To do:
-* check that there are 4 (or len of use.dIVs) per grouping of by term (or not is essentially already done)
-* confirm all same functionality! 
-* address the "Fix" thing
+Note that interpolating values at standard DIVs from non-standard DIVs is not the same as interpolating a value when a DIV recording was just missed. See notes on 'check for missing DIV' below for how this is handled.
+
+
+**parameter_values_to_AUC() notes**:
+
+* the default expected_DIVs for this script are c(2, 5, 7, 9, 12)
+* In order to calculate the area under the curve, this function sets any NA parameter values are set to 0. This has been the practice since before 2019; however, the appropriateness of this choice in uncertain for some parameters. Alternative approaches to summarizing the activity over the DIV recorded may be warranted in these cases.
+* **Checks for missing DIVs:** 
+  * Case #1: In some cases, a DIV recording may have been missed or not saved for a given plate. For example, a given plate may only have data for DIV 5, 9, and 12 (but not DIV 7). In this case, an AUC value could be calculated, but the appropriateness of comparing this AUC value to AUC values from plates with recordings on all of the expected_DIVs is uncertain. In some past projects (e.g., ~2014) with some missing DIV recordings for a single plate, parameter values from the other 2 plates tested in the same culture were used to generate filler data. Specifically, the median of wells that tested the same treatment and dose was used to generate filler data for each well of the plate with the missing DIV. The script estimate_missing_DIV.R was used to do this. However, this script has not been maintained and this practice is not optimal. Therefore, in the current implementation of `parameter_values_to_AUC()`, the well quality will be set to 0 for the AUC value for any wells/parameters that do not have a value for every DIV in expected_DIVs.
+  * Case #2: If the well quality by well is 0 for any DIV for a given well/parameter, than the well quality by well for the AUC value for the well/parameter will also be set to 0.
 
 
 # RESUME BELOW (then resume with step in run_me, explaining)
@@ -510,6 +527,10 @@ save_notes_graphs <- FALSE
 ```
 
 This will save the graphs and dataset checks in pdf and txt files.
+
+# Wrap up
+
+Knit the doc to save it!
 
 # Final checks before sending data to TCPL
 

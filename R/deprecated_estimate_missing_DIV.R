@@ -10,7 +10,7 @@
 estimate_missing_DIV <- function(dat, date_platei, add.DIV, use_all_plates = FALSE)
 {
   
-  stop('Warning - this function is deprecated. Use only for reference')
+  warning('Warning - this function is deprecated. This function is for reference only')
   
   require(data.table)
   if (!("date_plate" %in% names(dat))) dat[, date_plate := paste(date, Plate.SN, sep = "_")]

@@ -1,12 +1,15 @@
-# functions to handle non-standard DIV recordings
-# before calculating AUC values
-# last updated July 2023 by Amy Carpenter
-
-# linear interpolation function
-# notes:
-# - this function finds the approximate value between 2 other values
-# - NA values are set to 0 in order to find the slope
-
+#' Impute parameter values for standard DIV from non-standard DIV recordings using linear interpolation
+#'
+#' @param dati data table in long format (i.e., 1 parameter per row)
+#' @param DIV.to.interpolate desired DIV to interpolate from the closest DIV in dati
+#' 
+#' @details This function finds the approximate value between 2 other values. NA values are set to 0 in order to find the slope
+#' Last updated July 2023 by Amy Carpenter
+#'
+#' @return
+#' @export
+#'
+#' @examples
 linear_interpolate_DIV <- function(dati, DIV.to.interpolate) {
   
   # find the DIVs from original recordings that are above and below DIV.to.interpolate
@@ -38,7 +41,7 @@ linear_interpolate_DIV <- function(dati, DIV.to.interpolate) {
   
   # Update wllq_by_well
   new.dat[, wllq_by_well := pmin(wllq_by_well.lower, wllq_by_well.upper, na.rm = T)]
-  new.dat[, wllq_notes_by_well := paste0(paste0("Linear interpolation from DIV",DIV.lower," to DIV",DIV.upper, "; "),
+  new.dat[, wllq_notes_by_well := paste0(paste0("Linear interpolation of DIV",DIV.to.interpolate," from DIV",DIV.lower," and ",DIV.upper, "; "),
                                          ifelse(!is.na(wllq_notes_by_well.lower),wllq_notes_by_well.lower,''),
                                          ifelse(!is.na(wllq_notes_by_well.lower) & !is.na(wllq_notes_by_well.upper),'; ',''),
                                          ifelse(!is.na(wllq_notes_by_well.upper),wllq_notes_by_well.upper,''))]
@@ -49,7 +52,7 @@ linear_interpolate_DIV <- function(dati, DIV.to.interpolate) {
   new.dat[, .N, by = .(wllq_by_well, wllq_notes_by_well, wllq_ref_by_well)]
   
   # New file.name
-  new.dat$file.name <- paste0("linear interpolation from DIV",DIV.lower," to DIV",DIV.upper)
+  new.dat$file.name <- paste0("linear interpolation of DIV",DIV.to.interpolate," from DIV",DIV.lower," and ",DIV.upper)
   new.dat <- new.dat[, .SD, .SDcols = names(dati)]
   
   return(new.dat)

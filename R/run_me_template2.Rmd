@@ -210,9 +210,11 @@ source(file.path(scripts.dir,'nmi2_final.R'))
 source(file.path(scripts.dir,'nmi_wrapper.R'))
 source(file.path(scripts.dir,'MI_script_all.R'))
 
-source(file.path(scripts.dir,'DIV-interpolation-functions.R'))
-source(file.path(scripts.dir,'estimate_missing_DIV.R'))
-source(file.path(scripts.dir,'burst_parameter_to_AUC.R'))
+# AUC
+source(file.path(scripts.dir,'prepare_parameter_values.R'))
+source(file.path(scripts.dir,'linear_interpolate_DIV.R'))
+source(file.path(scripts.dir,'add_wllq_by_well.R'))
+source(file.path(scripts.dir,'parameter_values_to_AUC.R'))
 ```
 
 **Convert spike list files to h5 files**
@@ -230,7 +232,6 @@ h5_conversion(project.output.dir,
 create_ont_csv(project.output.dir, 
                remake_all = FALSE,
                get_h5Files_under_project.output.dir = TRUE)
-rm(list = setdiff(ls(), objects.to.keep))
 ```
 
 **Calculate normalized mutual information**
@@ -242,25 +243,58 @@ run_mi_functions(project.output.dir,
 ```
 
 **Calculate Area-Under-the-Curve values**
+
+Combine all parameter data files, update well quality by well, add dummy points at DIV 2, and check for non-standard DIV.
 ```{r}
+# Get paths to the parameter data files & wllq table
+div_data_file_folders <- file.path(project.output.dir,c('prepared_data','All_MI'))
+div_data_files <- unlist(lapply(div_data_file_folders, list.files, pattern = '.csv$', full.names = TRUE, recursive = FALSE))
+wllq.tb.by.well.file <- file.path(project.output.dir, 
+                                                          paste0(project_name,'_well_quality_assignments_by_well.csv'))
+
+# Run the function
+prepare_parameter_values(project.output.dir, 
+                         project_name, 
+                         div_data_files = div_data_files,
+                         id.columns = c("date","Plate.SN","DIV","well","trt","dose","units","file.name"),
+                         wllq.tb.by.well.file = wllq.tb.by.well.file,
+                         num_rows_per_plate = 6,
+                         num_columns_per_plate = 8,
+                         expected_DIVs = c(5,7,9,12),
+                         add_DIV2_values_of_0 = TRUE,
+                         interpolate_stnd_DIVs = TRUE)
+
+# project.output.dir, 
+#                                      project_name, 
+#                                      div_data_files,
+#                                      id.columns = c("date","Plate.SN","DIV","well","trt","dose","units","file.name"),
+#                                      wllq.tb.by.well.file = NULL,
+#                                      num_rows_per_plate = 6,
+#                                      num_columns_per_plate = 8,
+#                                      expected_DIVs = c(5,7,9,12),
+#                                      add_DIV2_values_of_0 = TRUE,
+#                                      interpolate_stnd_DIVs = TRUE
+
+```
+
+Calculate the trapzoidal area under the curve for each well/parameter versus the DIV
+
+```{r}
+# Get single DIV data file created above
+div_data_file <- file.path(project.output.dir,'output',paste0(project_name,'_parameters_by_DIV.csv'))
+
+# Run the function
 parameter_values_to_AUC(project.output.dir, 
-                        project_name = project_name, 
-                        div_data_file_folders = file.path(project.output.dir,c('prepared_data')),
-                        use_DIVs = c(5,7,9,12),
-                        interpolate_diff_divs = TRUE,
-                        wllq.tb.by.well.file =file.path(project.output.dir, 
-                                                                      paste0(project_name,'_well_quality_assignments_by_well.csv')))
+                        project_name, 
+                        div_data_file = div_data_file,
+                        id.columns = c("date","Plate.SN","DIV","well","trt","dose","units","file.name","wllq_by_well","wllq_notes_by_well","wllq_ref_by_well"),
+                        dose_column_name = 'dose',
+                        expected_DIVs = c(2,5,7,9,12))
+
+```
 
 
-# final
-parameter_values_to_AUC(project.output.dir, 
-                        project_name = project_name, 
-                        div_data_file_folders = file.path(project.output.dir,c('prepared_data','All_MI')),
-                        use_divs = c(5,7,9,12),
-                        interpolate_diff_divs = TRUE,
-                        wllq.tb.by.well.file =file.path(project.output.dir, 
-                                                                      paste0(project_name,'_well_quality_assignments_by_well.csv')))
-
+```{r}
 
 # cytotox prep
 cat("\n- Extract the cytotoxicity data from Calculations files:\n")
@@ -290,6 +324,9 @@ setwd(root.output.dir)
 
 
 # run tcpl_MEA_dev_AUC
+**exclude dummy data
+
+
 ```{r}
 source(file.path(scripts.dir, 'tcpl_MEA_dev_AUC.R'))
 dat <- tcpl_MEA_dev_AUC(basepath = file.path(root.output.dir,project_name), project_name)
