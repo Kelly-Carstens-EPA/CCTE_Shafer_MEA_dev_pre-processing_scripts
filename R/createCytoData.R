@@ -1,6 +1,32 @@
-createCytoData <- function(cyto_data,cyto_type,Plate.SN = NULL, srcname = NULL, date = NULL) {
-  
-  cat(Plate.SN,cyto_type,"\n")
+#' Read the cytotoxicity data for a given cyto_type (AB or LDH) from an input data chunk for a single plate
+#'
+#' @param cyto_data data chunk from a file containing the chemical, concentration, and blank-corrected values for a single assay and plate
+#' @param cyto_type type of cytotoxicity data in the input cyto_data (either AB or LDH)
+#' @param Plate.SN plate serial number of plate represented in cyto_data
+#' @param date culture data of data represented in cyto_data
+#'
+#' @return
+#' @export
+#'
+#' @details The chemical, concentration, and blank-corrected data values are read. The following process is used to identify the indicies in the input data chunk that 
+#' contain the desired data:
+#' 
+#' * Chemical data = 
+#' 1) Search for word “Chemical”
+#' 2) Search for word “Row” in same column as “Chemical”
+#' 3) Take all data that is 1 – 6 rows below the word “Row” and in the same column as “Chemical” to + 8 rows out
+#' 
+#' * Concentration data = 
+#' Same as previous, except replace “Chemical” with “Concentration mM”
+#' 
+#' * Blank-corrected values = 
+#' 1) Same as previous, except “Chemical” is replaced with one of the following: c("Corrected for Blank", "Corrected Optical Denisty 490 nm", "Corrected Optical Density 490 nm", "Corrected Fluorescence")
+#' 
+#' 
+#' Note that any negative blank-corrected values are set to 0.
+#'
+#' @examples
+createCytoData <- function(cyto_data,cyto_type,Plate.SN = NULL, date = NULL) {
   
   # compound map
   compound_col <- which(cyto_data == "Chemical", arr.ind = T)[1,"col"]
@@ -24,20 +50,18 @@ createCytoData <- function(cyto_data,cyto_type,Plate.SN = NULL, srcname = NULL, 
   if(any(is.na(compoundmap) | is.na(concmap))) {
     print(compoundmap)
     print(concmap)
-    stop("NA's found in well ID data")
+    stop(paste("NA's found in well ID data for",Plate.SN,cyto_type))
   }
   
   # Get desired values
-  tagPhrases = c("Corrected for Blank", "Corrected Optical Denisty 490 nm", "Corrected Optical Density 490 nm", "Corrected Fluorescence", )
+  tagPhrases = c("Corrected for Blank", "Corrected Optical Denisty 490 nm", "Corrected Optical Density 490 nm", "Corrected Fluorescence")
   value_index <- matrix(data = NA_real_, nrow = 0, ncol = 2) # initialize value_index as empty
   i = 1
   while (nrow(value_index)==0) {
     if (i > length(tagPhrases)) {
-      cat("no corrected for blank-corrected data found for",Plate.SN,cyto_type,"\n")
+      stop("No corrected for blank-corrected data found for",Plate.SN,cyto_type,
+           "\nUpdate the tagPhrases in createCytoData() to include the tagPhrase needed to identify the blank-corrected values for the current file")
       print(cyto_data)
-      value_row <- readline(prompt = "Enter the Row number in table above corresponding to well A1 of the blank-corrected values: ")
-      value_col <- readline(prompt = "Enter the Column number in table above corresponding to well A1 of the blank-corrected values : ")
-      value_index <- array(c((as.numeric(value_row)-1), (as.numeric(value_col)-1)), dim  = c(1,2), dimnames = list(NULL,c("row","col"))) # Back up to the Row and Col id info
     }
     else {
       value_index <- which(cyto_data == tagPhrases[i], arr.ind = TRUE)
@@ -68,27 +92,23 @@ createCytoData <- function(cyto_data,cyto_type,Plate.SN = NULL, srcname = NULL, 
     print(compoundmap)
     print(concmap)
     print(valuemap)
-    stop("Did not merge correctly with 48 rows")
+    stop(paste("Did not merge correctly with 48 rows for",Plate.SN,cyto_type))
   }
   
   # get numerical rowi from character Row
   longdat[, rowi := match(Row, LETTERS)]
   
-  if (length(Plate.SN) != 1 || is.null(Plate.SN) || is.na(Plate.SN)) {
-    stop("Plate cannot be determined from file name. ")
-  }
   if (length(date) != 1 || is.null(date) || is.na(date)) {
-    stop("Culture date cannot be determined from file name. ")
+    stop(paste("Culture date cannot be determined from file name for",Plate.SN,cyto_type))
   }
   
   # Add info columns
   longdat[, src_acsn := cyto_type]
-  longdat$srcf = srcname
   longdat$Plate.SN = Plate.SN
   longdat$date = date
   longdat[, coli := as.numeric(coli)]
   
   # reorder columns
-  longdat <- longdat[,c("date","Plate.SN","treatment","rowi","coli","conc","rval","srcf","src_acsn")]
+  longdat <- longdat[,c("date","Plate.SN","treatment","rowi","coli","conc","rval","src_acsn")]
   return(longdat)
 }

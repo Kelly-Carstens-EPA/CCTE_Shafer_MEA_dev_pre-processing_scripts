@@ -50,6 +50,7 @@ spid_sheet <- "" # desired sheet in spidmap_file (can be numeric or the sheet na
 project.input.dir <- "L:/Lab/NHEERL_MEA/Project - DNT Test Set 2021 NTP" # main folder of experimental data for project
 scripts.dir <- "C:/Users/acarpe01/Documents/local_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/R" # directory containing the pre-processing scripts for the NFA
 root.output.dir <- "C:/Users/acarpe01/Documents/local_repos/data_process_prac" # main directory where the output should be saved
+assay_component_map_filename <- "C:/Users/acarpe01/Documents/local_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts_test/mea_nfa_component_name_map.csv"
 
 project.output.dir <- file.path(root.output.dir, project_name)
 if (!dir.exists(project.output.dir)) dir.create(project.output.dir)
@@ -219,7 +220,9 @@ source(file.path(scripts.dir,'add_wllq_by_well.R'))
 source(file.path(scripts.dir,'parameter_values_to_AUC.R'))
 
 # Extracting the cytotoxicity data
-source(file.path(scripts.dir,'cytotox_prep06.R'))
+source(file.path(scripts.dir,'run_cytotox_functions.R'))
+source(file.path(scripts.dir,'createCytoTable2.R'))
+source(file.path(scripts.dir,'createCytoData.R'))
 ```
 
 **Convert spike list files to h5 files**
@@ -288,41 +291,47 @@ parameter_values_to_AUC(project.output.dir,
 **Extract the cytoxicity data**
 
 ```{r}
-# Test/dev
-get_files_from_log = TRUE
-cytoFiles = NULL
-
-run_cytotox_functions(project.output.dir, project_name, get_files_from_log = TRUE, cytoFiles = NULL)
-
-
-# final
-run_cytotox_functions(basepath = project.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
-                      append = append)
-
+wllq.tb.by.well.file <- file.path(project.output.dir, 
+                                  paste0(project_name,'_well_quality_assignments_by_well.csv'))
+run_cytotox_functions(project.output.dir, project_name, 
+                      get_files_from_log = TRUE, 
+                      wllq.tb.by.well.file = wllq.tb.by.well.file)
 ```
 
 
+# Prepare the level 0 table
 
-
+Remove extra objects from environment
 
 ```{r}
-rm(list = setdiff(ls(),c('project_name','pause_between_steps','save_notes_graphs','default_ControlTreatmentName','spidmap_file','spid_sheet','project.input.dir','scripts.dir','root.output.dir','update_concs_without_prompt','get_new_files_log')))
-setwd(root.output.dir)
+rm(list = setdiff(ls(),objects.to.keep))
 ```
 
-
-# run tcpl_MEA_dev_AUC
-**exclude dummy data
-
+Read in the files under the "output" folder (_parameters_by_DIV, _AUC, _cytotox), convert to long-format (1 row per parameter), and combine into 1 table.
 
 ```{r}
 source(file.path(scripts.dir, 'tcpl_MEA_dev_AUC.R'))
-dat <- tcpl_MEA_dev_AUC(basepath = file.path(root.output.dir,project_name), project_name)
-# cytotox data does not have units. Will fill with NA
-# long-format data is ready.
+dat <- tcpl_MEA_dev_AUC(project.output.dir, 
+                        project_name, 
+                        assay_component_map_filename,
+                        id.columns = c("date","Plate.SN","DIV","well","trt","dose",
+                                       "units","file.name","wllq_by_well","wllq_notes_by_well","wllq_ref_by_well"))
+```
 
 
-# Updated treatment label for solvent control wells ------------------------------------
+# Confirm treatments are consistent (and correct)
+
+```{r}
+# before dive in too much further, let's confirm consistent treatment labels by wells
+dat[, .(length(unique(treatment))), by = .(apid, rowi, coli)][V1 > 1]
+# empty, cool!
+```
+
+
+
+
+## Updated treatment label for solvent control wells 
+```{r}
 dat[, treatment_srcf := treatment]
 dat[wllt == 'n', .N, by = .(treatment)][order(-N)] # wllt == 'n' determined where conc_original == 0
 # Note: "Water" is currently used in other MEA NFA data in ToxCast
@@ -386,9 +395,23 @@ dat[wllt == 't', solvent := ifelse(treatment %in% treatments.same.row.water, 'Wa
 dat[wllt == "n", conc := 0.1]  # previously I entered this as 0.001, as a fraction, but now I"m going to enter it as 0.1 with units "%"
 dat[wllt == "n", units := '%']  # previously I entered this as 0.001, as a fraction, but now I"m going to enter it as 0.1 with units "%"
 
+```
 
+# Prepare columns needed for TCPL lvl0 table
 
-# Assign sample ID's -------------------------------------------------------------
+## acsn, anm
+
+## apid
+
+Placeholder to update this in the future if we want to do something more sophisticated than what is currently done in `tcpl_MEA_dev_AUC()`
+
+## srcf
+
+Placeholder to update this in the future if we want to do something more sophisticated than what is currently done in `tcpl_MEA_dev_AUC()`
+
+## spids 
+
+```{r}
 # We don't have sample id's actually, instead I'm goign to assign the blind code
 spidmap <- as.data.table(read.xlsx(spidmap_file, sheet = spid_sheet))
 head(spidmap)
@@ -542,6 +565,26 @@ spidmap[treatment %in% unique(dat$treatment), .N, by = .(treatment)][N > 1] # ch
 
 # assign spids
 # dat <- check_and_assign_spids(dat, spidmap)
+# this fun:
+check_and_assign_spids <- function(dat, spidmap) {
+  if (length(setdiff(c("treatment","spid"), names(spidmap))) > 0) {
+    stop("The following columns are not found in spidmap: ",paste0(setdiff(c("treatment","spid"), names(spidmap)),collapse =","))
+  }
+  if (spidmap[!is.na(spid) & treatment %in% unique(dat$treatment), .(length(unique(spid))), by = "treatment"][,any(V1 !=1)]) {
+    stop(paste0("The following treatments map to multiple spids: ",
+                spidmap[!is.na(spid) & treatment %in% unique(dat$treatment), .(length(unique(spid))), by = "treatment"][V1 != 1,paste0(treatment,collapse=", ")]))
+  }
+  dat <- merge(dat, spidmap[, .(spid, treatment)], by = "treatment", all.x = TRUE)
+  dat[wllt != 't' & is.na(spid), spid := treatment]
+  if (dat[wllt == "t", any(is.na(spid))]) {
+    cat("The following treatments don't have a corresponding spid in the spidmap:\n")
+    print(dat[wllt == "t" & is.na(spid), unique(treatment)])
+    stop("Adjust input dat before continuing")
+  }
+  return(dat)
+}
+
+
 # can't use this fun, since I'm not actually assinging spids
 # adapted:
 if (spidmap[!is.na(DNTP_blind_code) & treatment %in% unique(dat$treatment), .(length(unique(DNTP_blind_code))), by = "treatment"][,any(V1 !=1)]) {
@@ -579,28 +622,38 @@ dat[grepl('could not be determined',footnote), .N, by = .(treatment, footnote)]
 dat[footnote == 'Coded Plate Map stock conc <= 10. Exact concentration could not be determined.',
     wllq_notes_by_well := paste0(ifelse(is.na(wllq_notes_by_well) | wllq_notes_by_well == '', '', paste0(wllq_notes_by_well,'; ')),
                                  footnote)]
+```
 
 
+## wllt (well type)
+```{r}
 
-# Confirm treatments ------------------------------------------------------
+# see other run_ms:
+# Assign wllt (well type)
+longdat[, wllt := "t"]
+longdat[ conc == 0, wllt := "n"]
 
-# before dive in too much further, let's confirm consistent treatment labels by wells
-dat[, .(length(unique(treatment))), by = .(apid, rowi, coli)][V1 > 1]
-# empty, cool!
+```
 
+
+# Confirm concentrations and units
+
+## basic conc checks
+
+## Compare conc's with expected conc based on stock conc & conc index
+
+```{r}
 # get the culture, to facilate below checks
 dat[, culture := sub('_.*','',apid)]
 
-
-# Confirm Conc's ----------------------------------------------------------------
 # confirm that the conc's collected from master chem lists and Calc files match
 # and that the correct concentration-corrections has been done for each compound
 dat[, conc_srcf := conc] # save the original conc's in a column
 dat[, conc_log10 := log10(conc)]
+```
 
-
-## Make conc's consistent across srcfs -------------------------------------
-
+## Make conc's consistent across srcfs 
+```{r}
 # Sometimes conc's appear differently with the data pulled from the master chemical list,
 # then modified with as.character(signif(dose, 4)) in burst_parameter_to_AUC.R,
 # compared to the conc's pulled from the Calculations files for the cytotoxicity data.
@@ -645,10 +698,10 @@ dat[wllt == 't', .(length(unique(conc))), by = .(treatment, apid)][V1 != 7]
 dat[, cndx := frank(conc, ties.method = 'dense'), by = .(treatment, apid)]
 dat[, summary(cndx)] # max should be 7 for 48-well plates with 1 column for controls
 
+```
 
-
-## Check if conc's have been adjusted to the stock conc corrrectly --------
-
+## Check if conc's have been adjusted to the stock conc corrrectly
+```{r}
 # Merge in stock conc's from spidmap
 dat <- merge(dat, spidmap[, .(DNTP_blind_code, treatment, sheet_stock_conc, sheet_stock_conc_units)], by = c('DNTP_blind_code','treatment'), all.x = T)
 dat[, sheet_stock_conc := as.numeric(sheet_stock_conc)]
@@ -804,10 +857,98 @@ dat[my_anticipated_conc != conc, .N, by = .(culture, treatment, conc, my_anticip
 # (see again 20220601 PFAS+ G3 & DNT Reps 1_ Calculations.xlsx)
 # I will replace with my_anticipated_conc in these cases.
 dat[my_anticipated_conc != conc & treatment %in% c('7126 D7','7126 H10') & culture == '20220601', conc := my_anticipated_conc]
+```
+
+## Check concentration units 
+
+```{r}
+# **Add units for cyto data
+```
 
 
-# Wllq updates by treatment -----------------------------------------------
+```{r}
+dat[, .N, by = .(units)]
+# any not in uM? If so, convert to uM
+# actually, I can include the units column, so I don't have to convert
 
+# What to do where units are NA?
+dat[is.na(units), .N, by = .(treatment)]
+dat[is.na(units), .N, by = .(endpoint_type)]
+# oh right, this is all of the cytotox data!
+# can extrapolate based on the MCL's
+# then confirm with the sheet stock conc
+# First confirm that there is only 1 unique unit per treatment
+dat[, length(unique(units[!is.na(units)])), by = .(treatment)][V1 > 1]
+# treatment V1
+# 1:   9163 A1  2
+dat[treatment == '9163 A1', .N, by = .(units, srcf, apid)]
+#    units                                                 srcf               apid   N
+# 1:  <NA> 20220316_NFA_DNT_NTP 2021_Group 16_Calculations.xlsx 20220316_MW78-7115  14
+# 2:  <NA> 20220316_NFA_DNT_NTP 2021_Group 16_Calculations.xlsx 20220316_MW78-7116  14
+# 3:  <NA> 20220316_NFA_DNT_NTP 2021_Group 16_Calculations.xlsx 20220316_MW78-7117  14
+# 4:    uM                                  DNT_NTP2021_AUC.csv 20220316_MW78-7115  17
+# 5:    uM                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7115  68
+# 6: mg/ml                                  DNT_NTP2021_AUC.csv 20220316_MW78-7116 119
+# 7: mg/ml                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7116 476
+# 8: mg/ml                                  DNT_NTP2021_AUC.csv 20220316_MW78-7117 119
+# 9: mg/ml                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7117 476
+# 10: mg/ml                                  DNT_NTP2021_AUC.csv 20220316_MW78-7115 102
+# 11: mg/ml                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7115 408
+# Based on lab notebook, all treatments from Group 16 should be in mg/ml except for 7126 H7
+# Makes sense, becaue i believe all treatments from plate 9163 are in mg/ml
+# I have no idea why the incorrect unit is appearing for 78-115
+# it is correct in the maestro exp log file. Will correct now
+dat[treatment == '9163 A1', units := 'mg/ml']
+dat[, length(unique(units[!is.na(units)])), by = .(treatment)][V1 > 1]
+# empty, cool
+
+# assign units for rows from calculations files
+dat[, units := unique(units[!is.na(units)]), by = .(treatment)]
+
+# compare to the sheet stock conc
+dat[, .N, by = .(sheet_stock_conc_units, units, wllt)]
+#   sheet_stock_conc_units units wllt      N
+# 1:                     mM    uM    t 213759
+# 2:                   <NA>     %    n  37584
+# 3:                   <NA>    uM    t   7308
+# 4:                  mg/mL mg/ml    t  36540
+dat[is.na(sheet_stock_conc_units), .N, by = .(treatment, sheet_stock_conc_units, units)]
+# treatment sheet_stock_conc_units units     N
+# 1:          DMSO                   <NA>     % 36018
+# 2:   Bisphenol A                   <NA>    uM  3654
+# 3:         Water                   <NA>     %  1566
+# 4: Acetaminophen                   <NA>    uM  3654
+# this is okay. All looks okay!
+
+# Compare with the treatments csv file I made
+units.tb <- as.data.table(read.xlsx(file.path(project_name,'treatments_with_units_not_in_mM.xlsx'), sheet = 1))
+dat[, .(num_trts = length(unique(treatment))), by = .(units, trt_not_in_mM = treatment %in% units.tb$treatment)]
+#    units trt_not_in_mM num_trts
+# 1:    uM         FALSE       97
+# 2:     %         FALSE        2
+# 3: mg/ml          TRUE       20
+# cool, lines up!
+rm(units.tb)
+
+dat[, .N, by = .(units, from_plate2 = grepl('9163',treatment))]
+#    units from_plate2      N
+# 1:    uM       FALSE 221067
+# 2:     %       FALSE  37584
+# 3: mg/ml        TRUE  36540
+
+# note solvents are %
+dat[wllt == 'n', .N, by = .(conc, units)]
+# conc units     N
+# 1:  0.1     % 37584
+```
+
+
+
+# Finalize well quality
+
+(i.e., add wllq notes by compound cndx and merge with other wllq ntoes to finalize)
+
+```{r}
 dat[grepl('LDH',acsn), endpoint_type := 'LDH']
 dat[grepl('AB',acsn), endpoint_type := 'CTB'] # this is the abbreviation I'm using in the wllq tables... could change
 dat[is.na(endpoint_type), endpoint_type := 'mea']
@@ -883,88 +1024,26 @@ dat[, .N, by = .(wllq_by_well, wllq_by_trt, wllq_merged)]
 View(dat[, .N, by = .(wllq_notes_merged, wllq_merged)][order(wllq_merged)])
 # looks like all wllq==0 instances are due to substance that was noisy and repeated
 # or some wllq issue
+```
 
+# Confirm the solvent
 
-# Check conc units --------------------------------------------------------
+# Check for NA rvals
 
-dat[, .N, by = .(units)]
-# any not in uM? If so, convert to uM
-# actually, I can include the units column, so I don't have to convert
+# FINAL DATA CHECKS 
 
-# What to do where units are NA?
-dat[is.na(units), .N, by = .(treatment)]
-dat[is.na(units), .N, by = .(endpoint_type)]
-# oh right, this is all of the cytotox data!
-# can extrapolate based on the MCL's
-# then confirm with the sheet stock conc
-# First confirm that there is only 1 unique unit per treatment
-dat[, length(unique(units[!is.na(units)])), by = .(treatment)][V1 > 1]
-# treatment V1
-# 1:   9163 A1  2
-dat[treatment == '9163 A1', .N, by = .(units, srcf, apid)]
-#    units                                                 srcf               apid   N
-# 1:  <NA> 20220316_NFA_DNT_NTP 2021_Group 16_Calculations.xlsx 20220316_MW78-7115  14
-# 2:  <NA> 20220316_NFA_DNT_NTP 2021_Group 16_Calculations.xlsx 20220316_MW78-7116  14
-# 3:  <NA> 20220316_NFA_DNT_NTP 2021_Group 16_Calculations.xlsx 20220316_MW78-7117  14
-# 4:    uM                                  DNT_NTP2021_AUC.csv 20220316_MW78-7115  17
-# 5:    uM                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7115  68
-# 6: mg/ml                                  DNT_NTP2021_AUC.csv 20220316_MW78-7116 119
-# 7: mg/ml                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7116 476
-# 8: mg/ml                                  DNT_NTP2021_AUC.csv 20220316_MW78-7117 119
-# 9: mg/ml                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7117 476
-# 10: mg/ml                                  DNT_NTP2021_AUC.csv 20220316_MW78-7115 102
-# 11: mg/ml                    DNT_NTP2021_parameters_by_DIV.csv 20220316_MW78-7115 408
-# Based on lab notebook, all treatments from Group 16 should be in mg/ml except for 7126 H7
-# Makes sense, becaue i believe all treatments from plate 9163 are in mg/ml
-# I have no idea why the incorrect unit is appearing for 78-115
-# it is correct in the maestro exp log file. Will correct now
-dat[treatment == '9163 A1', units := 'mg/ml']
-dat[, length(unique(units[!is.na(units)])), by = .(treatment)][V1 > 1]
-# empty, cool
+See Kelly's not to pass back to lab technicians - what would be good for them to see? graphs? # of chem? values? the csv?
 
-# assign units for rows from calculations files
-dat[, units := unique(units[!is.na(units)]), by = .(treatment)]
+Maybe a reminder of how it's normalized :)
 
-# compare to the sheet stock conc
-dat[, .N, by = .(sheet_stock_conc_units, units, wllt)]
-#   sheet_stock_conc_units units wllt      N
-# 1:                     mM    uM    t 213759
-# 2:                   <NA>     %    n  37584
-# 3:                   <NA>    uM    t   7308
-# 4:                  mg/mL mg/ml    t  36540
-dat[is.na(sheet_stock_conc_units), .N, by = .(treatment, sheet_stock_conc_units, units)]
-# treatment sheet_stock_conc_units units     N
-# 1:          DMSO                   <NA>     % 36018
-# 2:   Bisphenol A                   <NA>    uM  3654
-# 3:         Water                   <NA>     %  1566
-# 4: Acetaminophen                   <NA>    uM  3654
-# this is okay. All looks okay!
+Include check for expected number of replicates (with wllq == 1) (Check for expected number of technical replicates (sometimes helpful for identifying typo-s, e.g. if a chemical was not supposed to be repeated or appears in multiple rows of a plate));
+determine which repeats to keep
 
-# Compare with the treatments csv file I made
-units.tb <- as.data.table(read.xlsx(file.path(project_name,'treatments_with_units_not_in_mM.xlsx'), sheet = 1))
-dat[, .(num_trts = length(unique(treatment))), by = .(units, trt_not_in_mM = treatment %in% units.tb$treatment)]
-#    units trt_not_in_mM num_trts
-# 1:    uM         FALSE       97
-# 2:     %         FALSE        2
-# 3: mg/ml          TRUE       20
-# cool, lines up!
-rm(units.tb)
-
-dat[, .N, by = .(units, from_plate2 = grepl('9163',treatment))]
-#    units from_plate2      N
-# 1:    uM       FALSE 221067
-# 2:     %       FALSE  37584
-# 3: mg/ml        TRUE  36540
-
-# note solvents are %
-dat[wllt == 'n', .N, by = .(conc, units)]
-# conc units     N
-# 1:  0.1     % 37584
-
-
-# FINAL DATA CHECKS -------------------------------------------------------------
+```{r}
 # this section is to confirm that the data has been processed correctly
 source(file.path(scripts.dir, 'dataset_checks.R'), echo = FALSE)
+
+# run this fun... or outdated?
 
 # Define putative final wllq and wllq_notes
 dat[, wllq := wllq_merged]
@@ -1001,10 +1080,10 @@ if(save_notes_graphs) {
   sink() # close the txt log file
   graphics.off() # clear the plot history
 }
+```
 
-
-# Additional checks and wllq adjustments ----------------------------------
-
+# Additional checks and wllq adjustments 
+```{r}
 # Any other plots or things to check?
 
 # Why are some apid appearing to have no treatments in the data set checks graphs?
@@ -1084,9 +1163,9 @@ dat[treatment == '7126 H7', .N, by = .(culture_date, wllq, wllq_notes)]
 # another sample was repeated because the wrong substance was used in the first culture.
 
 
-
-## Clean wllq notes --------------------------------------------------------
-
+```
+## Clean wllq notes 
+```{r}
 # After discussion with Tim 7/29/2022, confirmed that where the wllq note indicates that "Precipitates in dosing solution but soluble in 37C incubator", no wllq note is need
 # and wllq can be 1
 dat[grepl('precipitates in media, but not when in 37 C incubator', wllq_notes), .N, by = .(wllq, wllq_notes)]
@@ -1135,10 +1214,10 @@ dat[, wllq_notes := sub(';[ ]*$','',wllq_notes)]
 dat[, wllq_notes := sub('; NA','',wllq_notes)]
 dat[, wllq_notes := sub('^NA$','',wllq_notes)]
 dat[, wllq_notes := sub(',[ ]*$','',wllq_notes)]
+```
 
-
-## Review substances with precipitate, determine which repeat to keep -------------------------
-
+## Review substances with precipitate, determine which repeat to keep 
+```{r}
 # Note that for 20220330_NFA_DNT 2021_Group 19: In lab notebook, was noted that no precipitate was observed
 # Just confirmed that all observations off precipitate noted in lab notebook or README notes have been entered in the well_quality_nots_per_culture_treatment_cndx.xlsx
 
@@ -1244,10 +1323,10 @@ all.treatments <- dat[wllt == 't', unique(treatment)]
 dat[wllq == '1', setdiff(all.treatments, treatment)]
 # empty, cool
 
+```
 
-
-## Other wllq issues -------------------------------------------------------
-
+## Other wllq issues 
+```{r}
 
 ### Confirm well with cell debris -------------------------------------------
 
@@ -1343,10 +1422,10 @@ dat$wllq <- as.numeric(as.character(dat$wllq)) # make wllq no longer a factor
 dat[culture_date == '20211110', `:=`(wllq = 0,
                                      wllq_notes = paste0(ifelse(is.na(wllq_notes), '', paste0(wllq_notes, '; ')),
                                                          '20211110 culture produced noisy results, setting wllq to 0 for all points'))]
+```
 
-
-# Save results ------------------------------------------------------------
-
+# Save results 
+```{r}
 # any superfluous columns to remove?
 names(dat)
 dat[, c('culture','conc_calc_file','conc_calc_file_log10','dilution_cndx_multiplier','in_dat','group','plot_apid') := NULL]

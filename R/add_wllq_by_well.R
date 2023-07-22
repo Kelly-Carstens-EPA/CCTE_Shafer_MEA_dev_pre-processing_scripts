@@ -44,7 +44,7 @@ add_wllq_by_well <- function(dat, wllq.tb.by.well.file, num_rows_per_plate, num_
   
   
   # Expand rows where DIV == 'all' (if applicable)
-  if ('DIV' %in% names(wllq.tb.by.well)) {
+  if ('DIV' %in% names(dat) & 'DIV' %in% names(wllq.tb.by.well)) {
     setnames(wllq.tb.by.well, old = 'DIV', new = 'DIV_org')
     indicies.all.DIVs <- which(wllq.tb.by.well$DIV_org == 'all')
     all.DIVs.tb <- data.table('DIV' = all_DIVs)
@@ -55,6 +55,9 @@ add_wllq_by_well <- function(dat, wllq.tb.by.well.file, num_rows_per_plate, num_
     wllq.tb.by.well[!DIV_org %in% 'all', DIV := as.numeric(DIV_org)]
     stopifnot(nrow(wllq.tb.by.well[assay %in% 'nfa' & is.na(DIV)]) == 0)
     wllq.tb.by.well[, DIV_org := NULL]
+  } else {
+    if ('DIV' %in% names(wllq.tb.by.well))
+      wllq.tb.by.well[, DIV := NULL]
   }
 
   
@@ -87,7 +90,8 @@ add_wllq_by_well <- function(dat, wllq.tb.by.well.file, num_rows_per_plate, num_
   if(nrow(dat[is.na(dat.id)]) > 0) {
     cat('\nSome rows in ',basename(wllq.tb.by.well.file), ' did not match any rows in dat:\n')
     print(dat[is.na(dat.id)])
-    warning(paste0('Some rows in ',basename(wllq.tb.by.well.file), ' did not match any rows in dat'))
+    warning(paste0('Some rows in ',basename(wllq.tb.by.well.file), ' did not match any rows in dat. These will be ignored.'))
+    dat <- dat[!is.na(dat.id)]
   }
   dat[, c('dat.id','wllq.tb.by.well.id') := NULL]
   

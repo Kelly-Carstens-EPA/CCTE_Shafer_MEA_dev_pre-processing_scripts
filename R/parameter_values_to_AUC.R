@@ -99,8 +99,7 @@ parameter_values_to_AUC <- function(project.output.dir,
                    .(num_wells= length(unique(paste0(date,Plate.SN,well))),
                      expected_DIVs = expected_DIVs_str), by = .(DIVs_with_wllq_1)])
     
-    cat('Wllq will be set to 0 for the AUC values for wells/plates with missing DIVs\n',
-        'If this is unexpected, check for inconsistencies in the id.columns of the div_data\n', sep = '')
+    cat('Wllq will be set to 0 for the AUC values for wells/plates with missing DIVs\n', sep = '')
   }
   
   # Update well quality where some DIV are missing

@@ -7,7 +7,7 @@ output:
     toc: true
     toc_float: true
     number_sections: true
-    code_folding: show
+    code_folding: hide
     df_print: kable
 ---
 
@@ -35,18 +35,15 @@ print(sessionInfo())
 
 * Quickly search for old notes of things to do for NFA / general pre-processing. Triage those somewhere where I will seem them. Goal is to priortize (noting only have so much time left!)
 * Making this an RMD -> going to do it!
+* Confirm that package load order is okay
+
 
 # Next steps
 
-*** Monday = minimally viable product!! *********
-COB - have something that will work, with known issues / bugs / to-d articulated at the top, in such a way that Man/Kelly could interpret
-
 * Go through the run_me, make it good, and make this guide actually follow that! (time to go line by line & make it work!!)
-* Make it a working RMD as you go!
 * Review recent updates to the HCI data pre-processing. Note any to integrate here or in run_me.
 * Cross check template with most recent NFA run_me that has been ran
 * To update in scripts as you go
-* Confirm that package load order is okay
 * well quality notes - updated name & format of wllq notes tables (see how doing it for the HCI!)
 * make sure include functionality to merge wllq notes / wllq within and across tables
 * check back with the notes template to confirm that instructions align with function
@@ -89,8 +86,11 @@ Console will say ‘user elected to stop’. This is fine, you can move on.
 
 ```{r echo = FALSE}
 abb.tb <- rbind(
+  data.table('acsn','assay component source name'),
   data.table('NFA','Network Formation Assay'),
   data.table('MCL or Master Chemical List','MaestroExperimentLog file'),
+  data.table('spid','sample ID'),
+  data.table('srcf','source file'),
   data.table('wllq','well quality')
 )
 names(abb.tb) <- c('Abbrev','Defn')
@@ -173,7 +173,7 @@ Every level 0 table processed with the ToxCast pipeline must contain a binary 'w
 
 There are 2 ways to set the wllq to 0 or add a well quality note (described below). Either option can be used; choose whichever option is easiest for each wllq situation. 
 
-Note that the wllq notes entered in the first table ("[project_name]_well_quality_assignments_by_well.csv") will be applied by the function `add_wllq_by_well()`, which is called by `prepare_parameter_values.R()`. This will produce the column "wllq_by_well." This well quality should not be considered final. The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you. Finally the 2 well quality columns will be merged to produce the final well quality column which will be part of the level 0 data for the ToxCast Pipeline.
+Note that the wllq notes entered in the first table ("[project_name]_well_quality_assignments_by_well.csv") will be applied by the function `add_wllq_by_well()`, which is called by `prepare_parameter_values()` and `run_cytotox_functions()`. This will produce the column "wllq_by_well." This well quality should not be considered final. The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you. Finally the 2 well quality columns will be merged to produce the final well quality column which will be part of the level 0 data for the ToxCast Pipeline.
 
 
 ## Update the wllq when the well ID is known
@@ -186,7 +186,7 @@ For each well, fill out the columns:
 ```{r echo = FALSE}
 wllq.by.well.desc <- data.table(
   'Column' = c('affected_assays','date','Plate.SN','well','DIV','wllq','wllq_notes','wllq_ref'), 
-  'Description' = c("Comma-separated list of which assays the well-quality affects, including mea, AB (Alamar Blue, aka Cell Titer Blue), or LDH",
+  'Description' = c("Comma-separated list of which assays the well-quality affects, including nfa, AB (Alamar Blue, aka Cell Titer Blue), or LDH",
                     "Culture date (YYYYMMDD)",
                     "Plate Serial Number. Should begin with 'MW'","Affected well. Should begin with a letter (for the row) and end with a number. If all of the wells on a given plate are affected, enter 'all'.",
                     "Day in vitro. If all DIV are affected, enter 'all'. (If any DIV other than the standard expected DIV (5, 7, 9, and 12) are affected, create a separate row in the well quality table for each DIV). If the affected assay is a cytotoxicity assay (LDH or AB), this column will be ignored.",
@@ -317,7 +317,7 @@ Links to the GitHub repositories: https://github.com/dianaransomhall/meadq, http
 Additional information on installing packages from GitHub:
 https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html
 
-# Running the pre-processing script
+# Running the pre-processing script (run_me)
 
 ## Set up
 
@@ -335,9 +335,12 @@ https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.ht
 * `project_name` - the project name. Should be the same as the folder name created under 'Setting up the pre-processing project folder'
 * `spidmap_file` - path to file that maps treatment names to registered sample IDs. Preferably, this file should also contain the stock concentrations for each sample
 * `spid_sheet` - desired sheet in spidmap_file (can be numeric or the sheet name)
-* `project.dir` -  main directory of the experimental data for project, e.g., "L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021". This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
+* `project.input.dir` -  main directory of the experimental data for project, e.g., "L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021". This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
 * `scripts.dir` - directory containing the pre-processing scripts for the NFA. Usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R". These scripts are also availabe on GitHub <link tba>
 * `root.output.dir` - directory where the project_name folder is located, usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects". This defines where the output will be saved.
+* `assay_component_map_filename` - filename of the csv file containing a map of the parameter value names as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names registered in invitroDB. Defaults to "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\mea_nfa_component_name_map.csv"
+* `project.output.dir` - directory where output should be saved for the given project. Defaults to file.path(root.output.dir, project_name)
+
 
 * Fill out the information to record the version of the pre-processing scripts that will be used for the given project. 
 * To verify that there are no uncommitted modifications to the scripts, open Git Bash in the scripts.dir and run `git status`. Commit any recent modifications and then run `git push` to sync with the remote.
@@ -444,7 +447,7 @@ Refer to the scripts prepare_parameter_values.R and parameter_values_to_AUC.R fo
 
   * If some of the rows in the wllq.tb.by.well.file that include 'nfa' in the affected assays do not match any of the data rows in the div_data, a warning will be given, e.g.
 
-> Some rows in Test2023_well_quality_assignments_by_well.csv did not match any rows in dat
+> Some rows in [project_name]_well_quality_assignments_by_well.csv did not match any rows in dat
 
   This warning indicates that there was likely a typo in the meta data in the wllq.tb.by.well.file or the div_data (e.g., incorrect culture date or Plate.SN entered somewhere). If this warning is observed and the div_data_files includes the entire data set, check the preceding output and check if any of the meta data in the wllq.tb.by.well.file does not match the intended meta data in the div_data.
 
@@ -467,6 +470,41 @@ Refer to the scripts prepare_parameter_values.R and parameter_values_to_AUC.R fo
   * Case #1: In some cases, a DIV recording may have been missed or not saved for a given plate. For example, a given plate may only have data for DIV 5, 9, and 12 (but not DIV 7). In this case, an AUC value could be calculated, but the appropriateness of comparing this AUC value to AUC values from plates with recordings on all of the expected_DIVs is uncertain. In some past projects (e.g., ~2014) with some missing DIV recordings for a single plate, parameter values from the other 2 plates tested in the same culture were used to generate filler data. Specifically, the median of wells that tested the same treatment and dose was used to generate filler data for each well of the plate with the missing DIV. The script estimate_missing_DIV.R was used to do this. However, this script has not been maintained and this practice is not optimal. Therefore, in the current implementation of `parameter_values_to_AUC()`, the well quality by wellwill be set to 0 for the AUC value for any wells/parameters that do not have a value for every DIV in expected_DIVs.
   * Case #2: If the well quality by well is 0 for any DIV for a given well/parameter, than the well quality by well for the AUC value for the well/parameter will also be set to 0.
 
+
+### Extract the cytotoxicity data
+
+The function `run_cytotox_functions()` will extract the blank-corrected fluorescence and optical density values for the LDH and Alamar Blue assays for the NFA. The functions `createCytoTable2()` and `createCytoData()` are called to do the leg work of extracting the data. Refer to roxygen documentation for more information on each function.
+
+You may see the following message:
+
+> The following rval's are NA, but wllq_by_well == 1. Wllq_by_well will be set to 0
+
+In this case, if the NA rvals are unexpected, check the source file (and possibly lab notebook) to determine the cause. Possible causes include:
+
+* Misalignment in the Calculations files (in which case the structure of the xlsx needs to be fixed)
+* Plate was not ran for given assay (in which case, you can update the wllq.tb.by.well.file with any explanatory wllq_notes and re-run `run_cytotox_functions()`)
+
+**Notes**:
+
+* Any negative blank-corrected values are set to 0 in the function `createCytoData()` 
+* For any NA blank-corrected values, the wllq_by_well is set to 0 and the value is left as NA.
+* All functions are hard-coded to only work for standard 48-well (6x8 plates). Functions will need to be modified if plates with different dimensions are used.
+* The function `createCytoData()` works by anchoring the read frames for the chemical, concentration, and blank-corrected values based on certain hard-coded tag phrases. Therefore, if the spelling of any of these key phrases changes, the the function will need to be modified. See the function documentation for more details.
+* The function `createCytoTable2()` will read data from a maximum of 3 plates. This restriction was made to prevent tripping up the function in case the tag phrase "Chemical" appears in additional data rows that do not indicate the start of a data chunk for a given plate.
+
+**Known issues - potential for undetected incorrect data if raw files are not hand-copied by lab technicians**:
+
+The values in in the Calculations .xlsx files are updated by hand from the raw readouts of the AB and LDH data. Usually, for each group, the Calculations file will be copied from a previous culture or a template folder to serve as a starting point. **However, sometimes the lab technician may forget to manually copy-paste the data from the raw xls files to the Calculations data file for a group.** To ensure that this is not the case, you could manually check every raw data file to make sure that the data values have been pasted into the Calculations file. Example machine-produced raw data files:
+  * LDH (contains data for 3 plates per file): L:\Lab\NHEERL_MEA\Project - DNT Test Set 2021 NTP\20210929_NFA_DNT 2021_Group 3\Culture Cytotoxicity\20210929_20211011_DNT 2021_G3 G4_LDH.xls 
+  * Alamar Blue (contains data for 1 plate per file): L:\Lab\NHEERL_MEA\Project - DNT Test Set 2021 NTP\20210929_NFA_DNT 2021_Group 3\Culture Cytotoxicity\20210929_20211011_DNT 2021_G3_75-9306.xls
+
+However, manually checking every file would be very cumbersome. At the very least, check with the lab technicians if, to their memory, they have copied the AB & LDH data to the Calculations file for every plate and group. A better long-term solution may be to write functions that read the raw data from the machine-produced raw data files directly (rather than the Calculations files). Then the raw values could be corrected to the average of the blank wells within the R scripts (usually G1, G2, and G3, but will be denoted by the chemical name). However, a downside of this approach is that sometimes, based on the expert-judgment of the lab technicians, not all of the blank wells are used to perform the blank-correction or blank wells from another plate are used if the blank wells from a given plate look off. Therefore, if you create functions to read the raw data directly, you should also either communicate with the lab technicians to identify plates where different blank-control wells are used to correct the raw data values or develop standardized cutoffs for blank well acceptability.
+
+## Prepare the level 0 table
+
+The function `tcpl_MEA_dev_AUC()` will read in the parameter values in wide-format AUC, DIV, and cytotoxicity data files, transform into 1 long-format data table, and do some standardization/cleaning to the table. This function will return a single data table that can be further cleaned in the run_me script before it saved as a .RData file. 
+
+Note that the output data files will contain both the parameter values by DIV (as indicated by the suffix 'DIV' in the acsn (assay component source name)) as well as the AUC values (as indicated by no suffix in the acsn). Dummy-data added at DIV 2 with the function `prepare_parameter_values()` will be removed (i.e., any data rows that contain the phrase 'not recorded - dummy data at DIV' in the wllq_notes_by_well or the file.name will be excluded).
 
 # RESUME BELOW (then resume with step in run_me, explaining)
 

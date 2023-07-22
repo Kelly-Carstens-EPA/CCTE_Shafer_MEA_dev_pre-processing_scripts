@@ -1,4 +1,15 @@
-# splits the cyto data for each plate, assay, then calls createCytoData()
+#' Create a table of the cytotoxicity data for the given cyto_type (AB or LDH) for all plates in a given input cytoFile
+#'
+#' @param cytoFile full path to single .xlsx file containing the blank-corrected cytotoxicity data values (either a "Calculations" file, which is assumed to contain data for 3 plates, 
+#' or a "Summary" file, which is assumed to contain data for 1 plate)
+#' @param cyto_type type of cytotoxicity data to read (either AB or LDH)
+#'
+#' @return
+#' @export
+#' 
+#' @details This function splits the cyto data for each assay and plate, then calls createCytoData() to read the data
+#'
+#' @examples
 createCytoTable2 <- function(cytoFile, cyto_type) {
   
   # get the date, file name
@@ -11,10 +22,10 @@ createCytoTable2 <- function(cytoFile, cyto_type) {
   ABnames <- c("Alamar Blue", "AB", "CTB", "CellTiter Blue")
   LDHnames <- c("LDH", "Total LDH")
   sheetNames <- switch(cyto_type,
-                     AB = ABnames,
-                     LDH = LDHnames)
+                       AB = ABnames,
+                       LDH = LDHnames)
   cytoFile_sheets <- getSheetNames(cytoFile)
-  sheetName_for_cyto_type <- intersect(sheetNames, getSheetNames(cytoFile_sheets))
+  sheetName_for_cyto_type <- intersect(sheetNames, cytoFile_sheets)
   if (length(sheetName_for_cyto_type) != 1) {
     stop('Not sure which sheet in ',basename(cytoFile),' to read for ',cyto_type,' data.\nAvailable sheets: ',paste0(cytoFile_sheets,collapse = ", "))
   }
@@ -52,9 +63,12 @@ createCytoTable2 <- function(cytoFile, cyto_type) {
     if (all(is.na(cyto_data))) {
       cat("**No data found for ",basename(cytoFile),", ",cyto_type,", reading from sheet ",sheetName_for_cyto_type,", Plate ",Plate.SN,"\n")
     } else {
-      cyto_longdat <- createCytoData(cyto_data, cyto_type, Plate.SN, srcname, date, masterChemFiles)
+      cyto_longdat <- createCytoData(cyto_data, cyto_type, Plate.SN, date)
     }
     file_dat <- rbind(file_dat, cyto_longdat)
   }
+  
+  # Add srcf (source file) as a column
+  file_dat[, srcf := srcname]
   return(file_dat)
 }
