@@ -173,7 +173,7 @@ Every level 0 table processed with the ToxCast pipeline must contain a binary 'w
 
 There are 2 ways to set the wllq to 0 or add a well quality note (described below). Either option can be used; choose whichever option is easiest for each wllq situation. 
 
-Note that the wllq notes entered in the first table ("[project_name]_well_quality_assignments_by_well.csv") will be applied from within the function parameter_values_to_AUC(). The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you.
+Note that the wllq notes entered in the first table ("[project_name]_well_quality_assignments_by_well.csv") will be applied by the function `add_wllq_by_well()`, which is called by `prepare_parameter_values.R()`. This will produce the column "wllq_by_well." This well quality should not be considered final. The wllq notes in the second table ("[project_name]_well_quality_assignments_by_compound_cndx_culture_date.csv") will be applied within the run_me RMD AFTER the treatment names and concentrations have been verified by you. Finally the 2 well quality columns will be merged to produce the final well quality column which will be part of the level 0 data for the ToxCast Pipeline.
 
 
 ## Update the wllq when the well ID is known
@@ -186,13 +186,13 @@ For each well, fill out the columns:
 ```{r echo = FALSE}
 wllq.by.well.desc <- data.table(
   'Column' = c('affected_assays','date','Plate.SN','well','DIV','wllq','wllq_notes','wllq_ref'), 
-  'Description' = c("Comma-separated list of which assays the well-quality affects, including mea, CTB (Cell Titer Blue), or LDH. (Note that the CTB assay may also be referred to as Alamar Blue)",
+  'Description' = c("Comma-separated list of which assays the well-quality affects, including mea, AB (Alamar Blue, aka Cell Titer Blue), or LDH",
                     "Culture date (YYYYMMDD)",
                     "Plate Serial Number. Should begin with 'MW'","Affected well. Should begin with a letter (for the row) and end with a number. If all of the wells on a given plate are affected, enter 'all'.",
-                    "Day in vitro. If all DIV are affected, enter 'all'. (If any DIV other than the standard expected DIV (5, 7, 9, and 12) are affected, create a separate row in the well quality table for each DIV). If the affected assay is a cytotoxicity assay (LDH or CTB), this column will be ignored.",
+                    "Day in vitro. If all DIV are affected, enter 'all'. (If any DIV other than the standard expected DIV (5, 7, 9, and 12) are affected, create a separate row in the well quality table for each DIV). If the affected assay is a cytotoxicity assay (LDH or AB), this column will be ignored.",
                     "Well quality (1 = usable, 0 = not usable)","Well quality note ",
                     "Well quality reference (i.e., the source from which you learned about the well quality note)"),
-  'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: nfa,CTB,LDH",
+  'Examples' = c("For only the Alamar Blue assay: AB; For all assays: nfa,AB,LDH",
                  "20201109",
                  "MW71-7905",
                  "A4",
@@ -265,8 +265,8 @@ For each well, fill out the columns:
 ```{r echo = FALSE}
 wllq.by.well.trt <- data.table(
   'Column' = c("affected_assays","compound_name","cndx","culture_date","wllq","wllq_notes","wllq_ref"),
-  'Description' = c("Comma-separated list of which assays the well-quality affects (nfa, CTB (Cell Titer Blue), or LDH) . (Note that the CTB assay may also be referred to as Alamar Blue)","Name of affected compound (treatment), as it appears in the MaestroExperimentLog file","Concentration index tested for the given treatment, with 1 = lowest concentration tested and 7 = highest concentration. Note that this should be the concentration index ON A GIVEN PLATE (rather than all concentrations tested for the treatment in the project). If all concentrations tested are affected, enter 'all.'","Culture date (YYYYMMDD)","Well quality (1 = usable, 0 = not usable)","Well quality note ","Well quality reference (i.e., the source from which you learned about the well quality note)"),
-  'Examples' = c("For only the CellTiter Blue assay: CTB; For all assays: nfa,CTB,LDH",
+  'Description' = c("Comma-separated list of which assays the well-quality affects (nfa, AB (Alamar Blue, aka Cell Titer Blue), or LDH)","Name of affected compound (treatment), as it appears in the MaestroExperimentLog file","Concentration index tested for the given treatment, with 1 = lowest concentration tested and 7 = highest concentration. Note that this should be the concentration index ON A GIVEN PLATE (rather than all concentrations tested for the treatment in the project). If all concentrations tested are affected, enter 'all.'","Culture date (YYYYMMDD)","Well quality (1 = usable, 0 = not usable)","Well quality note ","Well quality reference (i.e., the source from which you learned about the well quality note)"),
+  'Examples' = c("For only the Alamar Blue assay: AB; For all assays: nfa,AB,LDH",
                  "7126 C7; DMSO","1","20201109","1; 0",
                  "Precipitate observed, actual concentration is dubious; Cell debris",
                  "Lab notebook; Readme note"))
@@ -430,6 +430,7 @@ In order to combine the parameter values from each DIV, we calculate the trapezo
 
 Refer to the scripts prepare_parameter_values.R and parameter_values_to_AUC.R for details on each argument.
 
+
 **prepare_parameter_values() notes**:
 
 * the default expected_DIVs for this script are c(5, 7, 9, 12)
@@ -450,19 +451,20 @@ Refer to the scripts prepare_parameter_values.R and parameter_values_to_AUC.R fo
 
 * Rare-but-sometimes-needed option: interpolate values from non-standard to standard DIVs: Usually, recordings are made on DIV 5, 7, 9, and 12. However, occasionally, e.g., due to inclement weather, recordings may be made on non-standard DIV. For example, if there was inclement weather on DIV 9, a set of plates might have been recorded on DIVs 5, 7, 10, and 12. In order to aim to make the AUC value for these plates comparable to AUC values from other plates with recordings from DIV 5, 7, 9, and 12, the parameter values for DIV 9 can be linearly interpolated from DIVs 7 and 10. This is an imperfect solution, but it has been used occasionally in past projects. 
 
-How values are interpolated with this script:
+  How values are interpolated with this script:
 
-The function prepare_parameter_values() will check for any non-standard DIV. If any non-standard DIV are present and interpolate_stnd_DIVs = TRUE, then this function will call the function linear_interpolate_DIV() to interpolate the parameter values at the standard DIVs from the DIVs that were recorded. The wllq_notes and file.name in the resulting table will indicate the data rows that were interpolated. However, note that the linear_interpolate_DIV() function was recently updated (July 2023) and has had limited use, so it has not been well-tested and may need to be updated for a given project. 
+  The function prepare_parameter_values() will check for any non-standard DIV. If any non-standard DIV are present and interpolate_stnd_DIVs = TRUE, then this function     will call the function linear_interpolate_DIV() to interpolate the parameter values at the standard DIVs from the DIVs that were recorded. The wllq_notes and file.name     in the resulting table will indicate the data rows that were interpolated. However, note that the linear_interpolate_DIV() function was recently updated (July 2023)    and has had limited use, so it has not been well-tested and may need to be updated for a given project. 
 
-Note that interpolating values at standard DIVs from non-standard DIVs is not the same as interpolating a value when a DIV recording was just missed. See notes on 'check for missing DIV' below for how this is handled.
+  Note that interpolating values at standard DIVs from non-standard DIVs is not the same as interpolating a value when a DIV recording was just missed. See notes on        'check for missing DIV' below for how this is handled.
+
 
 
 **parameter_values_to_AUC() notes**:
 
 * the default expected_DIVs for this script are c(2, 5, 7, 9, 12)
 * In order to calculate the area under the curve, this function sets any NA parameter values are set to 0. This has been the practice since before 2019; however, the appropriateness of this choice in uncertain for some parameters. Alternative approaches to summarizing the activity over the DIV recorded may be warranted in these cases.
-* **Checks for missing DIVs:** 
-  * Case #1: In some cases, a DIV recording may have been missed or not saved for a given plate. For example, a given plate may only have data for DIV 5, 9, and 12 (but not DIV 7). In this case, an AUC value could be calculated, but the appropriateness of comparing this AUC value to AUC values from plates with recordings on all of the expected_DIVs is uncertain. In some past projects (e.g., ~2014) with some missing DIV recordings for a single plate, parameter values from the other 2 plates tested in the same culture were used to generate filler data. Specifically, the median of wells that tested the same treatment and dose was used to generate filler data for each well of the plate with the missing DIV. The script estimate_missing_DIV.R was used to do this. However, this script has not been maintained and this practice is not optimal. Therefore, in the current implementation of `parameter_values_to_AUC()`, the well quality will be set to 0 for the AUC value for any wells/parameters that do not have a value for every DIV in expected_DIVs.
+* Checks for missing DIVs:
+  * Case #1: In some cases, a DIV recording may have been missed or not saved for a given plate. For example, a given plate may only have data for DIV 5, 9, and 12 (but not DIV 7). In this case, an AUC value could be calculated, but the appropriateness of comparing this AUC value to AUC values from plates with recordings on all of the expected_DIVs is uncertain. In some past projects (e.g., ~2014) with some missing DIV recordings for a single plate, parameter values from the other 2 plates tested in the same culture were used to generate filler data. Specifically, the median of wells that tested the same treatment and dose was used to generate filler data for each well of the plate with the missing DIV. The script estimate_missing_DIV.R was used to do this. However, this script has not been maintained and this practice is not optimal. Therefore, in the current implementation of `parameter_values_to_AUC()`, the well quality by wellwill be set to 0 for the AUC value for any wells/parameters that do not have a value for every DIV in expected_DIVs.
   * Case #2: If the well quality by well is 0 for any DIV for a given well/parameter, than the well quality by well for the AUC value for the well/parameter will also be set to 0.
 
 

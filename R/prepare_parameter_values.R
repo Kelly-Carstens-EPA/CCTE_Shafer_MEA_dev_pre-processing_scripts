@@ -8,8 +8,8 @@
 #' @param div_data_files full file paths to wide .csv files containing the parameter data by DIV (with parameter values as column name(s))
 #' @param id.columns vector of column names in div_data_files that should be interpreted as ID columns (i.e., all columns other than the parameters)
 #' @param wllq.tb.by.well.file (optional) full path to table containing well quality definitions and/or notes for specific plates, wells, and DIVs. If NULL, wllq_by_well will be set to 1 for all data rows
-#' @param num_rows_per_plate (optional) number of rows in an MEA plate. Used to expand data rows where well = 'all' in the wllq.tb.by.well
-#' @param num_columns_per_plate (optional) number of columns in an MEA plate. Used to expand data rows where well = 'all' in the wllq.tb.by.well
+#' @param num_rows_per_plate (optional) number of rows in an MEA plate. Used to expand data rows where well = 'all' in the wllq.tb.by.well. Defaults to 6 for a standard MEA 48-well plate.
+#' @param num_columns_per_plate (optional) number of columns in an MEA plate. Used to expand data rows where well = 'all' in the wllq.tb.by.well. Defaults to 8 for a standard MEA 48-well plate.
 #' @param expected_DIVs vector of the DIVs that should be present for all plates in div_data_files (defaults to 5, 7, 9, 12). Used to expands data rows where DIV = 'all' in wllq.tb.by.well and to check for non-standard DIV (see interpolate_stnd_DIVs)
 #' @param add_DIV2_values_of_0 whether to add dummy-data values of 0 at DIV 2 (standard practice for the Shafer Lab). If TRUE, the function will add 2 to expected_DIVs
 #' @param interpolate_stnd_DIVs whether to interpolate standard DIVs (defined by expected_DIVs) from non-standard DIVs. Only applies if non-standard DIVs are present in the div_data_files
@@ -66,7 +66,7 @@ prepare_parameter_values <- function(project.output.dir,
   if(!is.null(wllq.tb.by.well.file)) {
     div_data[, assay := 'nfa']
     div_data <- add_wllq_by_well(div_data, wllq.tb.by.well.file, num_rows_per_plate, num_columns_per_plate, all_DIVs = expected_DIVs)
-    # remove columns that were created for the add_wllq_by_well() and are not needed going forward
+    # remove columns that were created for or by the add_wllq_by_well() and are not needed going forward
     div_data[, intersect(c('assay','rowi','coli'),names(div_data)) := NULL]
   } else{
     # Default to wllq == 1

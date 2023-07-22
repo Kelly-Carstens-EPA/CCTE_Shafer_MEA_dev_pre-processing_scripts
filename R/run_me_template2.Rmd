@@ -98,11 +98,13 @@ X'
 readmes.body <- readmes.body[readmes.body != generic.readme.text]
 
 # View the readmes that have any non-generic text
-for (i in 1:length(readmes.body)) {
-  cat(i,'\n')
-  cat(names(readmes.body)[i],'\n')
-  cat(readmes.body[i])
-  cat('\n\n')
+if (length(readmes.body) > 0) {
+  for (i in 1:length(readmes.body)) {
+    cat(i,'\n')
+    cat(names(readmes.body)[i],'\n')
+    cat(readmes.body[i])
+    cat('\n\n')
+  }
 }
 ```
 
@@ -215,6 +217,9 @@ source(file.path(scripts.dir,'prepare_parameter_values.R'))
 source(file.path(scripts.dir,'linear_interpolate_DIV.R'))
 source(file.path(scripts.dir,'add_wllq_by_well.R'))
 source(file.path(scripts.dir,'parameter_values_to_AUC.R'))
+
+# Extracting the cytotoxicity data
+source(file.path(scripts.dir,'cytotox_prep06.R'))
 ```
 
 **Convert spike list files to h5 files**
@@ -250,7 +255,7 @@ Combine all parameter data files, update well quality by well, add dummy points 
 div_data_file_folders <- file.path(project.output.dir,c('prepared_data','All_MI'))
 div_data_files <- unlist(lapply(div_data_file_folders, list.files, pattern = '.csv$', full.names = TRUE, recursive = FALSE))
 wllq.tb.by.well.file <- file.path(project.output.dir, 
-                                                          paste0(project_name,'_well_quality_assignments_by_well.csv'))
+                                  paste0(project_name,'_well_quality_assignments_by_well.csv'))
 
 # Run the function
 prepare_parameter_values(project.output.dir, 
@@ -263,18 +268,6 @@ prepare_parameter_values(project.output.dir,
                          expected_DIVs = c(5,7,9,12),
                          add_DIV2_values_of_0 = TRUE,
                          interpolate_stnd_DIVs = TRUE)
-
-# project.output.dir, 
-#                                      project_name, 
-#                                      div_data_files,
-#                                      id.columns = c("date","Plate.SN","DIV","well","trt","dose","units","file.name"),
-#                                      wllq.tb.by.well.file = NULL,
-#                                      num_rows_per_plate = 6,
-#                                      num_columns_per_plate = 8,
-#                                      expected_DIVs = c(5,7,9,12),
-#                                      add_DIV2_values_of_0 = TRUE,
-#                                      interpolate_stnd_DIVs = TRUE
-
 ```
 
 Calculate the trapzoidal area under the curve for each well/parameter versus the DIV
@@ -288,28 +281,23 @@ parameter_values_to_AUC(project.output.dir,
                         project_name, 
                         div_data_file = div_data_file,
                         id.columns = c("date","Plate.SN","DIV","well","trt","dose","units","file.name","wllq_by_well","wllq_notes_by_well","wllq_ref_by_well"),
-                        dose_column_name = 'dose',
-                        expected_DIVs = c(2,5,7,9,12))
-
+                        expected_DIVs = c(2,5,7,9,12),
+                        dose_column_name = 'dose')
 ```
 
+**Extract the cytoxicity data**
 
 ```{r}
+# Test/dev
+get_files_from_log = TRUE
+cytoFiles = NULL
 
-# cytotox prep
-cat("\n- Extract the cytotoxicity data from Calculations files:\n")
-resp <- check_existing(path = file.path(project.output.dir, "output"), pattern = "_cytotox", pause_between_steps)
-if (resp %in% c("r","a")) {
-  source(file.path(scripts.dir,'cytotox_prep06.R'))
-  run_cytotox_functions(basepath = project.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
-                        append = append)
-  rm(list = setdiff(ls(), keep_items))
-}
-
-cat("\n'source_steps.R' is complete.\n")
+run_cytotox_functions(project.output.dir, project_name, get_files_from_log = TRUE, cytoFiles = NULL)
 
 
-
+# final
+run_cytotox_functions(basepath = project.output.dir, get_files_from_log = TRUE, filename = paste0(project_name,"_cytotox.csv"), 
+                      append = append)
 
 ```
 

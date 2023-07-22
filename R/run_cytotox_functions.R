@@ -1,0 +1,83 @@
+# This script will extract the blank-corrected flurescense values (instead of the percent of control)
+# Script to process cytotoxicity data to prepare for tcpl
+# Output is a long file with all the necessary columns for tcpl (except no spid, just treatment column)
+# This script will extract the cytotoxicity data (LDH and Alamar Blue) from the input files
+# Example input files:
+# - "ON_20160720_MW1139-19_Summary.xlsx" - these contain data for 1 plate per sheet (LDH and Alamar Blue)
+# - "20171011_ON G8_2 Calculations.xlsx" - these contain data for 3 plates per sheet (LDH and Alamar Blue)
+
+
+
+run_cytotox_functions <- function(project.output.dir, project_name, get_files_from_log = TRUE, cytoFiles = NULL, wllq.tb.by.well.file = NULL) {
+  
+  require(openxlsx)
+  require(data.table)
+  
+  cat("\nStarting cytotoxicity data collection...\n")
+  cat("Any negative blank-corrected values will be set to 0.\n")
+  
+  # get the Calculations/Summary data files, either from files_log or provided cytoFiles
+  if (get_files_from_log) {
+    cytoFiles <- readFilesLog(project.output.dir, files_type = "Calculations")
+    cytoFiles <- c(cytoFiles, readFilesLog(project.output.dir, files_type = "Summary"))
+  }
+  
+  if (length(cytoFiles) == 0) {
+    cat('No Summary or Calculations files found\n')
+    return(0)
+  }
+  
+  # run the functions for each file
+  all_cyto_data <- data.table()
+  for (i in 1:length(cytoFiles)) {
+    
+    if (grepl("(Calculations)|(Summary)",basename(cytoFiles[i]))) {
+      AB_dat <- createCytoTable2(cytoFiles[i], cyto_type = "AB")
+      LDH_dat <- createCytoTable2(cytoFiles[i], cyto_type = "LDH")
+    }
+    else {
+      cat(paste("can't tell if",cytoFiles[i],"is 'Summary' file or 'Calculations' file\n"))
+    }
+    all_cyto_data <- rbind(all_cyto_data, AB_dat, LDH_dat)
+    rm(list = c("AB_dat","LDH_dat"))
+  }
+  
+  # Update the wllq
+  if(!is.null(wllq.tb.by.well.file)) {
+    all_cyto_data[, assay := src_acsn]
+    all_cyto_data[, `:=`(date = as.character(date), rowi = as.numeric(rowi))]
+    
+    all_cyto_data <- add_wllq_by_well(all_cyto_data, wllq.tb.by.well.file, num_rows_per_plate = 6, num_columns_per_plate = 8)
+    # remove columns that were created for or by the add_wllq_by_well() and are not needed going forward
+    all_cyto_data[, intersect(c('assay'),names(all_cyto_data)) := NULL]
+  } else{
+    # Default to wllq == 1
+    cat('No well quality table given - will default to wllq_by_well = 1 for all rows\n')
+    all_cyto_data[, `:=`(wllq_by_well = 1,
+                         wllq_notes_by_well = NA_character_,
+                         wllq_ref_by_well = NA_character_)]
+  }
+  
+  # flag NA rval's where wllq == 1
+  na_rvals <- longdat[is.na(rval) & wllq_by_well == 1]
+  if (nrow(na_rvals) > 0) {
+    cat("The following rval's are NA, but wllq_by_well == 1. Wllq_by_well will be set to 0\n")
+    print(na_rvals)
+    all_cyto_data[is.na(rval) & wllq_by_well == 1, `:=`(wllq_by_well = 0,
+                                                        wllq_notes_by_well = paste0("rval is NA; ",wllq_notes_by_well[!is.na(wllq_notes_by_well)]),
+                                                        wllq_ref_by_well = paste0("rval is NA; ",wllq_ref_by_well[!is.na(wllq_ref_by_well)]))]
+    warning('Some rvals were NA; Wllq_by_well set to 0 for affected wells/assays.\n')
+  }
+  
+  # Print summary of wllq updates
+  cat("Wllq summary:\n")
+  print(all_cyto_data[, .N, by = c("src_acsn","wllq_by_well","wllq_notes_by_well")][order(src_acsn, wllq_by_well, wllq_notes_by_well)])
+  
+  # Save the file
+  if (!dir.exists(file.path(project.output.dir, "output"))) dir.create(file.path(project.output.dir, "output"))
+  output_file <- file.path(project.output.dir, "output",paste0(project_name,'_cytotox.csv'))
+  write.csv(all_cyto_data, file = output_file, row.names = FALSE, col.names = TRUE)
+  
+  cat(basename(output_file),"is ready\n")
+  
+}
