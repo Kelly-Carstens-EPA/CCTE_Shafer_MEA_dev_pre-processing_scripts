@@ -155,81 +155,81 @@ update_wllq_by_well_DIV <- function(longdat, basepath = NULL, get_files_under_ba
 # - Implement addition of new secondary wllq table to run_me as well, possibly borrow from this function.
 # - do a minim test-run from start to fin with wllq
 
-
-# Get wllq file
-if (get_files_under_basepath) {
-  
-  wllq.info.file <- file.path(basepath, "well_quality_notes_by_well_DIV.xlsx")
-  
-  # For backwards compatibility:
-  if(!file.exists(wllq.info.file)) wllq.info.file <- file.path(basepath, "wells_with_well_quality_zero.csv")
-} else {
-  wllq.info.file <- choose.files(default = basepath, caption = "Select well quality csv table")
-}
-
-# Read file
-if(grepl('\\.xlsx',wllq.info.file)) {
-  wllq_info <- as.data.table(openxlsx::read.xlsx(wllq.info.file, sheet = 1))
-  wllq_info[, c(setdiff(names(wllq_info),c('DIV','wllq'))) := lapply(.SD, as.character), .SDcols = c(setdiff(names(wllq_info),c('DIV','wllq')))]
-  wllq_info[, c('DIV','wllq') := lapply(.SD, as.numeric), .SDcols =  c('DIV','wllq')]
-} else {
-  # (for backwards compatibility)
-  wllq_info <- as.data.table(read.csv(wllq.info.file, 
-                                      colClasses = c(rep("character",4),"numeric",rep("character",2)), stringsAsFactors = FALSE))
-}
-
-# Just concerned about MEA data here
-wllq_info <- wllq_info[grepl('mea',tolower(affected_endpoints))]
-
-# expand the rows where well == "all" to include every well in plate
-# (Currently assuming that plates are 6x8, but would like to make this more flexible in the future)
-# expand the rows where well == "all" to include every well in plate
-for(table_row in which(wllq_info$well == "all")) {
-  full_plate <- wllq_info[table_row, .(date, Plate.SN, DIV, well = paste0(unlist(lapply(LETTERS[1:6],rep,times=8)),rep(1:8,6)), wllq, wllq_notes, affected_endpoints)]
-  wllq_info <- rbind(wllq_info, full_plate) # rbind the new rows to the end of wllq_info
-}
-wllq_info <- wllq_info[well != "all"]
-
-# Remove rows where DIV == "all" (this info will be merged in later)
-wllq_info <- wllq_info[DIV != 'all']
-wllq_info[, DIV := as.numeric(DIV)]
-stopifnot(nrow(wllq_info[is.na(DIV)]) == 0)
-
-# check for any DIV that do not match data
-unmatched_DIV <- merge(longdat[, .(date, Plate.SN, well, trt, dose, file.name, DIV)], wllq_info[, .(date, Plate.SN, well, DIV, wllq, wllq_notes)], 
-                       all.y = T)[is.na(file.name)]
-if(nrow(unmatched_DIV) > 0) {
-  cat("The following wells and DIV rows from wells_with_well_quality_zero.csv did not match the DIV for the corresponding plates in longdat:\n")
-  print(unmatched_DIV)
-  cat("\nSummary of longdat:\n")
-  print(longdat[Plate.SN %in% unmatched_DIV$Plate.SN, .(DIVs = paste0(sort(unique(DIV)),collapse=",")), by = c("date","Plate.SN")][order(date,Plate.SN)])
-  warning(paste0("Update ",wllq.info.file))
-}
-
-# Get indicies of MEA data where wllq==0 for specific DIV
-well.div.to.remove <- wllq_info[wllq == 0, unique(.SD), .SDcols = c('date','Plate.SN','well','DIV')]
-# If multiple DIV affected for a given well... then we'd want to just set the wllq to 0, not remove
-stopifnot(nrow(well.div.to.remove[, .N, by = .(date, Plate.SN, well)][N > 1]) == 0)
-
-# Merge with longdat
-longdat[, in_dat := 1]
-well.div.to.remove[, in_well.div.to.remove := 1]
-longdat <- merge(longdat, well.div.to.remove, by = c('date','Plate.SN','well','DIV'), all = T)
-
-# Check for any date, Plate.SN, well, DIV combinations in wllq_info not in longdat (likley indicates typo in wllq_info)
-if(nrow(longdat[is.na(in_dat)]) > 0) {
-  print(longdat[is.na(in_dat), .N, by = .(date, Plate.SN, well, DIV, in_dat, in_well.div.to.remove)])
-  stop('Above date, plate, well, DIV combinations in wllq_info are not in data')
-}
-
-# Remove where wllq == 0 for specific DIV
-cat("The following data rows will be REMOVED from the AUC analysis because wllq==0 and DIV is not 'all':\n")
-print(longdat[!is.na(in_well.div.to.remove), .(date, Plate.SN, well, DIV, full_id, trt, dose, file.name, meanfiringrate)])
-longdat <- longdat[!is.na(in_well.div.to.remove)]
-
-# Note: 
-# Previous version: Only removed rows where the wllq is not already 0 because of soem affect on all DIV
-# Now: removing rows where wllq is 0 for an individual DIV, even if there is another wllq note affecting all DIV
-
-# Remove added columns
-longdat[, c('in_dat_','in_well.div.to.remove') := NULL]
+# 
+# # Get wllq file
+# if (get_files_under_basepath) {
+#   
+#   wllq.info.file <- file.path(basepath, "well_quality_notes_by_well_DIV.xlsx")
+#   
+#   # For backwards compatibility:
+#   if(!file.exists(wllq.info.file)) wllq.info.file <- file.path(basepath, "wells_with_well_quality_zero.csv")
+# } else {
+#   wllq.info.file <- choose.files(default = basepath, caption = "Select well quality csv table")
+# }
+# 
+# # Read file
+# if(grepl('\\.xlsx',wllq.info.file)) {
+#   wllq_info <- as.data.table(openxlsx::read.xlsx(wllq.info.file, sheet = 1))
+#   wllq_info[, c(setdiff(names(wllq_info),c('DIV','wllq'))) := lapply(.SD, as.character), .SDcols = c(setdiff(names(wllq_info),c('DIV','wllq')))]
+#   wllq_info[, c('DIV','wllq') := lapply(.SD, as.numeric), .SDcols =  c('DIV','wllq')]
+# } else {
+#   # (for backwards compatibility)
+#   wllq_info <- as.data.table(read.csv(wllq.info.file, 
+#                                       colClasses = c(rep("character",4),"numeric",rep("character",2)), stringsAsFactors = FALSE))
+# }
+# 
+# # Just concerned about MEA data here
+# wllq_info <- wllq_info[grepl('mea',tolower(affected_endpoints))]
+# 
+# # expand the rows where well == "all" to include every well in plate
+# # (Currently assuming that plates are 6x8, but would like to make this more flexible in the future)
+# # expand the rows where well == "all" to include every well in plate
+# for(table_row in which(wllq_info$well == "all")) {
+#   full_plate <- wllq_info[table_row, .(date, Plate.SN, DIV, well = paste0(unlist(lapply(LETTERS[1:6],rep,times=8)),rep(1:8,6)), wllq, wllq_notes, affected_endpoints)]
+#   wllq_info <- rbind(wllq_info, full_plate) # rbind the new rows to the end of wllq_info
+# }
+# wllq_info <- wllq_info[well != "all"]
+# 
+# # Remove rows where DIV == "all" (this info will be merged in later)
+# wllq_info <- wllq_info[DIV != 'all']
+# wllq_info[, DIV := as.numeric(DIV)]
+# stopifnot(nrow(wllq_info[is.na(DIV)]) == 0)
+# 
+# # check for any DIV that do not match data
+# unmatched_DIV <- merge(longdat[, .(date, Plate.SN, well, trt, dose, file.name, DIV)], wllq_info[, .(date, Plate.SN, well, DIV, wllq, wllq_notes)], 
+#                        all.y = T)[is.na(file.name)]
+# if(nrow(unmatched_DIV) > 0) {
+#   cat("The following wells and DIV rows from wells_with_well_quality_zero.csv did not match the DIV for the corresponding plates in longdat:\n")
+#   print(unmatched_DIV)
+#   cat("\nSummary of longdat:\n")
+#   print(longdat[Plate.SN %in% unmatched_DIV$Plate.SN, .(DIVs = paste0(sort(unique(DIV)),collapse=",")), by = c("date","Plate.SN")][order(date,Plate.SN)])
+#   warning(paste0("Update ",wllq.info.file))
+# }
+# 
+# # Get indicies of MEA data where wllq==0 for specific DIV
+# well.div.to.remove <- wllq_info[wllq == 0, unique(.SD), .SDcols = c('date','Plate.SN','well','DIV')]
+# # If multiple DIV affected for a given well... then we'd want to just set the wllq to 0, not remove
+# stopifnot(nrow(well.div.to.remove[, .N, by = .(date, Plate.SN, well)][N > 1]) == 0)
+# 
+# # Merge with longdat
+# longdat[, in_dat := 1]
+# well.div.to.remove[, in_well.div.to.remove := 1]
+# longdat <- merge(longdat, well.div.to.remove, by = c('date','Plate.SN','well','DIV'), all = T)
+# 
+# # Check for any date, Plate.SN, well, DIV combinations in wllq_info not in longdat (likley indicates typo in wllq_info)
+# if(nrow(longdat[is.na(in_dat)]) > 0) {
+#   print(longdat[is.na(in_dat), .N, by = .(date, Plate.SN, well, DIV, in_dat, in_well.div.to.remove)])
+#   stop('Above date, plate, well, DIV combinations in wllq_info are not in data')
+# }
+# 
+# # Remove where wllq == 0 for specific DIV
+# cat("The following data rows will be REMOVED from the AUC analysis because wllq==0 and DIV is not 'all':\n")
+# print(longdat[!is.na(in_well.div.to.remove), .(date, Plate.SN, well, DIV, full_id, trt, dose, file.name, meanfiringrate)])
+# longdat <- longdat[!is.na(in_well.div.to.remove)]
+# 
+# # Note: 
+# # Previous version: Only removed rows where the wllq is not already 0 because of soem affect on all DIV
+# # Now: removing rows where wllq is 0 for an individual DIV, even if there is another wllq note affecting all DIV
+# 
+# # Remove added columns
+# longdat[, c('in_dat_','in_well.div.to.remove') := NULL]
