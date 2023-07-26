@@ -1,8 +1,29 @@
-# this function has been edited to reference local.corr.all.ont.ae.filter (not in meadq package)
-# to calculate the correlation coefficient 12/13/2019
-
+#' Create burst ontogeny data
+#' 
+#' Function to calculate 16 parameter values from MEA recordings. 
+#'
+#' @param h5Files Input files (spike list files converted to h5files, as created by the function h5_conversion())
+#' @param csv.filename.AEfilt Name of output file with parameter values calculated based on active-electrodes filter only. Only created if AEfile = T. (see AEfile below)
+#' @param csv.filename.ABEfilt Name of output file with parameter values calculated based on active-elecrodes and actively bursting electrodes filter for appropriate parameters
+#' @param save.rdata Binary whether to save the object that contains the parameter values and additional information as an RData file
+#' @param add.silent.wells Binary of whether to add data rows to the output table for the wells that did not have any activity. For these wells, 
+#' parameters values in the list 'may.be.zero' are set to 0 and parameter values in the list 'may.not.be.zero' are set to NA.
+#' @param AEfile Binary whether to save a file for which only an "active" electrodes filter has been applied to the appropriate parameters.
+#' Note that this function will always save a file in which the appropriate parameters are filtered to "active" electrodes AND the following 4 parameters are filtered
+#' to "actively bursting" electrodes: mean.isis.abe, per.spikes.in.burst.abe, mean.dur.abe, and mean.IBIs.abe. 
+#' @param remake_all Binary whether to calculate the parameter values for all input h5files (TRUE), or only for the h5files that do not already have a corresponding .csv file in the 
+#'
+#' @details 
+#' This function was originally created by Diana Hall as part of the meadq package. The function here has been edited to reference 
+#' local.corr.all.ont.ae.filter (a modified version of a script not in meadq package)
+#' for the calculation of the correlation coefficient 12/13/2019.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 create_burst_ont_Data <-
-  function(h5Files,  save.rdata=F, add.silent.wells=T , AEfile = F, remake_all = TRUE){
+  function(h5Files,  csv.filename.AEfilt, csv.filename.ABEfilt, save.rdata=F, add.silent.wells=T , AEfile = F, remake_all = TRUE){
     write.header <- T
     
     # get a list of the date-plate combinations selected

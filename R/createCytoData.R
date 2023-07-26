@@ -103,12 +103,12 @@ createCytoData <- function(cyto_data,cyto_type,Plate.SN = NULL, date = NULL) {
   }
   
   # Add info columns
-  longdat[, src_acsn := cyto_type]
-  longdat$Plate.SN = Plate.SN
-  longdat$date = date
+  longdat$acsn <- cyto_type
+  longdat$Plate.SN <- Plate.SN
+  longdat$date <- date
   longdat[, coli := as.numeric(coli)]
   
   # reorder columns
-  longdat <- longdat[,c("date","Plate.SN","treatment","rowi","coli","conc","rval","src_acsn")]
+  longdat <- longdat[,c("date","Plate.SN","treatment","rowi","coli","conc","rval","acsn")]
   return(longdat)
 }

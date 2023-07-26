@@ -2,6 +2,8 @@
 
 export(createCytoData)
 export(createCytoTable2)
+export(create_burst_ont_Data)
+export(h5_conversion)
 export(linear_interpolate_DIV)
 export(parameter_values_to_AUC)
 export(prepare_parameter_values)

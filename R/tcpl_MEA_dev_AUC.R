@@ -2,7 +2,7 @@
 #'
 #' @param project.output.dir folder where the AUC, DIV, and cytotoxicity data files are located
 #' @param project_name name of the project
-#' @param assay_component_map_filename file path to the csv file containing a map of the parameter value names as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names registered in invitroDB.
+#' @param assay_component_map_filename file path to the csv file containing a map of the assay component source names (acsn, aka "parameters") names as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names (acnm) registered in invitroDB.
 #' Note that this function will append 'DIV#" to the parameter values in the input DIV table in order to match with the names in the assay_component_map_filename.
 #' @param auc_data_file (optional) file path to the csv file containing the AUC parameter values (created by prepare_parameter_values.R). Defaults to the AUC data file in the project.out.dir/output folder.
 #' @param div_data_file (optional) file path to the csv file containing the parameter values by DIV (created by parameter_values_to_AUC.R). Defaults to the _parameters_by_DIV data file in the project.out.dir/output folder.
@@ -31,15 +31,15 @@ tcpl_MEA_dev_AUC <- function(project.output.dir,
   div_data_wide[, c(measure.columns) := lapply(.SD, as.numeric), .SDcols = measure.columns]
   div_data <- data.table::melt(div_data_wide, 
                                id.vars = intersect(names(div_data_wide),id.columns),
-                               variable.name = 'src_acsn',
+                               variable.name = 'acsn',
                                value.name = 'rval',
                                variable.factor = FALSE)
   
   # Exclude any dummy-data that was added in prepare_parameter_values() for the AUC calculation (usually at DIV 2)
   div_data <- div_data[!grepl('not recorded - dummy data at DIV', wllq_notes_by_well, fixed = T) & !grepl('not recorded - dummy data at DIV', file.name, fixed = T)]
   
-  # Append the DIV to the source assay component source name (src_acsn) and remove the DIV column
-  div_data[, `:=`(src_acsn = paste0(src_acsn,"_DIV",DIV),
+  # Append the DIV to the assay component source name (acsn) and remove the DIV column
+  div_data[, `:=`(acsn = paste0(acsn,"_DIV",DIV),
                   srcf = basename(div_data_file))]
   div_data[, DIV := NULL]
   div_data[, file.name := NULL] # this column is DIV-specific and is not present in the AUC data
@@ -50,7 +50,7 @@ tcpl_MEA_dev_AUC <- function(project.output.dir,
   auc_data_wide[, c(measure.columns) := lapply(.SD, as.numeric), .SDcols = measure.columns]
   auc_data <- data.table::melt(auc_data_wide, 
                                id.vars = intersect(names(auc_data_wide),id.columns),
-                               variable.name = 'src_acsn',
+                               variable.name = 'acsn',
                                value.name = 'rval',
                                variable.factor = FALSE)
   auc_data[, `:=`(srcf = basename(auc_data_file))]
@@ -71,7 +71,7 @@ tcpl_MEA_dev_AUC <- function(project.output.dir,
   cytotox_data <- as.data.table(read.csv(cytotox_data_file))
   
   # Check alignment of names
-  columns.to.keep <- c('apid', 'rowi', 'coli', 'treatment', 'conc', 'wllq_by_well', 'wllq_notes_by_well', 'wllt', 'rval', 'acsn', 'srcf', 'units')
+  columns.to.keep <- c('apid', 'rowi', 'coli', 'treatment', 'conc', 'wllq_by_well', 'wllq_notes_by_well', 'wllq_ref_by_well', 'wllt', 'rval', 'acnm', 'srcf', 'units')
   columns.in.mea.data.not.in.cytotox <- intersect(setdiff(names(longdat),names(cytotox_data)), columns.to.keep)
   if(length(columns.in.mea.data.not.in.cytotox) > 0) 
     warning('cytotox data does not have columns ',paste0(columns.in.mea.data.not.in.cytotox,collapse=","),
@@ -83,12 +83,12 @@ tcpl_MEA_dev_AUC <- function(project.output.dir,
   longdat <- rbind(longdat, cytotox_data, fill = T)
   rm(list = c("cytotox_data"))
   
-  # replace the src_acsn with the TCPL acsn
+  # replace the acsn with the TCPL acnm
   assay_component_map <- as.data.table(read.csv(assay_component_map_filename, stringsAsFactors = FALSE))
-  longdat <- merge(longdat, assay_component_map, by = c("src_acsn"), all.x = T)
+  longdat <- merge(longdat, assay_component_map, by = c("acsn"), all.x = T)
   if (any(is.na(unique(longdat$acsn)))) {
-    print(longdat[is.na(acsn), unique(src_acsn)])
-    stop(paste0("The above src_acsn's are not found in ",assay_component_map_filename))
+    print(longdat[is.na(acsn), unique(acsn)])
+    stop(paste0("The above acsn's are not found in ",assay_component_map_filename))
   }
   
   # Define apid

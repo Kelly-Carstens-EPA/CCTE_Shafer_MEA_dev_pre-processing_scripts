@@ -23,7 +23,7 @@ tcpl_MEA_dev_AUC(
 
 \item{project_name}{name of the project}
 
-\item{assay_component_map_filename}{file path to the csv file containing a map of the parameter value names as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names registered in invitroDB.
+\item{assay_component_map_filename}{file path to the csv file containing a map of the assay component source names (acsn, aka "parameters") names as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names (acnm) registered in invitroDB.
 Note that this function will append 'DIV#" to the parameter values in the input DIV table in order to match with the names in the assay_component_map_filename.}
 
 \item{auc_data_file}{(optional) file path to the csv file containing the AUC parameter values (created by prepare_parameter_values.R). Defaults to the AUC data file in the project.out.dir/output folder.}

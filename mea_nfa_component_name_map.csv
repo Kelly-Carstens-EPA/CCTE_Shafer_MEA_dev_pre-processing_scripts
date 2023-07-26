@@ -1,4 +1,4 @@
-src_acsn,acsn
+acsn,acnm
 meanfiringrate_auc,CCTE_Shafer_MEA_dev_firing_rate_mean
 burst.per.min_auc,CCTE_Shafer_MEA_dev_burst_rate
 mean.isis_auc,CCTE_Shafer_MEA_dev_per_burst_interspike_interval

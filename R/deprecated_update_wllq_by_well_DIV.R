@@ -83,8 +83,8 @@ update_wllq_by_well_DIV <- function(longdat, basepath = NULL, get_files_under_ba
 
   # Prepare columns in longdat
   longdat[, `:=`(date = as.character(date), rowi = as.numeric(rowi))]
-  longdat[grepl('LDH',acsn), endpoint_type := 'LDH']
-  longdat[grepl('AB',acsn), endpoint_type := 'CTB'] # this is the abbreviation I'm using in the wllq tables... could change to AB
+  longdat[grepl('LDH',acnm), endpoint_type := 'LDH']
+  longdat[grepl('AB',acnm), endpoint_type := 'CTB'] # this is the abbreviation I'm using in the wllq tables... could change to AB
   longdat[is.na(endpoint_type), endpoint_type := 'mea']
   
   # Check for any rows where the date, plate, rowi, coli, affected endpoints is not in longdat
@@ -122,7 +122,7 @@ update_wllq_by_well_DIV <- function(longdat, basepath = NULL, get_files_under_ba
   
   # summary of wllq updates
   cat("Wllq summary:\n")
-  print(longdat[, .N, by = c("src_acsn","wllq_by_well","wllq_notes_by_well")][order(src_acsn, wllq_by_well, wllq_notes_by_well)])
+  print(longdat[, .N, by = c("parameter","wllq_by_well","wllq_notes_by_well")][order(parameter, wllq_by_well, wllq_notes_by_well)])
   
   return(longdat)
 }

@@ -26,12 +26,9 @@ create_ont_csv<-function(project.output.dir, remake_all = TRUE, get_h5Files_unde
   if(!dir.exists(prepared.dir)) dir.create( prepared.dir )
 
   # output file names
-  assign( "csv.filename.AEfilt",paste( prepared.dir, "/ont_data_summary_AEfilt",sep=""),
-          envir = .GlobalEnv )
-  assign( "csv.filename.ABEfilt",paste( prepared.dir, "/ont_data_summary_ABEfilt",sep=""  ),
-          envir = .GlobalEnv )
+  csv.filename.AEfilt <- paste( prepared.dir, "/ont_data_summary_AEfilt",sep="")
+  csv.filename.ABEfilt <- paste( prepared.dir, "/ont_data_summary_ABEfilt",sep=""  )
   
- 
   if ( is.null( param.file ) ){
     data('chgv_parameters')
   } else {
@@ -42,7 +39,8 @@ create_ont_csv<-function(project.output.dir, remake_all = TRUE, get_h5Files_unde
     }
   }
 
-  create_burst_ont_Data(h5Files=h5Files, save.rdata=save.rdata, AEfile=AEfile, remake_all = remake_all)
+  create_burst_ont_Data(h5Files=h5Files, csv.filename.AEfilt, csv.filename.ABEfilt, 
+                        save.rdata=save.rdata, AEfile=AEfile, remake_all = remake_all)
   
   cat('Prepared data files are ready under',prepared.dir,'\n')
   

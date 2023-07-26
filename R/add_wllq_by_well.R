@@ -10,8 +10,8 @@ add_wllq_by_well <- function(dat, wllq.tb.by.well.file, num_rows_per_plate, num_
   
   # Expand rows for each "affected assay"
   # only include 'assays' that are present in dat
-  dat[, assay := tolower(assay)]
-  wllq.tb.by.well[, affected_assays := tolower(affected_assays)]
+  dat[, assay := toupper(assay)]
+  wllq.tb.by.well[, affected_assays := toupper(affected_assays)]
   affected_assays_list <- unique(unlist(stringi::stri_split(wllq.tb.by.well$affected_assays, regex = '[,;][ ]*')))
   affected_assays_list <- intersect(affected_assays_list, unique(dat$assay))
   if (length(affected_assays_list) == 0) {
@@ -64,9 +64,9 @@ add_wllq_by_well <- function(dat, wllq.tb.by.well.file, num_rows_per_plate, num_
   # If there are multiple rows in wllq.tb that apply to the same well/assay/DIV,
   # Get the minimum wllq and collapse across all notes
   id.columns <- names(wllq.tb.by.well)[!grepl('wllq',names(wllq.tb.by.well))]
-  wllq.tb.by.well <- wllq.tb.by.well[, .(wllq_by_well = min(wllq),
-                                         wllq_notes_by_well = paste0(unique(wllq_notes), collapse = "; "),
-                                         wllq_ref_by_well = paste0(unique(wllq_ref), collapse = "; ")),
+  wllq.tb.by.well <- wllq.tb.by.well[, .(wllq_by_well = min(wllq_by_well),
+                                         wllq_notes_by_well = paste0(unique(wllq_notes_by_well), collapse = "; "),
+                                         wllq_ref_by_well = paste0(unique(wllq_ref_by_well), collapse = "; ")),
                                      by = c(id.columns)]
   stopifnot(nrow(wllq.tb.by.well[, .N, by = c(id.columns)][N > 1]) == 0) # checking 1 row per id.columns combination
   
@@ -89,13 +89,13 @@ add_wllq_by_well <- function(dat, wllq.tb.by.well.file, num_rows_per_plate, num_
   # (indicates possible type-o in wllq.tb)
   if(nrow(dat[is.na(dat.id)]) > 0) {
     cat('\nSome rows in ',basename(wllq.tb.by.well.file), ' did not match any rows in dat:\n')
-    print(dat[is.na(dat.id)])
+    print(dat[is.na(dat.id), .N, by = c(id.columns)])
     warning(paste0('Some rows in ',basename(wllq.tb.by.well.file), ' did not match any rows in dat. These will be ignored.'))
     dat <- dat[!is.na(dat.id)]
   }
   dat[, c('dat.id','wllq.tb.by.well.id') := NULL]
   
-  # Default to wllq_by_well == 1 were not specified in wllq.tb.by.well
+  # Default to wllq_by_well == 1 where not specified in wllq.tb.by.well
   dat[is.na(wllq_by_well), wllq_by_well := 1]
   
   dat

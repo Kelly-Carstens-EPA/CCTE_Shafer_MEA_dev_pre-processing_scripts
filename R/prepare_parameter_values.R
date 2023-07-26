@@ -64,7 +64,7 @@ prepare_parameter_values <- function(project.output.dir,
   # Update well quality by DIV ----------------------------------------------
   
   if(!is.null(wllq.tb.by.well.file)) {
-    div_data[, assay := 'nfa']
+    div_data[, assay := 'NFA']
     div_data <- add_wllq_by_well(div_data, wllq.tb.by.well.file, num_rows_per_plate, num_columns_per_plate, all_DIVs = expected_DIVs)
     # remove columns that were created for or by the add_wllq_by_well() and are not needed going forward
     div_data[, intersect(c('assay','rowi','coli'),names(div_data)) := NULL]

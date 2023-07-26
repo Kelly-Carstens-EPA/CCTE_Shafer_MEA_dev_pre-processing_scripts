@@ -1,7 +1,28 @@
-# convert_spkListFiles_to_h5_MetaData.R
-# Created by Diana Hall
-# Adapted by Amy Carpenter
-
+#' Convert spike list files to h5 files
+#'
+#' @param project.output.dir folder in which the h5files should be created
+#' @param files.log.output.dir folder in which the files_log is located 
+#' (i.e., the .txt file containing the list of spike list files and MaestroExperimentLog files to be read)
+#' @param remake_all binary value indicating whether new h5files should be created 
+#' for every spike list file in the files_log (TRUE) or only for the spike list 
+#' files that have not already been created in the project.output.dir h5files folder (FALSE)
+#' @param check_nwells_per_plate the number of wells that are expected to be 
+#' present in a plate (usually 48 wells for the NFA). If this many wells are not 
+#' found in the MaestroExperimentLog, h5_conversion will throw an error
+#' @param recording_duration_sec expected duration of the spike list file 
+#' recording (in seconds). This should be 900 (i.e., 15 minutes) for Network 
+#' Formation Assay experiments done in the Shafer lab. Spikes recorded more than 
+#' recording_duration_sec beyond the time of the first spike will be ignored. If 
+#' a recording was more than 3 minutes less than the recording_duration_sec, the 
+#' function will throw an error.
+#' 
+#' @details convert_spkListFiles_to_h5_MetaData.R.
+#' Created by Diana Hall. Adapted by Amy Carpenter
+#'
+#' @return
+#' @export
+#'
+#' @examples
 h5_conversion <- function(project.output.dir, 
                           files.log.output.dir = project.output.dir,
                           remake_all = FALSE, 

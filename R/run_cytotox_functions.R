@@ -54,7 +54,7 @@ run_cytotox_functions <- function(project.output.dir, project_name, get_files_fr
   
   # Update the wllq
   if(!is.null(wllq.tb.by.well.file)) {
-    all_cyto_data[, assay := src_acsn]
+    all_cyto_data[, assay := acsn]
     all_cyto_data[, `:=`(date = as.character(date), rowi = as.numeric(rowi))]
     
     all_cyto_data <- add_wllq_by_well(all_cyto_data, wllq.tb.by.well.file, num_rows_per_plate = 6, num_columns_per_plate = 8)
@@ -81,7 +81,7 @@ run_cytotox_functions <- function(project.output.dir, project_name, get_files_fr
   
   # Print summary of wllq updates
   cat("\nWllq summary:\n")
-  print(all_cyto_data[, .N, by = c("src_acsn","wllq_by_well","wllq_notes_by_well")][order(src_acsn, wllq_by_well, wllq_notes_by_well)])
+  print(all_cyto_data[, .N, by = c("acsn","wllq_by_well","wllq_notes_by_well")][order(acsn, wllq_by_well, wllq_notes_by_well)])
   
   # Save the file
   if (!dir.exists(file.path(project.output.dir, "output"))) dir.create(file.path(project.output.dir, "output"))

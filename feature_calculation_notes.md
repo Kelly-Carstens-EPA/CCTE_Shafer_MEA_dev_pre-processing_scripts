@@ -15,7 +15,7 @@ The document provides details on how each feature (also called parameter) is cal
 
 The functions used to calculate most of these features are called in the script `create_burst_ont_Data.R`. The results are stored in are object named `s`. Then, the well-level values are calculated in `create_burst_ont_Data.R` using the appropriate filters. Details for each feature are described below.
 
-The functions rely on several parameters to calculate the features. The default parameters values set in `chgv_parameters.R` (from `meadq`) are:
+The functions rely on several parameters to calculate the features. The default parameters values are defined in data(`chgv_parameters`) (from `meadq`), which is loaded in `create_ont_csv()`. The parameter values are:
 
 | Name | Value | Description | Notes |
 | ----------- | ----------- | ----------- | ----------- |
