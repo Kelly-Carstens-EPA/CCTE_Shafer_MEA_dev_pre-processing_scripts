@@ -71,7 +71,9 @@ tcpl_MEA_dev_AUC <- function(project.output.dir,
   cytotox_data <- as.data.table(read.csv(cytotox_data_file))
   
   # Check alignment of names
-  columns.to.keep <- c('apid', 'rowi', 'coli', 'treatment', 'conc', 'wllq_by_well', 'wllq_notes_by_well', 'wllq_ref_by_well', 'wllt', 'rval', 'acnm', 'srcf', 'units')
+  columns.to.keep <- c('apid', 'rowi', 'coli', 'treatment', 'conc', 
+                       'wllq_by_well','wllq_notes_by_well', 'wllq_ref_by_well',
+                       'wllt', 'rval', 'acsn','acnm', 'srcf', 'units')
   columns.in.mea.data.not.in.cytotox <- intersect(setdiff(names(longdat),names(cytotox_data)), columns.to.keep)
   if(length(columns.in.mea.data.not.in.cytotox) > 0) 
     warning('cytotox data does not have columns ',paste0(columns.in.mea.data.not.in.cytotox,collapse=","),

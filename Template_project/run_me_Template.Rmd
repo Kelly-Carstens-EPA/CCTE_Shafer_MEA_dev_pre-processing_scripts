@@ -7,7 +7,7 @@ output:
     toc: true
     toc_float: true
     number_sections: true
-    code_folding: show
+    code_folding: hide
     df_print: paged
 ---
 
@@ -337,6 +337,8 @@ dat[, full_well_id := paste(apid, rowi, coli, sep = '_')]
 
 # Get the culture_datedate from the apid
 dat[, culture_date := stri_extract(apid, regex = '[0-9]{8}')]
+
+dat[, acnm_short := sub("CCTE_Shafer_MEA_dev_","",acnm)]
 ```
 
 # TO REMOVE
@@ -576,7 +578,7 @@ dat[, conc_log10 := log10(conc)]
 # Note that the cndx is specific to each plate (apid).
 # Also note that TCPL also includes the wllt and some additional columns in the 'by' argument for the cndx definition. This cndx in just for our purposes of concentration-checking
 dat[, cndx := frank(conc, ties.method = 'dense'), 
-    by = .(spid, apid, acsn)]
+    by = .(spid, apid, acnm)]
 
 
 # Default dilution scheme shown below
@@ -602,14 +604,18 @@ dat <- merge(dat, dilution.tb, by = 'cndx', all.x = T)
 dat[, top_conc := as.numeric(stock_conc)] # for most treatments, can assume top_conc (in uM) is equal to the stock_conc (in mM).
 dat[, my_anticipated_conc := top_conc*dilution_factor]
 dat[, my_anticipated_conc_log10 := log10(my_anticipated_conc)]
+```
 
-# In Carstens et al., 2022, the AC50s from replicates in the NFA were found to vary by approximately +/- 0.5 log10 uM.
-# Therefore, I think that any variability in the concentrations due to differences in data processing of decimal places/rounding/stock concentrations in different input files is negligible if it is less that 0.005 log10-uM (2 orders of magnitude lower).
+In Carstens et al., 2022, the AC50s from replicates in the NFA were found to vary by approximately +/- 0.5 log10 uM. Therefore, I think that any variability in the concentrations due to differences in data processing of decimal places/rounding/stock concentrations in different input files is negligible if it is less that 0.005 log10-uM (2 orders of magnitude lower).
 
+Check for any cases where the conc from the srcf and my_anticipated_conc disagree by more than +/-0.005 log10-uM
+
+```{r}
 # Check for any cases where the conc from the srcf and my_anticipated_conc disagree by more than +/-0.005 log10-uM
 dat[, conc_log10_diff_abs := abs(conc_log10 - my_anticipated_conc_log10)]
 dat[conc_log10_diff_abs >= 0.005, .N, 
     by = .(treatment, stock_conc, cndx, conc, my_anticipated_conc, conc_log10_diff_abs, culture_date)][order(treatment, conc)]
+
 
 # Possible reasons for disagreement between conc and my anticipated conc:
 # - conc's in source file were not corrected to stock_conc
@@ -714,7 +720,7 @@ Update the concentration index
 
 ```{r}
 dat[, cndx := frank(conc, ties.method = 'dense'), 
-    by = .(spid, apid, acsn)]
+    by = .(spid, apid, acnm)]
 ```
 
 
@@ -773,8 +779,8 @@ dat[, .N, by = .(wllt, units, stock_conc_units)]
 wllq.tb.by.trt.file <- file.path(project.output.dir,                                   paste0(project_name,'_well_quality_table_by_treatment_cndx_culture_date.csv'))
 
 # define the "assay" for every row of dat
-dat[grepl("LDH",acsn), assay := 'LDH']
-dat[grepl("AB",acsn), assay := 'AB']
+dat[grepl("LDH",acnm), assay := 'LDH']
+dat[grepl("AB",acnm), assay := 'AB']
 dat[is.na(assay), assay := 'NFA']
 
 # Source function
@@ -812,6 +818,8 @@ View(dat[, .N, by = .(wllq, wllq_notes, wllq_ref)][order(wllq)])
 
 # Note the vehicle controls per plate
 
+Check if any plates have multiple vehicle controls
+
 ```{r}
 # Check if any plates have multiple vehicle controls
 # (if multiple are present on a given plate, consider the normalization method and/or apid definition for the given plate)
@@ -827,17 +835,16 @@ dat[num_vehicle_control_types_per_plate > 1]
 
 Check for any NA or infinite rvals where wllq == 1. In the ToxCast pipeline, any NA rval will be set to wllq = 0 (at level 2).
 
+Check for NA's in all parameters other than the 'DIV' parameters.
+In these cases, if there are any NA rvals with wllq == 1, that indicates there was a problem in the data files, data collection, and/or pre-processing. These instances warrant further investigations
 ```{r}
-# Check for NA's in all parameters other than the 'DIV' parameters
-# In these cases, if there are any NA rvals with wllq == 1, that indicates there was a problem in the data files, data collection, and/or pre-processing
-# These instances warrant further investigations
-dat[(is.na(rval) | is.infinite(rval)) & wllq == 1 & !grepl('DIV',acsn), .N, by = .(acsn)]
-stopifnot(nrow(dat[is.na(rval) & wllq == 1 & !grepl('DIV',acsn)]) == 0)
+dat[(is.na(rval) | is.infinite(rval)) & wllq == 1 & !grepl('DIV',acnm), .N, by = .(acnm)]
+stopifnot(nrow(dat[is.na(rval) & wllq == 1 & !grepl('DIV',acnm)]) == 0)
+```
 
-# Note NA's in the DIV-specific parameters
-# These can be left as NA, but just note the occurrence
-dat[(is.na(rval) | is.infinite(rval)) & wllq == 1 & grepl('DIV',acsn), .N, by = .(acsn)]
-
+Note NA's in the DIV-specific parameters. These can be left as NA, but just note the occurrence
+```{r}
+dat[(is.na(rval) | is.infinite(rval)) & wllq == 1 & grepl('DIV',acnm), .N, by = .(acnm)]
 ```
 
 # For repeated treatments, determine which culture(s) to keep
@@ -846,8 +853,8 @@ Sometimes a treatment is repeated in multiple cultures within a project. This is
 
 ```{r}
 # define the "assay" for every row of dat
-dat[grepl("LDH",acsn), assay := 'LDH']
-dat[grepl("AB",acsn), assay := 'AB']
+dat[grepl("LDH",acnm), assay := 'LDH']
+dat[grepl("AB",acnm), assay := 'AB']
 dat[is.na(assay), assay := 'NFA']
 
 # Identify treatments tested in multiple cultures for a given assay
@@ -910,7 +917,7 @@ dat[apid %in% exclude.apid, `:=`(wllq = 0,
 # Data summaries 
 
 ```{r}
-dat[, acsn_short := sub("CCTE_Shafer_MEA_dev_","",acsn)]
+dat[, acnm_short := sub("CCTE_Shafer_MEA_dev_","",acnm)]
 ```
 
 ## Counts 
@@ -941,20 +948,20 @@ dat[wllt == "t", length(unique(spid))]
 print(dat[, .N, by = "wllq"]) # note if wllq is NA anywhere
 ```
 
-**Number of unique acsn's present:**
+**Number of unique assay components present:**
 (there should be 2 cyto + 17 AUC + 4*17 DIV = 87)
 ```{r}
-length(unique(dat$acsn))
+length(unique(dat$acnm))
 ```
 
 **Any plates don't have 48 wells for each component?** 
 ```{r}
-dat[, .N, by = .(apid, acsn)][N != 48]
+dat[, .N, by = .(apid, acnm)][N != 48]
 ```
 
 **Any plates don't have 6 control wells for each component?**
 ```{r}
-print(dat[wllt == "n", .N, by = c("acsn","apid")][N != 6])
+print(dat[wllt == "n", .N, by = c("acnm","apid")][N != 6])
 ```
 
 **Range of assay component values**
@@ -962,7 +969,7 @@ print(dat[wllt == "n", .N, by = c("acsn","apid")][N != 6])
 dat[wllq == 1, .(min = format(min(rval,na.rm=T),digits=2,scientific = F), 
                  median = format(median(rval,na.rm=T),digits=2,scientific = F),
                  max = format(max(rval,na.rm=T),digits=2,scientific = F),
-                 num_NA = sum(is.na(rval))), by = .(acsn_short)][order(acsn_short)]
+                 num_NA = sum(is.na(rval))), by = .(acnm_short)][order(acnm_short)]
 ```
 
 ## Visualizations
