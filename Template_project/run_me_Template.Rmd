@@ -430,14 +430,14 @@ Map the treatment names to the sample IDs using the spidmap file. The spidmap da
 * treatment = treatment names as they appear in the `dat`
 * spid = the sample ID (registered in ChemTrack). There should be a clear, 1-to-1 mapping between every treatment name and spid. The spids usually begin with a prefix such as “EPA”,“EX”, “TP” or “TX” followed by a 6-8 digit code.
 * stock_conc = stock concentration
-* stock_conc_units = units of the stock concentration
+* stock_conc_unit = units of the stock concentration
 
 ```{r}
 spidmap <- as.data.table(read.xlsx(spidmap_file, sheet = spid_sheet))
 head(spidmap)
 
 # Add the file name
-spidmap[, 'spidmap_file' := spidmap_file]
+spidmap[, 'spidmap_file' := basename(spidmap_file)]
 
 
 # Identify the column in the spidmap that contains the sample IDs and rename as "spid" 
@@ -471,7 +471,7 @@ spidmap[is.na(stock_conc)] # check no NAs
 # Example:
 # The stock conc column in spidmap is named 'Conc..(mM)'
 # Thus, the stock concentration units are in 'mM'
-spidmap[, stock_conc_units := 'mM']
+spidmap[, stock_conc_unit := 'mM']
 
 
 # View the spidmap, determine if any additional cleaning is needed
@@ -506,7 +506,7 @@ spidmap[treatment %in% unique(dat$treatment), .N, by = .(spid)][N > 1]
 
 
 # Merge the spidmap and dat
-dat <- merge(dat, spidmap[, .(treatment, spid, stock_conc, stock_conc_units, spidmap_file)],
+dat <- merge(dat, spidmap[, .(treatment, spid, stock_conc, stock_conc_unit, spidmap_file)],
              by = 'treatment', all.x = T)
 
 
@@ -561,6 +561,7 @@ dat[, .(num_control_wells_per_plate = length(unique(full_well_id[wllt == 'n'])))
 ```{r}
 # save original concentration from source data files for reference
 dat[, conc_srcf := conc]
+dat[, conc := as.numeric(conc)]
 
 # confirm concentration is defined for every row
 stopifnot(nrow(dat[is.na(conc)]) == 0)
@@ -694,7 +695,7 @@ dat[conc_log10_diff_abs >= 0.005, .N,
     by = .(treatment, stock_conc, cndx, conc, my_anticipated_conc, conc_log10_diff_abs, culture_date)][order(treatment, conc)]
 ```
 
-If no conc's differ from my_anticipated_conc by more than 0.005, set all conc's to my_anticipated_conc for consistency
+If no conc's differ from my_anticipated_conc by more than 0.005 OR I know that my_anticipated_conc is correct, set all conc's to my_anticipated_conc for consistency
 
 ```{r}
 dat[, conc := my_anticipated_conc]
@@ -746,7 +747,7 @@ dat[spid %in% c('Acetamenophin',' Bisphenol A'), conc := conc_srcf]
 
 ```{r}
 # View units that have already been defined
-dat[, .N, by = .(wllt, units, stock_conc_units)]
+dat[, .N, by = .(wllt, units, stock_conc_unit)]
 ```
 
 The vast majority of treatments will be in uM. Note that the units are not currently saved with the cytotoxicity data in the Calculations files, so those data rows will currently be NA. For the MEA data, the units are taken from the meta-data "Log" table (historically called the MaestroExperiment Log). However, sometimes this column may not be updated for a given group, so use your best judgement if the units are not actually in uM. Use the stock conc units to help verify.
@@ -758,8 +759,8 @@ dat[spid == 'DMSO', units := '%']
 # Confirm there is currently 1 unit type per treatment
 dat[, .(num_units_per_spid = length(unique(units[!is.na(units)]))), by = .(spid, treatment)][num_units_per_spid > 1]
 
-# For test wells, if the stock_conc_units are mM, then the units for the MEA and cytotoxicity data are usually uM (micromolar)
-dat[wllt == 't' & stock_conc_units == 'mM', units := 'uM']
+# For test wells, if the stock_conc_unit are mM, then the units for the MEA and cytotoxicity data are usually uM (micromolar)
+dat[wllt == 't' & stock_conc_unit == 'mM', units := 'uM']
 
 # Sometimes, the units may not be in a molar value.
 # For example, if the stock conc is in mg/mL, then the test units are likely in ug/mL
@@ -767,7 +768,7 @@ dat[wllt == 't' & stock_conc_units == 'mM', units := 'uM']
 # Otherwise, note the actual units
 
 # View updated units
-dat[, .N, by = .(wllt, units, stock_conc_units)]
+dat[, .N, by = .(wllt, units, stock_conc_unit)]
 ```
 
 
@@ -1059,7 +1060,7 @@ keep.columns <- c(
   # Additional columns for our documentation
   'acsn',  
   'treatment', 'treatment_srcf','spidmap_file',
-  'cndx_pre_pro','conc_srcf', 'units',  'stock_conc', 'stock_conc_units',
+  'cndx_pre_pro','conc_srcf', 'units',  'stock_conc', 'stock_conc_unit',
   'wllq_notes', 'wllq_ref'
 )
 dat <- dat[, .SD, .SDcols = keep.columns]
