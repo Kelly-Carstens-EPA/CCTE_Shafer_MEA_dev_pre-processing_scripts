@@ -22,11 +22,27 @@ library(stringi)
 print(sessionInfo())
 ```
 
+# Overview of the process
+
+This document outlines how to transform the recordings from the Microelectrode Array Network Formation Assay into an “mc0” file which can be analyzed with the ToxCast Pipeline R package. This document and the corresponding `run_me_Template.Rmd` was primarily designed to describe the pre-processing steps for the experimental data produced in the EPA Shafer Lab, but it can be generalized for other audiences. Steps or file directories that are specific to the Shafer Lab are noted.
+
+Input files:
+
+* _spike_list.csv files created by recording of activity from a microelectrode array with a Maestro
+* files that document the meta-data (minimally treatment and dose) in each well (referred to as "MaestroExperiment Log" files)
+* (optionally) files that contain the cytotoxicity (LDH and Alamar Blue) experimental and meta data
+
+Intermediate outputs of the pre-processing steps include:
+
+* A csv file containing well-level activity metrics for 17 endpoints across each DIV 
+*	A csv file containing area-under-the-curve values of the well-level activity metrics for 17 endpoints
+
+
 # Known issues with the pre-processing workflow
 
 * In the function `spkList2list`, recordings are truncated 900 seconds *after the first recorded spike* (rather than 900 seconds after the recording began). This choice may be undesirable for recordings with low activity for 2 reasons:
   * If there is a long period of quiescence at the beginning of the recording, activity parameters such as the mean firing rate, burst rate, etc., would be higher than they would be if the entire recording duration was included.
-  * The function `spkList2list` also checks that recordings are not more than 3 minutes short of the target 15 minute recording duration. Thus, if a recording has more than 3 minutes of quiescence at the beginning, the funciton may flag it as being too short.
+  * The function `spkList2list` also checks that recordings are not more than 3 minutes short of the target 15 minute recording duration. Thus, if a recording has more than 3 minutes of quiescence at the beginning, the function may flag it as being too short.
 * The input source files
   * Background: All experimental and meta data sources files used to pre-process data for the ToxCast Pipeline will ultimately be saved in Clowder (to Amy's knowledge). With the current pre-processing approach, the file paths to the source files used are recorded in the files_log.txt. However, these source files could be modified after the pre-processing is completed. Therefore, theoretically the source files should be copied to a stable location before running the pre-processing scripts. However, this seems like it could result in a lot of data copying, especially if the files will need to be copied again to the ToxCast_data drive. Going forward, work with the ToxCast data team to determine the best path, and check for any modifications to the source files that occurred after pre-processing before sharing with the ToxCast team.
 * The 'srcf' columns:
@@ -34,6 +50,7 @@ print(sessionInfo())
   * However, for the NFA, usually multiple source files are used to generate the numeric and meta data for a single data row
   * Thus, a solution is to package the source files into .zip files (e.g., 1 for each plate for the MEA endpoints). These .zip files would become the new 'srcf'. This solution was proposed by Jason Brown to address a similar issue for the HCI data.
 * Cytotoxicity data extraction - these scripts are configured to extract the blank-corrected values from the Calculations xlsx data files. Generally, template Calculations files are copied from previous groups before being manually updated by the lab technicians for the current group. However, occasionally the lab technicians may forget to update the cytotoxicity data in a Calculations file for a group (in which case the meta data may be correct but the cytotoxicity data values are not). Refer to the section 'Extract the cytotoxicity data' for more notes and potential solutions.
+
 
 # Abbreviations
 
@@ -54,28 +71,14 @@ abb.tb[order(Abbrev)]
 ```
 
 
-# Overview of the process
-
-This document outlines the process of transforming the recordings from the Microelectrode Array Network Formation Assay into an “mc0” file which can be analyzed with the ToxCast Pipeline R package. 
-
-Input files:
-
-* _spike_list.csv files created by recording of activity from a microelectrode array with a Maestro
-* files that document the meta-data (minimally treatment and dose) in each well (referred to as "MaestroExperiment Log" files)
-* (optionally) files that contain the cytotoxicity (LDH and Alamar Blue) experimental and meta data
-
-Intermediate outputs of the pre-processing steps include:
-
-* A csv file containing well-level activity metrics for 17 endpoints across each DIV 
-*	A csv file containing area-under-the-curve values of the well-level activity metrics for 17 endpoints
 
 
 # Setting up the pre-processing project folder
 
 * Define the project name for the project (usually the name of the compound set followed by the year the experiments were started, e.g. “TSCA2019”). Don’t use any spaces.
-* Create a copy of the Template folder in this directory: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`. Rename the copy of the folder with the project name.
+* Create a where you want the output to be saved, named by the project name. (For the Shafer-lab, the project folder should be created in this directory: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`).
 
-# Prepare notebook section
+# Prepare notebook section (Shafer-lab)
 
 * Open the pre-processing notebook for the NFA: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\OneNote Notebooks\Pre-processing_MEA_NFA_for_TCPL` 
 * Make a copy of the `Notes Template` section and rename it with the project name
@@ -212,22 +215,20 @@ If using a Windows machine, download and install Git for Windows (https://gitfor
 
 ## Set up
 
-* Go to the master pre-processing SCRIPTS repository on the L drive (`L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts`) or on GitHub (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts`). Open the `Template_project` folder. Copy the the script `run_me_template.Rmd` and the 2 well_quality_tables and save them in the PROJECTS folder you just created (`CCTE_Shafer_MEA_dev_pre-processing_projects\project_name`). In all 3 files, replace the word 'template' with the project name.
+* Go to a clone of the pre-processing scripts repository (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts`) (for the Shafer Lab, a clone can be access a clone of the repository here: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts`). Open the `Template_project` folder. Copy the the script `run_me_template.Rmd` and the 2 well_quality_tables and save them in the project output folder you just created (For Shafer lab, `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\<project_name>`). In all 3 files, replace the word 'template' with the project name.
 
-* Start RStudio by opening the .Rproj in the PROJECTS folder: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`.
-
-* Open the script you just created (`run_me_[project_name].Rmd`)
+* Open the newly saved run_me script (`run_me_<project_name>.Rmd`)
 
 * Load the packages in the first chunk. 
 
-* Fill out the “Project variables definitions” section. Note that all filepaths must use forward slashes ("/") rather than backslashes ("\").
+* Fill out the “Project variables definitions” section. Note that all filepaths must use forward slashes ("/") rather than backslashes.
     * `project_name` - the project name. Should be the same as the folder name created under 'Setting up the pre-processing project folder'
     * `spidmap_file` - (optional) path to file that maps treatment names to registered sample IDs. Preferably, this file should also contain the stock concentrations for each sample
     * `spid_sheet` - desired sheet in spidmap_file (can be the sheet number or the sheet name)
-    * `project.input.dir` - main directory of the experimental data for project, e.g., "L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021". This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
-    * `scripts.dir` - directory containing the pre-processing scripts for the NFA. Usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R". These scripts are also availabe on GitHub (https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts)
-    * `root.output.dir` - directory where the project_name folder is located, usually "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects". This defines where the output will be saved.
-    * `assay_component_map_filename` - filename of the csv file containing a map of the assay component names (acsn, aka 'parameters')  as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names (acnm) registered in invitroDB. Defaults to "L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\mea_nfa_component_name_map.csv"
+    * `project.input.dir` - main directory of the experimental data for project, e.g., `L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021`. This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
+    * `scripts.dir` - directory containing a clone of the pre-processing scripts the pre-processing scripts (https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts). For Shafer lab, default to `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R`
+    * `root.output.dir` - directory where the project_name folder is located. For Shafer lab, default to `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`. This defines where the output will be saved.
+    * `assay_component_map_filename` - filename of the csv file containing a map of the assay component names (acsn, aka 'parameters')  as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names (acnm) registered in invitroDB. File is oresent in the pre-processing repository. Defaults to `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\mea_nfa_component_name_map.csv`
     * `project.output.dir` - directory where output should be saved for the given project. Defaults to file.path(root.output.dir, project_name)
 
 
@@ -402,7 +403,7 @@ The output of `tcpl_MEA_dev_AUC()` has almost all of the columns that are needed
 
 Most of the checks performed are documented in the run_me script. A few additional notes on some steps are provided here. Throughout the process, refer to the lab notebook and talk to the lab technicians whenever their seems to be an issue with the meta-data.
 
-## Recommended Shafer-lab specific checks and cleaning
+## Recommended checks and cleaning
 
 ### Check treatment labels
 
@@ -457,9 +458,9 @@ Some things that could be confirmed with the lab technicians:
 Optimally, have people familar with the biology look at the data as well. Create additional visualizations and/or summaries and/or csv files as needed to share the output.
 
 
-# Final notes
+# Final notes 
 
-Update the status of the project in the file L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\MEA_dev_status_by_project.xlsx. (This file may be useful for keeping track of whether projects have been pre-processed and/or pipelined into invitrodb).
+(Shafer lab) Update the status of the project in the file `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\MEA_dev_status_by_project.xlsx`. (This file may be useful for keeping track of whether projects have been pre-processed and/or pipelined into invitrodb).
 
 Final things to do before running writing the dat to level 0 for TCPL:
 

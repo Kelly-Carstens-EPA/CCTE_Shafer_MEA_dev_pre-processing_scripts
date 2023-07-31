@@ -1624,10 +1624,52 @@ Pipeline</h1>
 ##  [9] jquerylib_0.1.4 bslib_0.4.2     rmarkdown_2.20  tools_4.2.1    
 ## [13] xfun_0.36       yaml_2.3.6      fastmap_1.1.0   compiler_4.2.1 
 ## [17] htmltools_0.5.4 knitr_1.42      sass_0.4.5</code></pre>
-<div id="known-issues-with-the-pre-processing-workflow" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Known issues with the
+<div id="overview-of-the-process" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Overview of the
+process</h1>
+<p>This document outlines how to transform the recordings from the
+Microelectrode Array Network Formation Assay into an “mc0” file which
+can be analyzed with the ToxCast Pipeline R package. This document and
+the corresponding <code>run_me_Template.Rmd</code> was primarily
+designed to describe the pre-processing steps for the experimental data
+produced in the EPA Shafer Lab, but it can be generalized for other
+audiences. Steps or file directories that are specific to the Shafer Lab
+are noted.</p>
+<p>Input files:</p>
+<ul>
+<li>_spike_list.csv files created by recording of activity from a
+microelectrode array with a Maestro</li>
+<li>files that document the meta-data (minimally treatment and dose) in
+each well (referred to as “MaestroExperiment Log” files)</li>
+<li>(optionally) files that contain the cytotoxicity (LDH and Alamar
+Blue) experimental and meta data</li>
+</ul>
+<p>Intermediate outputs of the pre-processing steps include:</p>
+<ul>
+<li>A csv file containing well-level activity metrics for 17 endpoints
+across each DIV</li>
+<li>A csv file containing area-under-the-curve values of the well-level
+activity metrics for 17 endpoints</li>
+</ul>
+</div>
+<div id="known-issues-with-the-pre-processing-workflow" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Known issues with the
 pre-processing workflow</h1>
 <ul>
+<li>In the function <code>spkList2list</code>, recordings are truncated
+900 seconds <em>after the first recorded spike</em> (rather than 900
+seconds after the recording began). This choice may be undesirable for
+recordings with low activity for 2 reasons:
+<ul>
+<li>If there is a long period of quiescence at the beginning of the
+recording, activity parameters such as the mean firing rate, burst rate,
+etc., would be higher than they would be if the entire recording
+duration was included.</li>
+<li>The function <code>spkList2list</code> also checks that recordings
+are not more than 3 minutes short of the target 15 minute recording
+duration. Thus, if a recording has more than 3 minutes of quiescence at
+the beginning, the function may flag it as being too short.</li>
+</ul></li>
 <li>The input source files
 <ul>
 <li>Background: All experimental and meta data sources files used to
@@ -1668,8 +1710,8 @@ are not). Refer to the section ‘Extract the cytotoxicity data’ for more
 notes and potential solutions.</li>
 </ul>
 </div>
-<div id="abbreviations" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Abbreviations</h1>
+<div id="abbreviations" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Abbreviations</h1>
 <div class="kable-table">
 <table>
 <thead>
@@ -1719,29 +1761,6 @@ notes and potential solutions.</li>
 </table>
 </div>
 </div>
-<div id="overview-of-the-process" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Overview of the
-process</h1>
-<p>This document outlines the process of transforming the recordings
-from the Microelectrode Array Network Formation Assay into an “mc0” file
-which can be analyzed with the ToxCast Pipeline R package.</p>
-<p>Input files:</p>
-<ul>
-<li>_spike_list.csv files created by recording of activity from a
-microelectrode array with a Maestro</li>
-<li>files that document the meta-data (minimally treatment and dose) in
-each well (referred to as “MaestroExperiment Log” files)</li>
-<li>(optionally) files that contain the cytotoxicity (LDH and Alamar
-Blue) experimental and meta data</li>
-</ul>
-<p>Intermediate outputs of the pre-processing steps include:</p>
-<ul>
-<li>A csv file containing well-level activity metrics for 17 endpoints
-across each DIV</li>
-<li>A csv file containing area-under-the-curve values of the well-level
-activity metrics for 17 endpoints</li>
-</ul>
-</div>
 <div id="setting-up-the-pre-processing-project-folder" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Setting up the
 pre-processing project folder</h1>
@@ -1749,14 +1768,15 @@ pre-processing project folder</h1>
 <li>Define the project name for the project (usually the name of the
 compound set followed by the year the experiments were started,
 e.g. “TSCA2019”). Don’t use any spaces.</li>
-<li>Create a copy of the Template folder in this directory:
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>.
-Rename the copy of the folder with the project name.</li>
+<li>Create a where you want the output to be saved, named by the project
+name. (For the Shafer-lab, the project folder should be created in this
+directory:
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>).</li>
 </ul>
 </div>
-<div id="prepare-notebook-section" class="section level1" number="5">
+<div id="prepare-notebook-section-shafer-lab" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Prepare notebook
-section</h1>
+section (Shafer-lab)</h1>
 <ul>
 <li>Open the pre-processing notebook for the NFA:
 <code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\OneNote Notebooks\Pre-processing_MEA_NFA_for_TCPL</code></li>
@@ -1782,7 +1802,9 @@ concerns). See “Experimental Summary of Data” file if present.</p>
 <h1><span class="header-section-number">7</span> Review lab notebook for
 well quality notes</h1>
 <ul>
-<li>Read through the lab notebook for well quality notes (usually you
+<li>For most projects, there will be a lab notebook with notes from
+conducting the experiments. Read through this lab notebook for any notes
+related to the well quality, dosing, data-alignment, etc (usually you
 can just scan for any hand-written notes)</li>
 <li>Determine if any cultures, plates, or wells should be excluded
 because of a misdose, contamination, bad culture, etc.</li>
@@ -2064,24 +2086,23 @@ pre-processing script (run_me)</h1>
 <div id="set-up" class="section level2" number="12.1">
 <h2><span class="header-section-number">12.1</span> Set up</h2>
 <ul>
-<li><p>Go to the master pre-processing SCRIPTS repository on the L drive
-(<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts</code>)
-or on GitHub
-(<code>https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts</code>).
-Open the <code>Template_project</code> folder, copy the script
-<code>run_me_template.Rmd</code>, and save it in the PROJECTS folder you
-just created
-(<code>CCTE_Shafer_MEA_dev_pre-processing_projects\project_name</code>).
-Rename the script, replacing <code>template</code> with the project
+<li><p>Go to a clone of the pre-processing scripts repository
+(<code>https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts</code>)
+(for the Shafer Lab, a clone can be access a clone of the repository
+here:
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts</code>).
+Open the <code>Template_project</code> folder. Copy the the script
+<code>run_me_template.Rmd</code> and the 2 well_quality_tables and save
+them in the project output folder you just created (For Shafer lab,
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\&lt;project_name&gt;</code>).
+In all 3 files, replace the word ‘template’ with the project
 name.</p></li>
-<li><p>Start RStudio by opening the .Rproj in the PROJECTS folder:
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>.</p></li>
-<li><p>Open the script you just created
-(<code>run_me_[project_name].Rmd</code>)</p></li>
+<li><p>Open the newly saved run_me script
+(<code>run_me_&lt;project_name&gt;.Rmd</code>)</p></li>
 <li><p>Load the packages in the first chunk.</p></li>
 <li><p>Fill out the “Project variables definitions” section. Note that
-all filepaths must use forward slashes (“/”) rather than backslashes
-(“&quot;).</p>
+all filepaths must use forward slashes (“/”) rather than
+backslashes.</p>
 <ul>
 <li><code>project_name</code> - the project name. Should be the same as
 the folder name created under ‘Setting up the pre-processing project
@@ -2092,23 +2113,24 @@ also contain the stock concentrations for each sample</li>
 <li><code>spid_sheet</code> - desired sheet in spidmap_file (can be the
 sheet number or the sheet name)</li>
 <li><code>project.input.dir</code> - main directory of the experimental
-data for project, e.g., “L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021”. This
-folder is used to direct the scripts of where to search for experimental
-data files and .txt files that might affect the well quality.</li>
-<li><code>scripts.dir</code> - directory containing the pre-processing
-scripts for the NFA. Usually “L:_MEA_Shafer pre-process for
-TCPL_repos_Shafer_MEA_dev_pre-processing_scripts“. These scripts are
-also availabe on GitHub (<a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts</a>)</li>
+data for project, e.g.,
+<code>L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021</code>. This folder is
+used to direct the scripts of where to search for experimental data
+files and .txt files that might affect the well quality.</li>
+<li><code>scripts.dir</code> - directory containing a clone of the
+pre-processing scripts the pre-processing scripts (<a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts</a>).
+For Shafer lab, default to
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R</code></li>
 <li><code>root.output.dir</code> - directory where the project_name
-folder is located, usually “L:_MEA_Shafer pre-process for
-TCPL_repos_Shafer_MEA_dev_pre-processing_projects”. This defines where
-the output will be saved.</li>
+folder is located. For Shafer lab, default to
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>.
+This defines where the output will be saved.</li>
 <li><code>assay_component_map_filename</code> - filename of the csv file
 containing a map of the assay component names (acsn, aka ‘parameters’)
 as they appear in the AUC, DIV, and cytotoxicity data files to the
-corresponding assay component names (acnm) registered in invitroDB.
-Defaults to “L:_MEA_Shafer pre-process for
-TCPL_repos_Shafer_MEA_dev_pre-processing_scripts_nfa_component_name_map.csv”</li>
+corresponding assay component names (acnm) registered in invitroDB. File
+is oresent in the pre-processing repository. Defaults to
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\mea_nfa_component_name_map.csv</code></li>
 <li><code>project.output.dir</code> - directory where output should be
 saved for the given project. Defaults to file.path(root.output.dir,
 project_name)</li>
@@ -2556,9 +2578,12 @@ few additional notes on some steps are provided here. Throughout the
 process, refer to the lab notebook and talk to the lab technicians
 whenever their seems to be an issue with the meta-data.</p>
 </div>
-<div id="check-treatment-labels" class="section level2" number="12.6">
-<h2><span class="header-section-number">12.6</span> Check treatment
-labels</h2>
+<div id="recommended-checks-and-cleaning" class="section level2" number="12.6">
+<h2><span class="header-section-number">12.6</span> Recommended checks
+and cleaning</h2>
+<div id="check-treatment-labels" class="section level3" number="12.6.1">
+<h3><span class="header-section-number">12.6.1</span> Check treatment
+labels</h3>
 <p>The main purpose of these checks is to try to catch any typo-s in the
 treatment meta data.</p>
 <p>Notes on vehicle control well labels:</p>
@@ -2575,9 +2600,9 @@ can be extrapolated from the vehicle controls in the same wells of the
 MEA data. If unsure, check the lab notebook or talk to the lab
 technicians.</p>
 </div>
-<div id="check-concentrations-and-units" class="section level2" number="12.7">
-<h2><span class="header-section-number">12.7</span> Check concentrations
-and units</h2>
+<div id="check-concentrations-and-units" class="section level3" number="12.6.2">
+<h3><span class="header-section-number">12.6.2</span> Check
+concentrations and units</h3>
 <p>The main purpose of these checks is to try to catch any typo-s in the
 concentration (dose) meta data.</p>
 <p>Note that sometimes the concentrations may differ between the
@@ -2587,9 +2612,9 @@ log10-uM), we want to determine which data files contain the correct
 concentrations. Steps to identify and resolve these instances are
 suggested in the run_me.</p>
 </div>
-<div id="note-the-vehicle-controls-per-plate" class="section level2" number="12.8">
-<h2><span class="header-section-number">12.8</span> Note the vehicle
-controls per plate</h2>
+<div id="note-the-vehicle-controls-per-plate" class="section level3" number="12.6.3">
+<h3><span class="header-section-number">12.6.3</span> Note the vehicle
+controls per plate</h3>
 <p>In the ToxCast Pipeline, the same-plate vehicle control wells are
 used to normalize the data (based on the median of well with wllt == ‘n’
 on a given apid). Usually, these are all DMSO wells, but occasionally we
@@ -2605,9 +2630,9 @@ this point (July 2023). But, as more data on different vehicle controls
 is collected, we may want to reconsider the normalization for plates
 with multiple vehicle controls.</p>
 </div>
-<div id="check-for-na-rvals" class="section level2" number="12.9">
-<h2><span class="header-section-number">12.9</span> Check for NA
-rvals</h2>
+<div id="check-for-na-rvals" class="section level3" number="12.6.4">
+<h3><span class="header-section-number">12.6.4</span> Check for NA
+rvals</h3>
 <p>None of the raw values for the AUC, LDH, or AB assay components
 should be NA at this step (unless wllq == 0). If there are any NA
 rval’s, check back through the input files/intermediate output files to
@@ -2618,9 +2643,9 @@ Any NA data points will be ignored from the curve-fitting in the ToxCast
 Pipeline. In the future, we may want to consider imputing a value for
 the NAs (e.g., 0) for some of the DIV-specific assay components.</p>
 </div>
-<div id="data-summaries-verify-results-with-others" class="section level2" number="12.10">
-<h2><span class="header-section-number">12.10</span> Data summaries
-(verify results with others)</h2>
+<div id="data-summaries-verify-results-with-others" class="section level3" number="12.6.5">
+<h3><span class="header-section-number">12.6.5</span> Data summaries
+(verify results with others)</h3>
 <p>The purpose of this section is to generate some high level summaries
 to share with others so that they can confirm the data contains what is
 expected to be present.</p>
@@ -2633,8 +2658,9 @@ data points near 0 generally increase as the concentration
 increases?</li>
 </ul>
 </div>
-<div id="save-verify-the-results-with-others-before-sending-to-tcpl" class="section level2" number="12.11">
-<h2><span class="header-section-number">12.11</span> Save &amp; verify
+</div>
+<div id="save-verify-the-results-with-others-before-sending-to-tcpl" class="section level2" number="12.7">
+<h2><span class="header-section-number">12.7</span> Save &amp; verify
 the results with others before sending to TCPL</h2>
 <p>Knit the run_me rmarkdown to document the pre-processing. The final
 output data file ([project_name]_for_tcpl_lvl0.RData) is ready for
@@ -2655,9 +2681,8 @@ as needed to share the output.</p>
 </div>
 <div id="final-notes" class="section level1" number="13">
 <h1><span class="header-section-number">13</span> Final notes</h1>
-<p>Update the status of the project in the file L:_MEA_Shafer
-pre-process for
-TCPL_repos_Shafer_MEA_dev_pre-processing_projects_dev_status_by_project.xlsx.
+<p>(Shafer lab) Update the status of the project in the file
+<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\MEA_dev_status_by_project.xlsx</code>.
 (This file may be useful for keeping track of whether projects have been
 pre-processed and/or pipelined into invitrodb).</p>
 <p>Final things to do before running writing the dat to level 0 for
