@@ -1001,7 +1001,7 @@ setkey(dat, NULL) # remove keys to make the file smaller
 # * Check that none of the data has been pipelined before (i.e., merge with current level 0 data and check for duplicates by apid, rowi, coli, and acnm)')
 cat(nfa.dat.description)
 save(dat, nfa.dat.description, 
-     file = file.path(root.output.dir, project_name, "output", paste0(project_name,"_for_tcpl_lvl0.RData")))
+     file = file.path(root.output.dir, project_name, "output", paste0(project_name,"_NFA_for_tcpl_lvl0.RData")))
 ```
 
 You made it!

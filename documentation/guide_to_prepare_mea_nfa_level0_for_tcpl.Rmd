@@ -38,6 +38,11 @@ Intermediate outputs of the pre-processing steps include:
 *	A csv file containing area-under-the-curve values of the well-level activity metrics for 17 endpoints
 
 
+Background on the scripts/packages:
+
+Initial functions for calculating parameter values from the spike list files were written by Stephen Eglen. This package is available at https://github.com/sje30/sjemea. Later, Diana Hall created the package meadq, which builds upon and provides modified versions of some of the functions in sjemea. Mostly recently, the scripts in this repository build upon and provide modifications of the scripts in meadq. Some of the scripts in this repository are edited versions of those in meadq. Packages and scripts are sourced in the run_me_Template.Rmd in the appropriate order such that the intended functions from each package are loaded.
+
+
 # Known issues with the pre-processing workflow
 
 * In the function `spkList2list`, recordings are truncated 900 seconds *after the first recorded spike* (rather than 900 seconds after the recording began). This choice may be undesirable for recordings with low activity for 2 reasons:
