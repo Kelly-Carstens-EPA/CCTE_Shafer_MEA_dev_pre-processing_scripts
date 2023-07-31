@@ -24,6 +24,9 @@ print(sessionInfo())
 
 # Known issues with the pre-processing workflow
 
+* In the function `spkList2list`, recordings are truncated 900 seconds *after the first recorded spike* (rather than 900 seconds after the recording began). This choice may be undesirable for recordings with low activity for 2 reasons:
+  * If there is a long period of quiescence at the beginning of the recording, activity parameters such as the mean firing rate, burst rate, etc., would be higher than they would be if the entire recording duration was included.
+  * The function `spkList2list` also checks that recordings are not more than 3 minutes short of the target 15 minute recording duration. Thus, if a recording has more than 3 minutes of quiescence at the beginning, the funciton may flag it as being too short.
 * The input source files
   * Background: All experimental and meta data sources files used to pre-process data for the ToxCast Pipeline will ultimately be saved in Clowder (to Amy's knowledge). With the current pre-processing approach, the file paths to the source files used are recorded in the files_log.txt. However, these source files could be modified after the pre-processing is completed. Therefore, theoretically the source files should be copied to a stable location before running the pre-processing scripts. However, this seems like it could result in a lot of data copying, especially if the files will need to be copied again to the ToxCast_data drive. Going forward, work with the ToxCast data team to determine the best path, and check for any modifications to the source files that occurred after pre-processing before sharing with the ToxCast team.
 * The 'srcf' columns:
@@ -86,7 +89,7 @@ If this data has already been published, determine which cultures were used for 
 
 # Review lab notebook for well quality notes
 
-* Read through the lab notebook for well quality notes (usually you can just scan for any hand-written notes)
+* For most projects, there will be a lab notebook with notes from conducting the experiments. Read through this lab notebook for any notes related to the well quality, dosing, data-alignment, etc (usually you can just scan for any hand-written notes)
 * Determine if any cultures, plates, or wells should be excluded because of a misdose, contamination, bad culture, etc.
 * Also note if any compounds are dissolved in anything other than DMSO
 * Enter any well quality notes into the appropriate table, as described below
@@ -209,7 +212,7 @@ If using a Windows machine, download and install Git for Windows (https://gitfor
 
 ## Set up
 
-* Go to the master pre-processing SCRIPTS repository on the L drive (`L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts`) or on GitHub (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts`). Open the `Template_project` folder, copy the script `run_me_template.Rmd`, and save it in the PROJECTS folder you just created (`CCTE_Shafer_MEA_dev_pre-processing_projects\project_name`). Rename the script, replacing `template` with the project name.
+* Go to the master pre-processing SCRIPTS repository on the L drive (`L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts`) or on GitHub (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts`). Open the `Template_project` folder. Copy the the script `run_me_template.Rmd` and the 2 well_quality_tables and save them in the PROJECTS folder you just created (`CCTE_Shafer_MEA_dev_pre-processing_projects\project_name`). In all 3 files, replace the word 'template' with the project name.
 
 * Start RStudio by opening the .Rproj in the PROJECTS folder: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`.
 
@@ -399,7 +402,9 @@ The output of `tcpl_MEA_dev_AUC()` has almost all of the columns that are needed
 
 Most of the checks performed are documented in the run_me script. A few additional notes on some steps are provided here. Throughout the process, refer to the lab notebook and talk to the lab technicians whenever their seems to be an issue with the meta-data.
 
-## Check treatment labels
+## Recommended Shafer-lab specific checks and cleaning
+
+### Check treatment labels
 
 The main purpose of these checks is to try to catch any typo-s in the treatment meta data.
 
@@ -408,13 +413,13 @@ Notes on vehicle control well labels:
 Usually, every well in column 2 of the MEA plate contains vehicle control wells. These are usually identifiable by the concentration being equal to 0. In the MaestroExperimentLog, the actual vehicle used will be identified in the treatment column (usually DMSO, sometimes Water or EtOH (ethanol)). 
 In some cases, the vehicle control may not be indicated (even though the concentration in the well is 0). For the cytotoxicity data, the vehicle control may not be indicated (i.e., the treatments in column 2 may have dose == 0 but treatment labelled as the test chemical). The treatment label of vehicle controls used in these cases can be extrapolated from the vehicle controls in the same wells of the MEA data. If unsure, check the lab notebook or talk to the lab technicians.
 
-## Check concentrations and units
+### Check concentrations and units
 
 The main purpose of these checks is to try to catch any typo-s in the concentration (dose) meta data.
 
 Note that sometimes the concentrations may differ between the cytotoxicity and MEA data files for a given well. If these discrepancies in concentration are notable (I usually look for differences > 0.005 log10-uM), we want to determine which data files contain the correct concentrations. Steps to identify and resolve these instances are suggested in the run_me.
 
-## Note the vehicle controls per plate
+### Note the vehicle controls per plate
 
 In the ToxCast Pipeline, the same-plate vehicle control wells are used to normalize the data (based on the median of well with wllt == 'n' on a given apid). Usually, these are all DMSO wells, but occasionally we use Water or Ethanol. 
 
@@ -422,14 +427,14 @@ Check here if there are multiple vehicle control types on a given plate. In that
 
 Historically, based on a handful of occurrences, we usually have not found a notable difference between the activity in the DMSO, Water, and Ethanol vehicle control wells. Therefore, we have not segregated wells on a plate based on the vehicle control in the normalization step up to this point (July 2023). But, as more data on different vehicle controls is collected,  we may want to reconsider the normalization for plates with multiple vehicle controls.
 
-## Check for NA rvals
+### Check for NA rvals
 
 None of the raw values for the AUC, LDH, or AB assay components should be NA at this step (unless wllq == 0). If there are any NA rval's, check back through the input files/intermediate output files to see where the NAs were introduced.
 
 For the DIV-specific assay components, some NAs will likely be present. Up to July 2023, the NAs have been left in the level 0 table. Any NA data points will be ignored from the curve-fitting in the ToxCast Pipeline. In the future, we may want to consider imputing a value for the NAs (e.g., 0) for some of the DIV-specific assay components.
 
 
-## Data summaries (verify results with others)
+### Data summaries (verify results with others)
 
 The purpose of this section is to generate some high level summaries to share with others so that they can confirm the data contains what is expected to be present.
 

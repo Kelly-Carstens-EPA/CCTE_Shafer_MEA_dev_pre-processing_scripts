@@ -1,8 +1,9 @@
 ## function to normalize by plate for each ontogeny parameter
 # Adapated from AUC_analysis_Revised_pipeline
 # Last edited Feb 26, 2021 by Amy Carpenter
+# This funciton is deprecated - we now use the ToxCast Pipeline R package to normalize the data
 
-auc_summary <- function(summary_table, direction=set_direction, plates_with_bad_controls = c()) {
+deprecated_normalize_auc_summary <- function(summary_table, direction=set_direction, plates_with_bad_controls = c()) {
   
   summary_table <- as.data.frame(summary_table)
   

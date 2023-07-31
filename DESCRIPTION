@@ -1,12 +1,11 @@
 Package: CCTE_Shafer_MEA_dev_pre-processing_scripts
-Title: What the Package Does (One Line, Title Case)
+Title: Pre-Process Microelectrode Array Network Formation Assay Data for Curve-Fitting with TCPL
 Version: 0.0.0.9000
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: CCTE_Shafer_MEA_dev_pre-processing_scripts transforms experimental data from recordings of electrical activity on micro-electrode array plates to a single, long-format data table that is ready for curve-fitting and hit calling with the R package "tcpl". Data from cytotoxicity experiments done alongside the assay is also integrated.
+License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

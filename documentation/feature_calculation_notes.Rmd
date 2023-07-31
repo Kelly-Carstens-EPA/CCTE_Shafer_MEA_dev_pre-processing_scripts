@@ -1,11 +1,24 @@
 ---
-output:
-  pdf_document: default
-  html_document: default
+title: "Feature Calculation Documentation"
+author: "Amy Carpenter"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    code_folding: hide
+    df_print: kable
 ---
-# Feature Calculation Documentation
 
-The document provides details on how each feature (also called parameter) is calculated, and which scripts perform the calculations. The features are divided into 5 categories in this document:
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Background
+
+This document provides details on how each feature (also called parameter) is calculated, and which scripts perform the calculations. For the purposes of this document, the features are divided into 5 categories in this document:
 
 * Spike features
 * Burst features
@@ -15,7 +28,7 @@ The document provides details on how each feature (also called parameter) is cal
 
 The functions used to calculate most of these features are called in the script `create_burst_ont_Data.R`. The results are stored in are object named `s`. Then, the well-level values are calculated in `create_burst_ont_Data.R` using the appropriate filters. Details for each feature are described below.
 
-The functions rely on several parameters to calculate the features. The default parameters values are defined in data(`chgv_parameters`) (from `meadq`), which is loaded in `create_ont_csv()`. The parameter values are:
+The functions rely on several parameters to calculate the features. The default parameters values are defined in data(`chgv_parameters`) (from `meadq`), which is loaded in `create_ont_csv()`. The parameters and default settings in data(`chgv_parameters`) are:
 
 | Name | Value | Description | Notes |
 | ----------- | ----------- | ----------- | ----------- |
@@ -124,7 +137,7 @@ function called in `create_ont_burst_Data.R`: `calc.burst.summary` (`sjemea`)
 How it's calculated:<br>
 The duration of the each burst is found as described above in the burst table above (specifically, in the code, the duration is `spikes[data[,"beg"]] - spikes[data[,"end"]]`, which is the length of time from the first spike in the burst to the last spike in the burst).
 The `mean.dur` for each electrode is calculated as the average "durn" from the burst table.
-The well-level value is found by the average of the mean durations of bursts from actively bursting elctrodes.
+The well-level value is found by the average of the mean durations of bursts from actively bursting electrodes.
 
 ## Mean Interburst Interval
 location in `s` object: `s[[cur.file]]$bs$mean.IBIs`
@@ -157,10 +170,10 @@ How it's calculated:
 
 For each electrode, sum up the total number of spikes in burst from the burst table (add up the "len" column).
 Then divide by total number of spikes on that electrode.
-The well-level value is found by the average percents of spikes in bursts from actively bursting elctrodes.
+The well-level value is found by the average percents of spikes in bursts from actively bursting electrodes.
 
 # Network Spike Features
-A network spike occurs when several electrodes fire at the same time. Network spikes are indicative of network connectivity and synapse formation. (Note that a *network burst* is different - it adds the requirement that the network spike also qualfy as a burst).
+A network spike occurs when several electrodes fire at the same time. Network spikes are indicative of network connectivity and synapse formation. (Note that a *network burst* is different - it adds the requirement that the network spike also qualify as a burst).
 
 Creating the network spike table:<br>
 The function `compute.ns` (located in the script `networkspikes.R` (sjemea), called in `calculate.network.spikes`) calls the functions needed to calculate the network spikes and stores the results in a table. Each row corresponds to a network spike. The "time" column is the time at the peak of the network spike. The "index"" is the index of the time-bin at the peak of the network spike.
@@ -298,16 +311,16 @@ The mutual information is calculated separately from the rest of the features.
 
 scripts: `spikeLoadRoutines.R`, `nmi_wrapper.R`, and `nmi_final2.R`. The script `MI_script_all.R` calls the functions in those scripts.
 
-The mutual information is a robust parameter that desribes both the global synchrony and level of activity in a network. See *A multivariate extension of mutual information for growing neural networks* [here](https://www.sciencedirect.com/science/article/abs/pii/S0893608017301612?via%3Dihub) by K. Ball et al. for more information.
+The mutual information is a robust parameter that desribes both the global synchrony and level of activity in a network. See *A multivariate extension of mutual information for growing neural networks* by Ball et al., 2017 ([doi](https://doi.org/10.1016/j.neunet.2017.07.009), [link](https://www.sciencedirect.com/science/article/abs/pii/S0893608017301612?via%3Dihub) for more information.
 
 # Cytotoxicity endpoints
 
 ## Alamar Blue
-script: `cytotox_prep06.R`
+script: `run_cytotox_functions.R`
 
 The blank-corrected fluorescense values from each well are collected from the input data sheet. If any value is negative, it is set to 0. The blank-corrected values as well as the plate, row, column, treatment, and dose are stored in the output csv file.
 
 ## LDH
-script: `cytotox_prep06.R`
+script: `run_cytotox_functions.R`
 
 The blank-corrected optical-density values from each well are collected from the input data sheet. If any value is negative, it is set to 0. The blank-corrected values as well as the plate, row, column, treatment, and dose are stored in the output csv file.

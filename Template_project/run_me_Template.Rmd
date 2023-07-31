@@ -1,5 +1,5 @@
 ---
-title: "MEA NFA script to complete pre-processing steps"
+title: "Script to pre-process MEA NFA experimental data"
 author: ""
 date: ""
 output: 
@@ -41,14 +41,14 @@ print(sessionInfo())
 ## Project variables definitions 
 
 ```{r}
-project_name <- "Test2023" # e.g. "name2020"
+project_name <- "" # e.g. "Example2020"
 
-spidmap_file <- "L:/Lab/NHEERL_Mundy/Project - DNT Test Set 2021 NTP/Coded Plate Map - Plate No. 4001207126 DNT HEI EPA SHIP CHEM14214 MRI3110.xlsx" # path to file that maps treatment names to sample IDs (optional)
-spid_sheet <- 1 # desired sheet in spidmap_file (can be numeric or the sheet name) (optional)
+spidmap_file <- "" # path to file that maps treatment names to sample IDs (optional)
+spid_sheet <- '' # desired sheet in spidmap_file (can be numeric or the sheet name) (optional)
 
-project.input.dir <- "L:/Lab/NHEERL_MEA/Project - DNT Test Set 2021 NTP" # main folder of experimental data for project
-scripts.dir <- "C:/Users/acarpe01/Documents/local_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts/R" # directory containing the pre-processing scripts for the NFA
-root.output.dir <- "C:/Users/acarpe01/Documents/local_repos/data_process_prac" # main directory where the output should be saved
+project.input.dir <- "" # main folder of experimental data for project (usually on the L drive)
+scripts.dir <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/script_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts/R" # directory containing the pre-processing scripts for the NFA
+root.output.dir <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/project_repos/CCTE_Shafer_MEA_dev_pre-processing_projects" # main directory where the output should be saved
 assay_component_map_filename <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/script_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts/mea_nfa_component_name_map.csv"
 
 project.output.dir <- file.path(root.output.dir, project_name)
@@ -77,12 +77,12 @@ objects.to.keep <- c(ls(),'objects.to.keep')
 # Check for READMEs and other well quality notes in project folder 
 
 Scan for txt files with notes that might affect dosing, wllq
-```{r eval = F}
+```{r}
 txt.files <- list.files(project.input.dir, pattern = '\\.txt', recursive = T, full.names = T)
 ```
 
 View any README .txt files
-```{r eval = F}
+```{r}
 # Read in the READMEs
 readmes.filename <- txt.files[grepl('read( )*me',tolower(txt.files))]
 readmes.body <- sapply(readmes.filename, scan, what = character(), sep = '\n', quiet = T) # read the text files
@@ -111,7 +111,7 @@ if (length(readmes.body) > 0) {
 
 Check for any other .txt files that appear may have relevant notes
 
-```{r eval = F}
+```{r}
 cat(setdiff(txt.files,readmes.filename), sep = "\n")
 ```
 
@@ -188,7 +188,7 @@ for (group.folder in group.folders) {
 
 Save a log of the selected source files for reference
 
-```{r eval = F}
+```{r}
 writeFilesLog(all.files, files.log.dir = project.output.dir, project_name = project_name)
 rm(list = setdiff(ls(), objects.to.keep))
 ```
@@ -341,14 +341,6 @@ dat[, culture_date := stri_extract(apid, regex = '[0-9]{8}')]
 dat[, acnm_short := sub("CCTE_Shafer_MEA_dev_","",acnm)]
 ```
 
-# TO REMOVE
-
-```{r}
-dat[conc == 0, treatment := 'DMSO']
-dat[apid == '20210929_MW75-9308' & treatment == '7126 A3', treatment := '7126 B3']
-```
-
-
 
 # Check treatment labels
 
@@ -445,24 +437,20 @@ spidmap[, 'spidmap_file' := basename(spidmap_file)]
 # Example:
 # setnames(spidmap, old = 'EPA_SAMPLE_ID', new = 'spid')
 
-# **For this example only**
-# the blind code is not actually the sample ID, but we can treat it like it is for this run_me practice file
-setnames(spidmap, old = 'Blind-Code', new = 'spid')
-
 
 # Identify and/or create the column in the spidmap that corresponds to the treatment names in dat (and make this column character)
 # Talk to lab technicians is not sure
 
 # Example:
-spidmap[, treatment := as.character(paste0('7126 ',Plate.Position))]
+# spidmap[, treatment := as.character(paste0('7126 ',Plate.Position))]
 
 
 # Identify and rename the column in spidmap that contains the stock concentration. Confirm that the stock concentration contains a numeric value.
 
 # Example:
-spidmap[, stock_conc_char := `Conc..(mM)`]
-spidmap[, stock_conc := stri_extract(stock_conc_char, regex = '[0-9]*(\\.)*[0-9]*')]
-spidmap[, stock_conc := as.numeric(stock_conc)]
+# spidmap[, stock_conc_char := `Conc..(mM)`]
+# spidmap[, stock_conc := stri_extract(stock_conc_char, regex = '[0-9]*(\\.)*[0-9]*')]
+# spidmap[, stock_conc := as.numeric(stock_conc)]
 spidmap[is.na(stock_conc)] # check no NAs
 
 
@@ -479,8 +467,6 @@ View(spidmap)
 
 # Cleanings for this specific spidmap:
 spidmap <- spidmap[!is.na(`Conc..(mM)`)]
-# **For this example only** - restrict the dat to specific treatments
-dat <- dat[grepl('7126',treatment) | treatment %in% c("DMSO","Bisphenol A","Acetamenophin")]
 
 # Check that all test treatments in dat are covered by the spidmap
 # (vehicle controls won't have spid's, and that is okay)
@@ -539,8 +525,6 @@ dat[is.na(wllt), .N, by = .(spid, treatment, spidmap_file)]
 
 # Assign wllt for any remaining treatments
 
-# **For this example only**
-dat[spid %in% c("Acetamenophin","Bisphenol A"), wllt := 'x']
 
 # View treatments in all non-test wells
 dat[wllt != 't', .N, by = .(wllt, spid)]
@@ -580,9 +564,12 @@ dat[, conc_log10 := log10(conc)]
 # Also note that TCPL also includes the wllt and some additional columns in the 'by' argument for the cndx definition. This cndx in just for our purposes of concentration-checking
 dat[, cndx := frank(conc, ties.method = 'dense'), 
     by = .(spid, apid, acnm)]
+```
 
-
-# Default dilution scheme shown below
+Calculate expected concentration (my anticipated conc) based on stock concentration and dilution scheme
+```{r}
+# Default dilution scheme from the stock concentration shown below for each concentration index 
+# Modify as needed for a given project
 # See e.g., formulas in "Dosing Prep" Calculations file for the dosing scheme.
 # Note that the top concentration in mM from the spidmap is usually the top concentration in uM in the MEA plate.
 # If the the scheme is different for a few substances,
@@ -625,66 +612,14 @@ dat[conc_log10_diff_abs >= 0.005, .N,
 # - treatment was intentionally tested at a different series than what is defined in dilution.tb (so my_anticipated_conc is off)
 # - something else is off with the conc-data alignment
 
-# Take appropriate action for each of the cases above
+
 ```
 
-**Specific note for this example with the DNT NTP 2021 data:**
-
-All of these treatments were intentionally retested at a lower concentration, so all of these are fine.
-
-Below is an example of updating my_anticipated conc's based on information from e.g., lab notebooks for the affected treatments, then re-checking the concentration agreement. (Don't worry about the specifics of this too much)
-
-
+Take appropriate action for each of the discrepancies identified
 ```{r}
-dat[conc_log10_diff_abs >= 0.005, .N, by = .(treatment, culture_date)][order(culture_date)]
-
-# Update the top_conc for each treatment-culture_date manually
-# (based on lab notebook)
-# there may be a less onerous way to do this...
-
-# These treatment-cultures tested at 1000-x lower conc
-dat[treatment == "7126 A12" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 B11" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 C11" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 D4" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 D5" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 F1" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 F8" & culture_date == "20220601", top_conc := stock_conc/1000]
-dat[treatment == "7126 H10" & culture_date == "20220601", top_conc := stock_conc/1000]
-
-# These treatment-cultures tested at 100-x lower conc
-dat[treatment == "7126 D7" & culture_date == "20220601", top_conc := stock_conc/100]
-
-
-# Note from lab notebook on 7126 A4, 20210915:
-# "Separate dilution for G1 Chemical 4
-# - Dilute 10:1 twice to get 1mm
-# - 15uL of 1mm into 35uL of DMSO to get 0.3mm
-# - Set 0.3mm as highest dose
-# Conc range: 0.3mm - 0.0003mm"
-
-# Update the expected concentrations accordingly:
-
-# Update top conc:
-dat[treatment == '7126 A4' & culture_date == '20210915', top_conc := (stock_conc/100)*15/(35+15)] # based on above notes, copied from lab notebook
-
-# Looking at the Calculations file for this substance, dilution scheme is also altered to follow 0.1, 0.3 pattern
-dilution.tb.treatmentA4 <- data.table(treatment = '7126 A4', cndx = 7:1)
-dilution.tb.treatmentA4[cndx == 7, dilution_cndx_multiplier := 1]
-dilution.tb.treatmentA4[cndx == 6, dilution_cndx_multiplier := 15/(15+30)]
-dilution.tb.treatmentA4[cndx == 5, dilution_cndx_multiplier := 15/(35+15)]
-dilution.tb.treatmentA4[cndx == 4, dilution_cndx_multiplier := 15/(15+30)]
-dilution.tb.treatmentA4[cndx == 3, dilution_cndx_multiplier := 15/(35+15)]
-dilution.tb.treatmentA4[cndx == 2, dilution_cndx_multiplier := 15/(15+30)]
-dilution.tb.treatmentA4[cndx == 1, dilution_cndx_multiplier := 15/(35+15)]
-dilution.tb.treatmentA4[, dilution_factor := Reduce(f = `*`, dilution_cndx_multiplier, accumulate = TRUE)]
-dat <- merge(dat, dilution.tb.treatmentA4, by = c('treatment','cndx'), all.x = T, suffixes = c('','.add'))
-dat[treatment == '7126 A4', dilution_factor := dilution_factor.add]
-dat[treatment == '7126 A4', dilution_cndx_multiplier := dilution_cndx_multiplier.add]
-dat[, dilution_factor.add := NULL]
-dat[, dilution_cndx_multiplier.add := NULL]
 
 ```
+
 
 Re-check conc's after updates
 ```{r}
@@ -695,7 +630,7 @@ dat[conc_log10_diff_abs >= 0.005, .N,
     by = .(treatment, stock_conc, cndx, conc, my_anticipated_conc, conc_log10_diff_abs, culture_date)][order(treatment, conc)]
 ```
 
-If no conc's differ from my_anticipated_conc by more than 0.005 OR I know that my_anticipated_conc is correct, set all conc's to my_anticipated_conc for consistency
+If no conc's differ from my_anticipated_conc by more than 0.005 OR my_anticipated_conc is known to be the correct concentration tested, set all conc's to my_anticipated_conc for consistency
 
 ```{r}
 dat[, conc := my_anticipated_conc]
@@ -737,9 +672,6 @@ dat[spid == 'DMSO', conc := 0.1]
 
 # conc for Media/Blank can be NA
 dat[spid %in% c('Media','Blank'), conc := NA_real_]
-
-# **for this example only**
-dat[spid %in% c('Acetamenophin',' Bisphenol A'), conc := conc_srcf]
 ```
 
 
@@ -750,7 +682,7 @@ dat[spid %in% c('Acetamenophin',' Bisphenol A'), conc := conc_srcf]
 dat[, .N, by = .(wllt, units, stock_conc_unit)]
 ```
 
-The vast majority of treatments will be in uM. Note that the units are not currently saved with the cytotoxicity data in the Calculations files, so those data rows will currently be NA. For the MEA data, the units are taken from the meta-data "Log" table (historically called the MaestroExperiment Log). However, sometimes this column may not be updated for a given group, so use your best judgement if the units are not actually in uM. Use the stock conc units to help verify.
+The vast majority of treatments will be in uM. Note that the units are not currently saved with the cytotoxicity data in the Calculations files, so those data rows will currently be NA. For the MEA data, the units are taken from the meta-data "Log" table (previously called the MaestroExperiment Log). However, sometimes this column may not have been updated for a given group, so use your best judgement if the units are not actually in uM. Use the stock conc units to help verify.
 
 ```{r}
 # For vehicle control wells, units are '%'
@@ -869,12 +801,6 @@ dat[wllq == 1 & wllt == 't', .(num_cultures = length(unique(culture_date)),
 ```{r}
 all.treatments <- dat[wllt == 't', unique(treatment)]
 dat[wllq == '1', setdiff(all.treatments, treatment)]
-```
-
-For this example - since we aren't including the entire data set, this is okay, this affected compound needed to be repeated
-
-```{r}
-dat[treatment == '7126 B1', .N, by = .(culture_date, wllq, wllq_notes)]
 ```
 
 # Check for the expected number of technical replicates for every treatment-conc 
@@ -1067,11 +993,12 @@ dat <- dat[, .SD, .SDcols = keep.columns]
 
 # Save the file
 setkey(dat, NULL) # remove keys to make the file smaller
-nfa.dat.description <- paste0(project_name,' MEA NFA pre-processed data
-Date prepared: ',as.character.Date(Sys.Date()),
-'\nTo do before tcplWriteLvl0:
-* Exclude acnms that are for a specific DIV (see where grepl("_DIV",acnm))
-* Check that none of the data has been pipelined before (i.e., merge with current level 0 data and check for duplicates by apid, rowi, coli, and acnm)')
+# optional character string to save with file, modify as appropriate
+# nfa.dat.description <- paste0(project_name,' MEA NFA pre-processed data
+# Date prepared: ',as.character.Date(Sys.Date()),
+# '\nTo do before tcplWriteLvl0:
+# * Exclude acnms that are for a specific DIV (see where grepl("_DIV",acnm))
+# * Check that none of the data has been pipelined before (i.e., merge with current level 0 data and check for duplicates by apid, rowi, coli, and acnm)')
 cat(nfa.dat.description)
 save(dat, nfa.dat.description, 
      file = file.path(root.output.dir, project_name, "output", paste0(project_name,"_for_tcpl_lvl0.RData")))

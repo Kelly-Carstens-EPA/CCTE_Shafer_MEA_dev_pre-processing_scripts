@@ -1,4 +1,6 @@
 # script to gather the mea nfa spike list files, and other files
+# This function could be used, but is no longer needed
+# automated selection of input data files is preferred with list.files()
 
 selectInputFiles <- function(start.dir, output.dir, project_name,append = F, files_type = "") {
   
