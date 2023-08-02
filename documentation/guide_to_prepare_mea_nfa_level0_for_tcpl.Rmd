@@ -81,7 +81,7 @@ abb.tb[order(Abbrev)]
 # Setting up the pre-processing project folder
 
 * Define the project name for the project (usually the name of the compound set followed by the year the experiments were started, e.g. “TSCA2019”). Don’t use any spaces.
-* Create a where you want the output to be saved, named by the project name. (For the Shafer-lab, the project folder should be created in this directory: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`).
+* Create a where you want the output to be saved, named by the project name. (For the Shafer-lab, the project folder should be created in this directory: `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects`).
 
 # Prepare notebook section (Shafer-lab)
 
@@ -220,7 +220,7 @@ If using a Windows machine, download and install Git for Windows (https://gitfor
 
 ## Set up
 
-* Go to a clone of the pre-processing scripts repository (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts`) (for the Shafer Lab, a clone can be access a clone of the repository here: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts`). Open the `Template_project` folder. Copy the the script `run_me_template.Rmd` and the 2 well_quality_tables and save them in the project output folder you just created (For Shafer lab, `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\<project_name>`). In all 3 files, replace the word 'template' with the project name.
+* Go to a clone of the pre-processing scripts repository (`https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts`) (for the Shafer Lab, a clone can be access a clone of the repository here: `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts`). Open the `Template_project` folder. Copy the the script `run_me_template.Rmd` and the 2 well_quality_tables and save them in the project output folder you just created (For Shafer lab, `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects\<project_name>`). In all 3 files, replace the word 'template' with the project name.
 
 * Open the newly saved run_me script (`run_me_<project_name>.Rmd`)
 
@@ -231,9 +231,9 @@ If using a Windows machine, download and install Git for Windows (https://gitfor
     * `spidmap_file` - (optional) path to file that maps treatment names to registered sample IDs. Preferably, this file should also contain the stock concentrations for each sample
     * `spid_sheet` - desired sheet in spidmap_file (can be the sheet number or the sheet name)
     * `project.input.dir` - main directory of the experimental data for project, e.g., `L:/Lab/NHEERL_MEA/Project - DNT_NTP_2021`. This folder is used to direct the scripts of where to search for experimental data files and .txt files that might affect the well quality.
-    * `scripts.dir` - directory containing a clone of the pre-processing scripts the pre-processing scripts (https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts). For Shafer lab, default to `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R`
-    * `root.output.dir` - directory where the project_name folder is located. For Shafer lab, default to `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects`. This defines where the output will be saved.
-    * `assay_component_map_filename` - filename of the csv file containing a map of the assay component names (acsn, aka 'parameters')  as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names (acnm) registered in invitroDB. File is oresent in the pre-processing repository. Defaults to `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\mea_nfa_component_name_map.csv`
+    * `scripts.dir` - directory containing a clone of the pre-processing scripts the pre-processing scripts (https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts). For Shafer lab, default to `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/R`
+    * `root.output.dir` - directory where the project_name folder is located. For Shafer lab, default to `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects`. This defines where the output will be saved.
+    * `assay_component_map_filename` - filename of the csv file containing a map of the assay component names (acsn, aka 'parameters')  as they appear in the AUC, DIV, and cytotoxicity data files to the corresponding assay component names (acnm) registered in invitroDB. File is present in the pre-processing repository. Defaults to `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/mea_nfa_component_name_map.csv`
     * `project.output.dir` - directory where output should be saved for the given project. Defaults to file.path(root.output.dir, project_name)
 
 
@@ -460,12 +460,12 @@ Some things that could be confirmed with the lab technicians:
 * expected repeated treatments are present with wllq == 1 (none missing, none added)
 * expected concentration ranges for each treatment
 
-Optimally, have people familar with the biology look at the data as well. Create additional visualizations and/or summaries and/or csv files as needed to share the output.
+Optimally, have people familiar with the biology look at the data as well. Create additional visualizations and/or summaries and/or csv files as needed to share the output.
 
 
 # Final notes 
 
-(Shafer lab) Update the status of the project in the file `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\MEA_dev_status_by_project.xlsx`. (This file may be useful for keeping track of whether projects have been pre-processed and/or pipelined into invitrodb).
+(Shafer lab) Update the status of the project in the file `L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/MEA_dev_status_by_project.xlsx`. (This file may be useful for keeping track of whether projects have been pre-processed and/or pipelined into invitrodb).
 
 Final things to do before running writing the dat to level 0 for TCPL:
 

@@ -1651,6 +1651,17 @@ across each DIV</li>
 <li>A csv file containing area-under-the-curve values of the well-level
 activity metrics for 17 endpoints</li>
 </ul>
+<p>Background on the scripts/packages:</p>
+<p>Initial functions for calculating parameter values from the spike
+list files were written by Stephen Eglen. This package is available at
+<a href="https://github.com/sje30/sjemea" class="uri">https://github.com/sje30/sjemea</a>. Later, Diana Hall
+created the package meadq, which builds upon and provides modified
+versions of some of the functions in sjemea. Mostly recently, the
+scripts in this repository build upon and provide modifications of the
+scripts in meadq. Some of the scripts in this repository are edited
+versions of those in meadq. Packages and scripts are sourced in the
+run_me_Template.Rmd in the appropriate order such that the intended
+functions from each package are loaded.</p>
 </div>
 <div id="known-issues-with-the-pre-processing-workflow" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Known issues with the
@@ -1771,7 +1782,7 @@ e.g. “TSCA2019”). Don’t use any spaces.</li>
 <li>Create a where you want the output to be saved, named by the project
 name. (For the Shafer-lab, the project folder should be created in this
 directory:
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>).</li>
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects</code>).</li>
 </ul>
 </div>
 <div id="prepare-notebook-section-shafer-lab" class="section level1" number="5">
@@ -2090,11 +2101,11 @@ pre-processing script (run_me)</h1>
 (<code>https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts</code>)
 (for the Shafer Lab, a clone can be access a clone of the repository
 here:
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts</code>).
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts</code>).
 Open the <code>Template_project</code> folder. Copy the the script
 <code>run_me_template.Rmd</code> and the 2 well_quality_tables and save
 them in the project output folder you just created (For Shafer lab,
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\&lt;project_name&gt;</code>).
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects\&lt;project_name&gt;</code>).
 In all 3 files, replace the word ‘template’ with the project
 name.</p></li>
 <li><p>Open the newly saved run_me script
@@ -2120,17 +2131,17 @@ files and .txt files that might affect the well quality.</li>
 <li><code>scripts.dir</code> - directory containing a clone of the
 pre-processing scripts the pre-processing scripts (<a href="https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts" class="uri">https://github.com/amycarpenter/CCTE_Shafer_MEA_dev_pre-processing_scripts</a>).
 For Shafer lab, default to
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\R</code></li>
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/R</code></li>
 <li><code>root.output.dir</code> - directory where the project_name
 folder is located. For Shafer lab, default to
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects</code>.
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects</code>.
 This defines where the output will be saved.</li>
 <li><code>assay_component_map_filename</code> - filename of the csv file
 containing a map of the assay component names (acsn, aka ‘parameters’)
 as they appear in the AUC, DIV, and cytotoxicity data files to the
 corresponding assay component names (acnm) registered in invitroDB. File
-is oresent in the pre-processing repository. Defaults to
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\script_repos\CCTE_Shafer_MEA_dev_pre-processing_scripts\mea_nfa_component_name_map.csv</code></li>
+is present in the pre-processing repository. Defaults to
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/mea_nfa_component_name_map.csv</code></li>
 <li><code>project.output.dir</code> - directory where output should be
 saved for the given project. Defaults to file.path(root.output.dir,
 project_name)</li>
@@ -2674,7 +2685,7 @@ added)</li>
 missing, none added)</li>
 <li>expected concentration ranges for each treatment</li>
 </ul>
-<p>Optimally, have people familar with the biology look at the data as
+<p>Optimally, have people familiar with the biology look at the data as
 well. Create additional visualizations and/or summaries and/or csv files
 as needed to share the output.</p>
 </div>
@@ -2682,7 +2693,7 @@ as needed to share the output.</p>
 <div id="final-notes" class="section level1" number="13">
 <h1><span class="header-section-number">13</span> Final notes</h1>
 <p>(Shafer lab) Update the status of the project in the file
-<code>L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\project_repos\CCTE_Shafer_MEA_dev_pre-processing_projects\MEA_dev_status_by_project.xlsx</code>.
+<code>L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/MEA_dev_status_by_project.xlsx</code>.
 (This file may be useful for keeping track of whether projects have been
 pre-processed and/or pipelined into invitrodb).</p>
 <p>Final things to do before running writing the dat to level 0 for

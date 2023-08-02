@@ -47,9 +47,9 @@ spidmap_file <- "" # path to file that maps treatment names to sample IDs (optio
 spid_sheet <- '' # desired sheet in spidmap_file (can be numeric or the sheet name) (optional)
 
 project.input.dir <- "" # main folder of experimental data for project (usually on the L drive)
-scripts.dir <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/script_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts/R" # directory containing the pre-processing scripts for the NFA
-root.output.dir <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/project_repos/CCTE_Shafer_MEA_dev_pre-processing_projects" # main directory where the output should be saved
-assay_component_map_filename <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/script_repos/CCTE_Shafer_MEA_dev_pre-processing_scripts/mea_nfa_component_name_map.csv"
+scripts.dir <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/R" # directory containing the pre-processing scripts for the NFA
+root.output.dir <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_projects" # main directory where the output should be saved
+assay_component_map_filename <- "L:/Lab/NHEERL_MEA/CCTE_Shafer pre-process for TCPL/MEA_dev/CCTE_Shafer_MEA_dev_pre-processing_scripts/mea_nfa_component_name_map.csv"
 
 project.output.dir <- file.path(root.output.dir, project_name)
 if (!dir.exists(project.output.dir)) dir.create(project.output.dir)
