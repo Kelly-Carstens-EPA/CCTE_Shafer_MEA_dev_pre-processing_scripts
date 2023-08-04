@@ -465,8 +465,6 @@ spidmap[, stock_conc_unit := 'mM']
 # View the spidmap, determine if any additional cleaning is needed
 View(spidmap)
 
-# Cleanings for this specific spidmap:
-spidmap <- spidmap[!is.na(`Conc..(mM)`)]
 
 # Check that all test treatments in dat are covered by the spidmap
 # (vehicle controls won't have spid's, and that is okay)

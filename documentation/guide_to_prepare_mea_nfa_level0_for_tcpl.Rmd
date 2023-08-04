@@ -1,15 +1,19 @@
 ---
-title: "Guide to Prepare Data from Network Formation Assay Experiments for Dose-Response Modeling with the ToxCast Pipeline"
+title: "Guide to Prepare Data from Network Formation Assay Experiments for Dose-Response
+  Modeling with the ToxCast Pipeline"
 author: "Amy Carpenter"
-last updated: "July 26, 2023"
-output: 
+last updated: July 26, 2023
+output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
     toc_depth: 3
-    number_sections: true
+    number_sections: yes
     code_folding: hide
     df_print: kable
+  word_document:
+    toc: yes
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
@@ -85,7 +89,7 @@ abb.tb[order(Abbrev)]
 
 # Prepare notebook section (Shafer-lab)
 
-* Open the pre-processing notebook for the NFA: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\OneNote Notebooks\Pre-processing_MEA_NFA_for_TCPL` 
+* Open the pre-processing notebook for the NFA: `L:\Lab\NHEERL_MEA\CCTE_Shafer pre-process for TCPL\MEA_dev\Pre-processing_MEA_NFA_for_TCPL` 
 * Make a copy of the `Notes Template` section and rename it with the project name
 * Use this notebook section to record to-do items, take notes, and save email records as you pre-process the data. Review the suggested usage of this notebook in the "Overview" page. 
 

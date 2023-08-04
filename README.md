@@ -2,7 +2,7 @@
 
 These scripts can be used to process the experimental data from microelectrode array recordings.
 
-For a step-by-step guide, see `documentation/guide_to_prepare_mea_nfa_level0_for_tcpl.html`. For an example script that runs the functions, see `template/run_me_Template.Rmd`. This guide was designed for pre-processing data from the Network Formation Assay done in the EPA Shafer Lab, but it can be adapted for others.
+For a step-by-step guide, see `documentation/guide_to_prepare_mea_nfa_level0_for_tcpl`. For an example script that runs the functions, see `Template_project/run_me_Template.Rmd`. This guide was designed for pre-processing data from the Network Formation Assay done in the EPA Shafer Lab, but it can be adapted for others.
 
 ## Acknowledgements
 
