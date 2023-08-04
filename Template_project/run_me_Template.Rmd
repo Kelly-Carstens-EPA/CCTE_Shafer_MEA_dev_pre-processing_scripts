@@ -794,12 +794,24 @@ dat[wllq == 1 & wllt == 't', .(num_cultures = length(unique(culture_date)),
     by = .(treatment, assay)][num_cultures > 1]
 ```
 
-# Confirm every treatment has some data with wllq=1
+# Confirm every treatment has at least 4 conc's with wllq=1
+
+Samples with usable data from less than 4 concentrations will not be fit to a curve in TCPL.
 
 ```{r}
-all.treatments <- dat[wllt == 't', unique(treatment)]
-dat[wllq == '1', setdiff(all.treatments, treatment)]
+# Use mean firing rate as a representative MEA parameter
+usable.concs.tb <- dat[acnm == 'CCTE_Shafer_MEA_dev_firing_rate_mean', 
+                       .(num_usable_concs = length(unique(conc[wllq == 1]))),
+                       by = .(treatment, wllt)]
+
+usable.concs.tb[wllt == 't', .N, by = .(num_usable_concs)][order(num_usable_concs)]
+
+treatments.less.than.4.concs <- usable.concs.tb[wllt == 't' & num_usable_concs < 4, unique(treatment)]
+treatments.less.than.4.concs
+# should be empty
+# If not, note that these treatments will not have any dose-response curves generated in TCPL. Confirm with lab technicians that these compounds were not retested elsewhere and that it is okay that we don't have any data for these.
 ```
+
 
 # Check for the expected number of technical replicates for every treatment-conc 
 
@@ -807,7 +819,7 @@ Usually there are 3 technical replicates, unless the treatment was intentionally
 
 ```{r}
 dat[wllt == 't', 
-    .(num_replicates = length(unique(full_well_id))), by = .(treatment, spid, conc)][num_replicates != 3]
+    .(num_replicates = length(unique(full_well_id))), by = .(treatment, spid, conc, culture_date)][num_replicates != 3]
 ```
 
 
@@ -980,7 +992,7 @@ keep.columns <- c(
   
   # Columns needed for tcpl lvl0
   'acnm','apid', 'rowi', 'coli', 'conc','rval','srcf','spid','wllt','wllq', 
-
+  
   # Additional columns for our documentation
   'acsn',  
   'treatment', 'treatment_srcf','spidmap_file',
